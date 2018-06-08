@@ -1,0 +1,23 @@
+{
+  "name": "Beldum-Bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tony120914/Beldum-Bot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tony120914/Beldum-Bot/issues"
+  },
+  "homepage": "https://github.com/Tony120914/Beldum-Bot#readme",
+  "dependencies": {
+    "discord.js": "^11.3.2"
+  }
+}
