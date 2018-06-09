@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/Tony120914/Beldum-Bot#readme",
   "dependencies": {
-    "discord.js": "^11.3.2"
+    "discord.js": "^11.3.2",
+    "dotenv": "^6.0.0"
   }
 }
