@@ -11,11 +11,15 @@ client.login(token);
 // Ready check
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
+
+  // Set bot's playing status
+  client.user.setActivity("with an Everstone, //help");
+
 });
 
-// Example testing
-client.on('message', msg => {
-  if (msg.content === 'ping') {
-    msg.reply('pong');
-  }
-});
+
+// Prefix for commands
+const prefix = '//';
+
+// My imports
+require('./js/help.js')(client, prefix);
