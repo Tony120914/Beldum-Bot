@@ -3,18 +3,32 @@
 module.exports = (client, prefix) => {
 
   // Listen on message
-  client.on('message', msg => {
+  client.on('message', message => {
     // Starting with prefix "//"
-    if (msg.content.startsWith(prefix)) {
+    if (message.content.startsWith(prefix)) {
+
+      let command = message.content.substring(prefix.length);
 
       // Command for "//help"
-      if (msg.content.substring(prefix.length) == 'help') {
-        require('../commands/help.js')(msg);
+      if (command == 'help') {
+        require('../commands/help.js')(message);
+      }
+
+      // Command for "//avatar @name"
+      else if (command.startsWith('avatar')) {
+        let array_of_mentions = message.mentions.users.array();
+        if (array_of_mentions.length == 1) {
+          require('../commands/avatar.js')(message);
+        }
+        else {
+          message.reply('_Beldum Beldum_ :anger: \`(Use it like this: //avatar @name)\`');
+        }
+
       }
 
       // No such command
       else {
-        msg.reply('_Beldum Beldum_ :anger: \`(Command does not exist. Use //help to search for commands.)\`');
+        message.reply('_Beldum Beldum_ :anger: \`(Command does not exist. Use //help to search for commands.)\`');
       }
     }
   });
