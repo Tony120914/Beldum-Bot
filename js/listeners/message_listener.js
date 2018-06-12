@@ -1,13 +1,15 @@
 
+// Event listener for messages
 module.exports = (client, prefix) => {
 
-  // Help commands
+  // Listen on message
   client.on('message', msg => {
+    // Starting with prefix "//"
     if (msg.content.startsWith(prefix)) {
 
-      // Help
+      // Command for "//help"
       if (msg.content.substring(prefix.length) == 'help') {
-        msg.reply('\`nothing for now...\`');
+        require('../commands/help.js')(msg);
       }
 
       // No such command

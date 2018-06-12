@@ -22,4 +22,4 @@ client.on('ready', () => {
 const prefix = '//';
 
 // My imports
-require('./js/help.js')(client, prefix);
+require('./js/listeners/message_listener.js')(client, prefix);
