@@ -7,10 +7,10 @@ module.exports = (message) => {
   // Now format should be 'name'
   emoji_name = emoji_name.substring(emoji_name.indexOf(':') + 1, emoji_name.lastIndexOf(':'));
 
-  let emoji = message.guild.emojis.find('name', emoji_name);
+  let emoji = message.client.emojis.find('name', emoji_name);
 
   if (emoji == null) {
-    message.reply('_Beldum Beldum_ :anger: \`(Incorrect format [use it like this: //emoji :custom emoji:], or custom emoji does not exist within this server)\`')
+    message.reply('_Beldum Beldum_ :anger: \`(Incorrect format [use it like this: //emoji :custom emoji:], or it is not a custom emoji)\`')
     .then(console.log("Successful error reply"))
     .catch(console.error);
   }
