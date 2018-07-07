@@ -29,6 +29,10 @@ module.exports = (client, prefix) => {
         require('../commands/server_icon.js')(message);
       }
 
+      else if (command == 'ping') {
+        require('../commands/ping.js')(message, client);
+      }
+
       // No such command
       else {
         message.reply('_Beldum Beldum_ :anger: \`(Command does not exist. Use //help to search for commands.)\`')

@@ -7,6 +7,7 @@ module.exports = (message) => {
     ['//avatar @name\t\t\t', 'Shows the user\'s avatar image url.'],
     ['//emoji :custom emoji:\t', 'Shows the custom emoji\'s image url.'],
     ['//help\t\t\t\t\t', 'Shows the list of commands with its description.'],
+    ['//ping\t\t\t\t\t', 'Shows Beldum-Bot\'s ping.'],
     ['//server icon \t\t\t', 'Shows the server\'s icon url.']
   ];
 
