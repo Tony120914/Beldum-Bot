@@ -13,7 +13,9 @@ client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 
   // Set bot's playing status
-  client.user.setActivity("with an Everstone, //help");
+  client.user.setActivity("with an Everstone, //help")
+  .then(console.log("Successful set activity"))
+  .catch(console.error);
 
 });
 
