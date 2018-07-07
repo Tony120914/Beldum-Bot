@@ -15,6 +15,8 @@ module.exports = (message) => {
     result += array_of_commands[i][0] + ' : ' + array_of_commands[i][1] + '\n';
   }
 
-  message.reply('_Beldum Beldum_ :question:\n' + '\`' + result + '\`');
+  message.reply('_Beldum Beldum_ :question:\n' + '\`' + result + '\`')
+  .then(console.log("Successful help error reply"))
+  .catch(console.error);
 
 }

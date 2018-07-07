@@ -10,11 +10,15 @@ module.exports = (message) => {
   let emoji = message.guild.emojis.find('name', emoji_name);
 
   if (emoji == null) {
-    message.reply('_Beldum Beldum_ :anger: \`(Incorrect format [use it like this: //emoji :custom emoji:], or custom emoji does not exist within this server)\`');
+    message.reply('_Beldum Beldum_ :anger: \`(Incorrect format [use it like this: //emoji :custom emoji:], or custom emoji does not exist within this server)\`')
+    .then(console.log("Successful error reply"))
+    .catch(console.error);
   }
 
   else {
-    message.reply(emoji.url);
+    message.channel.send(emoji.url)
+    .then(console.log("Successful emoji url"))
+    .catch(console.error);
   }
 
 }
