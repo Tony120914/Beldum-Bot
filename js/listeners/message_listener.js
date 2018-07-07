@@ -24,6 +24,11 @@ module.exports = (client, prefix) => {
         require('../commands/emoji.js')(message);
       }
 
+      // Command for "//server icon"
+      else if (command == 'server icon') {
+        require('../commands/server_icon.js')(message);
+      }
+
       // No such command
       else {
         message.reply('_Beldum Beldum_ :anger: \`(Command does not exist. Use //help to search for commands.)\`')
