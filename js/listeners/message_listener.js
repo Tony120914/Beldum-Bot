@@ -16,14 +16,12 @@ module.exports = (client, prefix) => {
 
       // Command for "//avatar @name"
       else if (command.startsWith('avatar')) {
-        let array_of_mentions = message.mentions.users.array();
-        if (array_of_mentions.length == 1) {
-          require('../commands/avatar.js')(message);
-        }
-        else {
-          message.reply('_Beldum Beldum_ :anger: \`(Use it like this: //avatar @name)\`');
-        }
+        require('../commands/avatar.js')(message);
+      }
 
+      // Command for "//emoji :custom emoji:"
+      else if (command.startsWith('emoji')) {
+        require('../commands/emoji.js')(message);
       }
 
       // No such command

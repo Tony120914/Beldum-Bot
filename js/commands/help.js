@@ -4,8 +4,9 @@ module.exports = (message) => {
 
   // In format of [[command name, command description], ...]
   var array_of_commands = [
-    ['//avatar', 'Displays a user\'s avatar image. <//avatar @name>'],
-    ['//help', 'Shows a list of commands with description.']
+    ['//avatar', 'Shows the user\'s avatar image url. <//avatar @name>'],
+    ['//emoji', 'Shows the custom emoji\'s image url. <//emoji :custom emoji:>'],
+    ['//help', 'Shows the list of commands with its description.']
   ];
 
   // formatted string holding the array_of_commands to reply
