@@ -29,8 +29,14 @@ module.exports = (client, prefix) => {
         require('../commands/server_icon.js')(message);
       }
 
+      // Command for "//ping"
       else if (command == 'ping') {
         require('../commands/ping.js')(message, client);
+      }
+
+      // Command for "//rng num1,num2"
+      else if (command.startsWith('rng')) {
+        require('../commands/rng.js')(message);
       }
 
       // No such command
