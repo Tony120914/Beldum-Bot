@@ -6,6 +6,7 @@ module.exports = (message) => {
   var array_of_commands = [
     ['//avatar @name\t\t\t', 'Shows the user\'s avatar image url.'],
     ['//emoji :custom emoji:\t', 'Shows the custom emoji\'s image url.'],
+    ['//google keywords...  \t', 'Performs a Google search with your keywords.'],
     ['//help\t\t\t\t\t', 'Shows the list of commands with its description.'],
     ['//ping\t\t\t\t\t', 'Shows Beldum-Bot\'s ping.'],
     ['//rng num1,num2   \t\t', 'Randomly generates a number between num1 and num2.'],

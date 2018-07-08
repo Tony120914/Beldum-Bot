@@ -39,6 +39,11 @@ module.exports = (client, prefix) => {
         require('../commands/rng.js')(message);
       }
 
+      // Command for "//google keywords..."
+      else if (command.startsWith('google')) {
+        require('../commands/google.js')(message);
+      }
+
       // No such command
       else {
         message.reply('_Beldum Beldum_ :anger: \`(Command does not exist. Use //help to search for commands.)\`')
