@@ -44,6 +44,11 @@ module.exports = (client, prefix) => {
         require('../commands/google.js')(message);
       }
 
+      // Command for "//youtube keywords..."
+      else if (command.startsWith('youtube')) {
+        require('../commands/youtube.js')(message);
+      }
+
       // No such command
       else {
         message.reply('_Beldum Beldum_ :anger: \`(Command does not exist. Use //help to search for commands.)\`')

@@ -10,5 +10,7 @@ module.exports = (message) => {
   // Replacing spaces with +
   google_url = google_url.replace(/ /g, '+');
 
-  message.reply(google_url);
+  message.reply(google_url)
+  .then(console.log('Successful Google search'))
+  .catch(console.error);
 }

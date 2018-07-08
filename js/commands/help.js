@@ -10,7 +10,8 @@ module.exports = (message) => {
     ['//help\t\t\t\t\t', 'Shows the list of commands with its description.'],
     ['//ping\t\t\t\t\t', 'Shows Beldum-Bot\'s ping.'],
     ['//rng num1,num2   \t\t', 'Randomly generates a number between num1 and num2.'],
-    ['//server icon \t\t\t', 'Shows the server\'s icon url.']
+    ['//server icon \t\t\t', 'Shows the server\'s icon url.'],
+    ['//youtube keywords... \t', 'Performs a YouTube search with your keywords.']
   ];
 
   // formatted string holding the array_of_commands to reply
@@ -21,7 +22,7 @@ module.exports = (message) => {
   }
 
   message.reply('_Beldum Beldum_ :question:\n' + '\`' + result + '\`')
-  .then(console.log("Successful help error reply"))
+  .then(console.log("Successful help reply"))
   .catch(console.error);
 
 }
