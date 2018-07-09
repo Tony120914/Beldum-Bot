@@ -60,11 +60,11 @@ module.exports = (client, prefix) => {
       }
 
       // No such command
-      else {
-        message.reply('_Beldum Beldum_ :anger: \`(Command does not exist. Use //help to search for commands.)\`')
-        .then(console.log("Successful error reply"))
-        .catch(console.error);
-      }
+      // else {
+      //   message.reply('_Beldum Beldum_ :anger: \`(Command does not exist. Use //help to search for commands.)\`')
+      //   .then(console.log("Successful error reply"))
+      //   .catch(console.error);
+      // }
     }
   });
 
