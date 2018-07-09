@@ -59,15 +59,20 @@ module.exports = (client, message, new_message, player1_id, player2_id, turn_id,
         player_switch = player2_id;
       }
       let temp_message = new_message.content.replace('<@' + turn_id + '>', '<@' + player_switch + '>');
-      temp_message = temp_message.replace(symbol, symbols[Math.abs(symbols.findIndex((sym) => {return sym == symbol}) - 1)])
+      temp_message = temp_message.replace(symbol, toggle_symbol(symbol));
       new_message.edit(temp_message)
       .then(console.log("Successful turn and symbol switch"))
       .catch(console.error);
 
       // Toggle symbols between O and X
-      symbol = symbols[Math.abs(symbols.findIndex((sym) => {
-        return sym == symbol;
-      }) - 1)];
+      symbol = toggle_symbol(symbol);
     }
   })
+
+  // Function for toggling symbols
+  function toggle_symbol(symbol) {
+    return symbols[Math.abs(symbols.findIndex((sym) => {
+      return sym == symbol;
+    }) - 1)];
+  }
 }
