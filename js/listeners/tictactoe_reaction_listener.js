@@ -1,38 +1,55 @@
 
 // Reaction listener for Tic-tac-toe game
 module.exports = (client, message, new_message, player1_id, player2_id, turn_id, symbol, symbols, grid_message) => {
+
+  var score = [
+    [null, null, null],
+    [null, null, null],
+    [null, null, null]
+  ];
+  var will_end_game = false;
+
   client.on('messageReactionAdd', (reaction, user) => {
-    if (reaction.message.id == new_message.id && turn_id == user.id) {
+    if (reaction.message.id == new_message.id && turn_id == user.id && !will_end_game) {
 
       let emoji;
       // Convert emoji identifier to :emoji: format
       switch(reaction.emoji.identifier) {
         case '1%E2%83%A3':
-          emoji = ':one:'
+          emoji = ':one:';
+          if (score[0][0] == null) score[0][0] = symbol;
           break;
         case '2%E2%83%A3':
-          emoji = ':two:'
+          emoji = ':two:';
+          if (score[0][1] == null) score[0][1] = symbol;
           break;
         case '3%E2%83%A3':
-          emoji = ':three:'
+          emoji = ':three:';
+          if (score[0][2] == null) score[0][2] = symbol;
           break;
         case '4%E2%83%A3':
-          emoji = ':four:'
+          emoji = ':four:';
+          if (score[1][0] == null) score[1][0] = symbol;
           break;
         case '5%E2%83%A3':
-          emoji = ':five:'
+          emoji = ':five:';
+          if (score[1][1] == null) score[1][1] = symbol;
           break;
         case '6%E2%83%A3':
-          emoji = ':six:'
+          emoji = ':six:';
+          if (score[1][2] == null) score[1][2] = symbol;
           break;
         case '7%E2%83%A3':
-          emoji = ':seven:'
+          emoji = ':seven:';
+          if (score[2][0] == null) score[2][0] = symbol;
           break;
         case '8%E2%83%A3':
-          emoji = ':eight:'
+          emoji = ':eight:';
+          if (score[2][1] == null) score[2][1] = symbol;
           break;
         case '9%E2%83%A3':
-          emoji = ':nine:'
+          emoji = ':nine:';
+          if (score[2][2] == null) score[2][2] = symbol;
           break;
         default:
           break;
@@ -42,13 +59,18 @@ module.exports = (client, message, new_message, player1_id, player2_id, turn_id,
       if (grid_message.content.indexOf(emoji) == -1) {
         return;
       }
-      var new_grid_message;
       grid_message.edit(grid_message.content.replace(emoji, symbol))
-      .then((new_message) => {
-        grid_message = new_message;
+      .then((new_mes) => {
+        grid_message = new_mes;
         console.log("Successful number to symbol conversion");
       })
       .catch(console.error);
+
+      // Check if the game has concluded
+      if (didPlayerWin(symbols[0], player1_id) || didPlayerWin(symbols[1], player2_id) || didItTie()) {
+        will_end_game = true;
+        return;
+      }
 
       // Replace player with the next and symbol with the next
       let player_switch;
@@ -74,5 +96,66 @@ module.exports = (client, message, new_message, player1_id, player2_id, turn_id,
     return symbols[Math.abs(symbols.findIndex((sym) => {
       return sym == symbol;
     }) - 1)];
+  }
+
+  // Function for checking if player1 won
+  function didPlayerWin(sym, player) {
+    for (let i = 0; i < score.length; i++) {
+      // Horizontal checks
+      if (score[i][0] == sym &&
+          score[i][1] == sym &&
+          score[i][2] == sym) {
+            new_message.edit('Congratulations! ' + '<@' + player + '> won!')
+            .then(console.log('Successful win'))
+            .catch(console.error);
+            return true;
+      }
+      // Vertical checks
+      else if (score[0][i] == sym &&
+               score[1][i] == sym &&
+               score[2][i] == sym) {
+               new_message.edit('Congratulations! ' + '<@' + player + '> won!')
+               .then(console.log('Successful win'))
+               .catch(console.error);
+               return true;
+      }
+    }
+    // Diagonal checks
+    if (score[0][0] == sym &&
+        score[1][1] == sym &&
+        score[2][2] == sym) {
+          new_message.edit('Congratulations! ' + '<@' + player + '> won!')
+          .then(console.log('Successful win'))
+          .catch(console.error);
+          return true;
+    }
+    else if (score[0][2] == sym &&
+             score[1][1] == sym &&
+             score[2][0] == sym) {
+               new_message.edit('Congratulations! ' + '<@' + player + '> won!')
+               .then(console.log('Successful win'))
+               .catch(console.error);
+               return true;
+    }
+
+    return false;
+  }
+
+  // Function for checking if it's a tie
+  function didItTie() {
+    let null_counter = 0;
+    for (let i = 0; i < score.length; i++) {
+      for (let j = 0; j < score.length; j++) {
+        if (score[i][j] == null) {
+          null_counter++;
+        }
+      }
+    }
+    if (null_counter == 0) {
+      new_message.edit('Boo! It\'s a tie!')
+      .then(console.log('Successful tie'))
+      .catch(console.error);
+      return true;
+    }
   }
 }

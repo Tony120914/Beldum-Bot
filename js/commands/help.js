@@ -4,15 +4,16 @@ module.exports = (message) => {
 
   // In format of [[command name, command description], ...]
   var array_of_commands = [
-    ['//avatar @name\t\t\t', 'Shows the user\'s avatar image url.'],
-    ['//emoji :custom emoji:\t', 'Shows the custom emoji\'s image url.'],
-    ['//google keywords...  \t', 'Performs a Google search with your keywords.'],
-    ['//help\t\t\t\t\t', 'Shows the list of commands with its description.'],
-    ['//ping\t\t\t\t\t', 'Shows Beldum-Bot\'s ping.'],
-    ['//rng num1,num2   \t\t', 'Randomly generates a number between num1 and num2.'],
-    ['//rps r or p or s \t\t', 'Play rock, paper, scissors with Beldum-bot.'],
-    ['//server icon \t\t\t', 'Shows the server\'s icon image url.'],
-    ['//youtube keywords... \t', 'Performs a YouTube search with your keywords.']
+    ['//avatar @name\t\t\t\t\t', 'Shows the user\'s avatar image url.'],
+    ['//emoji :custom emoji:\t\t\t', 'Shows the custom emoji\'s image url.'],
+    ['//google keywords...  \t\t\t', 'Performs a Google search with your keywords.'],
+    ['//help\t\t\t\t\t\t\t', 'Shows the list of commands with its description.'],
+    ['//ping\t\t\t\t\t\t\t', 'Shows Beldum-Bot\'s ping.'],
+    ['//rng num1,num2   \t\t\t\t', 'Randomly generates a number between num1 and num2.'],
+    ['//rps r or p or s \t\t\t\t', 'Play rock, paper, scissors with Beldum-bot.'],
+    ['//server icon \t\t\t\t\t', 'Shows the server\'s icon image url.'],
+    ['//tictactoe @player1 @player2 \t', 'Play tictactoe with another user via reactions.'],
+    ['//youtube keywords... \t\t\t', 'Performs a YouTube search with your keywords.']
   ];
 
   // formatted string holding the array_of_commands to reply
