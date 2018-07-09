@@ -1,5 +1,5 @@
 # Beldum-Bot
-<img src="374Beldum-Shiny.png" width="200" align="right">
+<img src="images/374Beldum-Shiny.png" width="200" align="right">
 
 This is my Discord bot in development.
 
@@ -9,6 +9,7 @@ In case you don't know what a Beldum is... https://bulbapedia.bulbagarden.net/wi
 
 It's a Pokemon! One of my favourites.
 
+## Commands
 | List of commands (so far): | Description |
 | --- | --- |
 | //avatar @name | Shows the user's avatar image url. |
@@ -21,3 +22,9 @@ It's a Pokemon! One of my favourites.
 | //server icon | Shows the server's icon image url. |
 | //tictactoe @player1 @player2 | Play tictactoe with another user via reactions. |
 | //youtube keywords... | Performs a YouTube search with your keywords. |
+
+## Some examples
+
+<img src="images/rps.PNG">
+
+<img src="images/tictactoe.PNG">
