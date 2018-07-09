@@ -54,6 +54,11 @@ module.exports = (client, prefix) => {
         require('../commands/rps.js')(message);
       }
 
+      // Command for "//tictactoe @player1 @player2"
+      else if (command.startsWith('tictactoe')) {
+        require('../commands/tictactoe.js')(message, client);
+      }
+
       // No such command
       else {
         message.reply('_Beldum Beldum_ :anger: \`(Command does not exist. Use //help to search for commands.)\`')
