@@ -49,6 +49,11 @@ module.exports = (client, prefix) => {
         require('../commands/youtube.js')(message);
       }
 
+      // Command for "//rps r or p or s"
+      else if (command.startsWith('rps')) {
+        require('../commands/rps.js')(message);
+      }
+
       // No such command
       else {
         message.reply('_Beldum Beldum_ :anger: \`(Command does not exist. Use //help to search for commands.)\`')
