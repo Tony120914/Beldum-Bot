@@ -3,9 +3,13 @@
 
 This is my Discord bot in development.
 
+You can invite it to your Discord server here
+https://discordbots.org/bot/454764425090433034
+
 It is developed in Javascript, utilizing Discordjs, Nodejs, and dotenv.
 
-In case you don't know what a Beldum is... https://bulbapedia.bulbagarden.net/wiki/Beldum_(Pok%C3%A9mon)
+In case you don't know what a Beldum is...
+https://bulbapedia.bulbagarden.net/wiki/Beldum_(Pok%C3%A9mon)
 
 It's a Pokemon! One of my favourites.
 
