@@ -5,7 +5,7 @@ module.exports = (client, prefix) => {
   // Listen on message
   client.on('message', message => {
     // Starting with prefix "//"
-    if (message.content.startsWith(prefix)) {
+    if (message.content.startsWith(prefix) && !message.author.bot) {
 
       let command = message.content.substring(prefix.length);
 
