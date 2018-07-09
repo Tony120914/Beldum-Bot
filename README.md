@@ -15,4 +15,5 @@ It is developed in Javascript, utilizing Discordjs, Nodejs, and dotenv.
 | //rng num1,num2 | Randomly generates a number between num1 and num2. |
 | //rps r or p or s | Play rock, paper, scissors with Beldum-bot. |
 | //server icon | Shows the server's icon image url. |
+| //tictactoe @player1 @player2 | Play tictactoe with another user via reactions. |
 | //youtube keywords... | Performs a YouTube search with your keywords. |
