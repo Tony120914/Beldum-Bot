@@ -5,6 +5,10 @@ This is my Discord bot in development.
 
 It is developed in Javascript, utilizing Discordjs, Nodejs, and dotenv.
 
+In case you don't know what a Beldum is... https://bulbapedia.bulbagarden.net/wiki/Beldum_(Pok%C3%A9mon)
+
+It's a Pokemon! One of my favourites.
+
 | List of commands (so far): | Description |
 | --- | --- |
 | //avatar @name | Shows the user's avatar image url. |
