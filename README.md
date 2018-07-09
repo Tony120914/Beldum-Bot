@@ -13,5 +13,6 @@ It is developed in Javascript, utilizing Discordjs, Nodejs, and dotenv.
 | //help | Shows the list of commands with its description. |
 | //ping | Shows Beldum-Bot's ping. |
 | //rng num1,num2 | Randomly generates a number between num1 and num2. |
-| //server icon | Shows the server's icon url. |
+| //rps r or p or s | Play rock, paper, scissors with Beldum-bot. |
+| //server icon | Shows the server's icon image url. |
 | //youtube keywords... | Performs a YouTube search with your keywords. |
