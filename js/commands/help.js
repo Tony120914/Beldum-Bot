@@ -11,7 +11,7 @@ module.exports = (message) => {
     ['//ping\t\t\t\t\t', 'Shows Beldum-Bot\'s ping.'],
     ['//rng num1,num2   \t\t', 'Randomly generates a number between num1 and num2.'],
     ['//rps r or p or s \t\t', 'Play rock, paper, scissors with Beldum-bot.'],
-    ['//server icon \t\t\t', 'Shows the server\'s icon url.'],
+    ['//server icon \t\t\t', 'Shows the server\'s icon image url.'],
     ['//youtube keywords... \t', 'Performs a YouTube search with your keywords.']
   ];
 

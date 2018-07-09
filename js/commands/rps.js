@@ -50,7 +50,7 @@ module.exports = (message) => {
 
   // Case 3: tie
   else {
-    message.reply('_You used_ ' + user_choice + ' _and Beldum used_ ' + bot_choice + ' , _nothing happened..._')
+    message.reply('_You used_ ' + user_choice + ' _and Beldum used_ ' + bot_choice + ' , _but nothing happened..._')
     .then(console.log("Successful rps tie"))
     .catch(console.error);
   }
