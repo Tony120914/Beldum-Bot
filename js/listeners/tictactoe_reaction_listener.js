@@ -73,23 +73,30 @@ module.exports = (client, message, new_message, player1_id, player2_id, turn_id,
       }
 
       // Replace player with the next and symbol with the next
-      let player_switch;
-      if (turn_id == player1_id) {
-        player_switch = player1_id;
-      }
-      else {
-        player_switch = player2_id;
-      }
-      let temp_message = new_message.content.replace('<@' + turn_id + '>', '<@' + player_switch + '>');
+      let temp_message = new_message.content.replace(`<@${turn_id}>`, `<@${toggle_player(turn_id, player1_id, player2_id)}>`);
       temp_message = temp_message.replace(symbol, toggle_symbol(symbol));
       new_message.edit(temp_message)
       .then(console.log("Successful turn and symbol switch"))
       .catch(console.error);
 
-      // Toggle symbols between O and X
+      // Toggle symbols between O and X and players 1 and 2
       symbol = toggle_symbol(symbol);
+      turn_id = toggle_player(turn_id, player1_id, player2_id);
     }
   })
+
+
+  // Function for toggling players
+  function toggle_player(turn_id, player1_id, player2_id) {
+    let player_switched;
+    if (turn_id == player1_id) {
+      player_switched = player2_id;
+    }
+    else {
+      player_switched = player1_id;
+    }
+    return player_switched;
+  }
 
   // Function for toggling symbols
   function toggle_symbol(symbol) {
@@ -98,14 +105,14 @@ module.exports = (client, message, new_message, player1_id, player2_id, turn_id,
     }) - 1)];
   }
 
-  // Function for checking if player1 won
+  // Function for checking if a player won
   function didPlayerWin(sym, player) {
     for (let i = 0; i < score.length; i++) {
       // Horizontal checks
       if (score[i][0] == sym &&
           score[i][1] == sym &&
           score[i][2] == sym) {
-            new_message.edit('Congratulations! ' + '<@' + player + '> won!')
+            new_message.edit(`Congratulations! <@${player}> won!`)
             .then(console.log('Successful win'))
             .catch(console.error);
             return true;
@@ -114,7 +121,7 @@ module.exports = (client, message, new_message, player1_id, player2_id, turn_id,
       else if (score[0][i] == sym &&
                score[1][i] == sym &&
                score[2][i] == sym) {
-               new_message.edit('Congratulations! ' + '<@' + player + '> won!')
+               new_message.edit(`Congratulations! <@${player}> won!`)
                .then(console.log('Successful win'))
                .catch(console.error);
                return true;
@@ -124,7 +131,7 @@ module.exports = (client, message, new_message, player1_id, player2_id, turn_id,
     if (score[0][0] == sym &&
         score[1][1] == sym &&
         score[2][2] == sym) {
-          new_message.edit('Congratulations! ' + '<@' + player + '> won!')
+          new_message.edit(`Congratulations! <@${player}> won!`)
           .then(console.log('Successful win'))
           .catch(console.error);
           return true;
@@ -132,7 +139,7 @@ module.exports = (client, message, new_message, player1_id, player2_id, turn_id,
     else if (score[0][2] == sym &&
              score[1][1] == sym &&
              score[2][0] == sym) {
-               new_message.edit('Congratulations! ' + '<@' + player + '> won!')
+               new_message.edit(`Congratulations! <@${player}> won!`)
                .then(console.log('Successful win'))
                .catch(console.error);
                return true;

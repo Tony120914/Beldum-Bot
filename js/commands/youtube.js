@@ -1,7 +1,7 @@
 
 // Command for "//youtube keywords..."
-module.exports = (message) => {
-  let keywords = message.content.substring('//youtube '.length);
+module.exports = (message, prefix) => {
+  let keywords = message.content.substring((prefix + 'youtube ').length);
 
   // Youtube URL for searching
   let youtube_url = 'https://www.youtube.com/results?search_query=';

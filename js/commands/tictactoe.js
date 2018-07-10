@@ -1,6 +1,6 @@
 
 // Command for ""//tictactoe @player1 @player2"
-module.exports = (message, client) => {
+module.exports = (message, client, prefix) => {
 
   // Array of @mentions in the message
   let array_of_mentions = message.mentions.users.array();
@@ -27,9 +27,9 @@ module.exports = (message, client) => {
     var symbol = symbols[0];
 
     // Initial message, calls the user a loser if they're playing the game alone
-    let initial_message = 'Tic-tac-toe game between <@' + player1_id + '> and ' + '<@' + player2_id + '> !';
+    let initial_message = `Tic-tac-toe game between <@${player1_id}> and <@${player2_id}> !`;
     if (player1_id == player2_id) {
-      initial_message += ' _(What a loser, playing this game with themself :joy:)_'
+      initial_message += ' _(What a loser, playing this game with yourself :joy:)_'
     }
 
     // Send initial message
@@ -48,7 +48,7 @@ module.exports = (message, client) => {
     .catch(console.error);
 
     // Send turn and reaction init
-    message.channel.send('It\'s <@' + turn_id + '>\'s turn! Your symbol is ' + symbol)
+    message.channel.send('Loading... Please wait for the :ok: reaction.')
     .then(async (new_message) => { // Async so it reacts in order
       await new_message.react('1⃣');
       await new_message.react('2⃣');
@@ -59,16 +59,25 @@ module.exports = (message, client) => {
       await new_message.react('7⃣');
       await new_message.react('8⃣');
       await new_message.react('9⃣');
+      await new_message.react('🆗');
 
-      // Tic-tac-toe game begins using the react listener
-      require('../listeners/tictactoe_reaction_listener.js')(client, message, new_message, player1_id, player2_id, turn_id, symbol, symbols, grid_message);
+      // Done loading, state first player's turn
+      await new_message.edit(`It\'s <@${turn_id}>\'s turn! Your symbol is ${symbol}`)
+      .then((new_new_message) => {
+        // Tic-tac-toe game begins using the react listener
+        require('../listeners/tictactoe_reaction_listener.js')(client, message, new_new_message, player1_id, player2_id, turn_id, symbol, symbols, grid_message);
+      })
+      .then(console.log("Successful tictactoe listener initialization"))
+      .catch(console.error);
+
+
     })
-    .then(console.log("Successful tictactoe turn and react initialization"))
+    .then(console.log("Successful tictactoe react (and listener) initialization"))
     .catch(console.error);
 
   }
   else {
-    message.reply('_Beldum Beldum_ :anger: \`(Use it like this: //tictactoe @player1 @player2)\`')
+    message.reply(`_Beldum Beldum_ :anger: \`(Use it like this: ${prefix}tictactoe @player1 @player2)\``)
     .then(console.log("Successful error reply"))
     .catch(console.error);
   }
