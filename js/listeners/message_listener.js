@@ -1,6 +1,6 @@
 
 // Event listener for messages
-module.exports = (client, prefix) => {
+module.exports = (Discord, client, prefix) => {
 
   // Listen on message
   client.on('message', message => {
@@ -11,7 +11,7 @@ module.exports = (client, prefix) => {
 
       // Command for "//help"
       if (command == 'help') {
-        require('../commands/help.js')(message, prefix);
+        require('../commands/help.js')(Discord, message, prefix);
       }
 
       // Command for "//avatar @name"

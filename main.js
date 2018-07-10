@@ -36,4 +36,4 @@ client.on('ready', () => {
 const prefix = '//';
 
 // My imports
-require('./js/listeners/message_listener.js')(client, prefix);
+require('./js/listeners/message_listener.js')(Discord, client, prefix);
