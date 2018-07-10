@@ -60,7 +60,7 @@ module.exports = (Discord, message, prefix) => {
 
   // Send RichEmbed
   message.channel.send(rich_embed)
-  .then(console.log("Successful rps user win"))
+  .then(console.log("Successful rps"))
   .catch(console.error);
 
 }
