@@ -21,8 +21,8 @@ It's a Pokemon! One of my favourites.
 
 ---
 
-## Commands
-| List of commands (so far): | Description | Showcase |
+## Commands (Be sure to check back for more!)
+| List of commands: | Description | Showcase |
 | --- | --- | --- |
 | //avatar @user | Show user's avatar url | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/avatar.JPG?raw=true" width="300"> |
 | //emoji :emoji: | Show custom emoji's url | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/emoji.JPG?raw=true" width="300"> |
