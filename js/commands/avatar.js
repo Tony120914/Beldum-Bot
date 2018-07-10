@@ -12,7 +12,7 @@ module.exports = (message, prefix) => {
     .catch(console.error);
   }
   else {
-    message.reply(`_Beldum Beldum_ :anger: \`(Use it like this: ${prefix}avatar @name, or avatar unavailable.)\``)
+    message.reply(`_Beldum Beldum_ :anger: \`(Use it like this: ${prefix}avatar @user, or avatar unavailable.)\``)
     .then(console.log("Successful error reply"))
     .catch(console.error);
   }

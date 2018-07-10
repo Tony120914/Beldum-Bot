@@ -10,7 +10,7 @@ module.exports = (message, prefix) => {
   let emoji = message.client.emojis.find('name', emoji_name);
 
   if (emoji == null || emoji.url == null) {
-    message.reply(`_Beldum Beldum_ :anger: \`(Use it like this: ${prefix}emoji :custom emoji:, or it is not a custom emoji, or it is unavailable.)\``)
+    message.reply(`_Beldum Beldum_ :anger: \`(Use it like this: ${prefix}emoji :emoji:, or it is not a custom emoji, or it is unavailable.)\``)
     .then(console.log("Successful error reply"))
     .catch(console.error);
   }

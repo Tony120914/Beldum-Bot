@@ -36,22 +36,22 @@ module.exports = (Discord, client, prefix) => {
 
       // Command for "//rng num1,num2"
       else if (command.startsWith('rng')) {
-        require('../commands/rng.js')(message, prefix);
+        require('../commands/rng.js')(Discord, message, prefix);
       }
 
       // Command for "//google keywords..."
       else if (command.startsWith('google')) {
-        require('../commands/google.js')(message, prefix);
+        require('../commands/google.js')(Discord, message, prefix);
       }
 
       // Command for "//youtube keywords..."
       else if (command.startsWith('youtube')) {
-        require('../commands/youtube.js')(message, prefix);
+        require('../commands/youtube.js')(Discord, message, prefix);
       }
 
       // Command for "//rps r or p or s"
       else if (command.startsWith('rps')) {
-        require('../commands/rps.js')(message, prefix);
+        require('../commands/rps.js')(Discord, message, prefix);
       }
 
       // Command for "//tictactoe @player1 @player2"

@@ -28,7 +28,7 @@ module.exports = (Discord, message, prefix) => {
   const rich_embed = new Discord.RichEmbed()
   .setColor('DARK_GOLD')
   .setThumbnail('https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/images/374Beldum-Shiny.png')
-  .setAuthor('Beldum-Bot', 'https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/images/Bag_Ultra_Ball_Sprite.png')
+  .setAuthor('Beldum-Bot', 'https://github.com/Tony120914/Beldum-Bot/blob/master/images/Bag_Ultra_Ball_Sprite.png?raw=true')
   .addBlankField(false)
   .setDescription('Holding an [_Everstone_](https://bulbapedia.bulbagarden.net/wiki/Everstone)')
   .addField('Commands', `\`${commands}\``, true)

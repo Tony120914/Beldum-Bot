@@ -1,6 +1,6 @@
 
 // Command for ""//rps"
-module.exports = (message, prefix) => {
+module.exports = (Discord, message, prefix) => {
 
   // Rock, paper, scissors
   let rps = [':new_moon:', ':newspaper:', ':scissors:']
@@ -30,29 +30,37 @@ module.exports = (message, prefix) => {
   // Inclusive random integers from Math.random() MDN web docs
   let bot_choice = rps[Math.floor(Math.random() * (2 - 0 + 1)) + 0];
 
+  const rich_embed = new Discord.RichEmbed()
+  .setColor('DARK_GOLD')
+  .setThumbnail('https://github.com/Tony120914/Beldum-Bot/blob/master/images/rps.PNG?raw=true')
+  .setAuthor('Rock-paper-scissors')
+  .addField('You used', user_choice, true)
+  .addField('Beldum used', bot_choice, true)
+  ;
+
   // Case 1: user wins
   if (user_choice == rps[0] && bot_choice == rps[2] ||
       user_choice == rps[2] && bot_choice == rps[1] ||
       user_choice == rps[1] && bot_choice == rps[0]) {
-        message.reply(`_You used_ ${user_choice} _and Beldum used_ ${bot_choice}, _it\'s super effective!_`)
-        .then(console.log("Successful rps user win"))
-        .catch(console.error);
+        rich_embed.addField('Result', '_it\'s super effective!_', true);
   }
 
   // Case 2: bot wins
   else if (user_choice == rps[0] && bot_choice == rps[1] ||
-      user_choice == rps[1] && bot_choice == rps[2] ||
-      user_choice == rps[2] && bot_choice == rps[0]) {
-        message.reply(`_You used_ ${user_choice} _and Beldum used_ ${bot_choice}, _it\'s not very effective..._`)
-        .then(console.log("Successful rps bot win"))
-        .catch(console.error);
+           user_choice == rps[1] && bot_choice == rps[2] ||
+           user_choice == rps[2] && bot_choice == rps[0]) {
+             rich_embed.addField('Result', '_it\'s not very effective..._', true);
   }
 
   // Case 3: tie
   else {
-    message.reply(`_You used_ ${user_choice} _and Beldum used_ ${bot_choice}, _but nothing happened..._`)
-    .then(console.log("Successful rps tie"))
-    .catch(console.error);
+    rich_embed.addField('Result', '_but nothing happened..._', true);
+
   }
+
+  // Send RichEmbed
+  message.channel.send(rich_embed)
+  .then(console.log("Successful rps user win"))
+  .catch(console.error);
 
 }
