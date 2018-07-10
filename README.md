@@ -5,7 +5,7 @@ This is my Discord bot in development.
 
 It is developed in Javascript, utilizing Discordjs, Nodejs, and dotenv.
 
-Certain images used do not belong to me and is used solely for this aesthetic reasons.
+Certain images used do not belong to me and is used solely for aesthetic reasons.
 
 ---
 
