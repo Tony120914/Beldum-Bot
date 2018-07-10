@@ -29,6 +29,6 @@ It's a Pokemon! One of my favourites.
 
 ## Some examples
 
-<img src="images/rps.PNG">
+<img src="screenshots/rps.PNG">
 
-<img src="images/tictactoe.PNG">
+<img src="screenshots/tictactoe.PNG">
