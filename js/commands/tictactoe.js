@@ -35,7 +35,7 @@ module.exports = (Discord, message, client, prefix) => {
     // RichEmbed
     const rich_embed = new Discord.RichEmbed()
     .setColor('DARK_GOLD')
-    // .setThumbnail('')
+    .setThumbnail('https://github.com/Tony120914/Beldum-Bot/blob/master/images/tictactoe.png?raw=true')
     .addField('Tic-tac-toe!', initial_message, true)
 
     // Send initial message
