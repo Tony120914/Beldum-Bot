@@ -30,7 +30,7 @@ module.exports = (Discord, message, prefix) => {
   .setThumbnail('https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/images/374Beldum-Shiny.png')
   .setAuthor('Beldum-Bot', 'https://github.com/Tony120914/Beldum-Bot/blob/master/images/Bag_Ultra_Ball_Sprite.png?raw=true')
   .addBlankField(false)
-  .setDescription('Holding an [_Everstone_](https://bulbapedia.bulbagarden.net/wiki/Everstone)')
+  .setDescription('Holding an [Everstone](https://bulbapedia.bulbagarden.net/wiki/Everstone)')
   .addField('Commands', `\`${commands}\``, true)
   .addField('Descriptions', `\`${descs}\``, true)
   .addBlankField(false)

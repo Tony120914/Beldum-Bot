@@ -56,7 +56,7 @@ module.exports = (Discord, client, prefix) => {
 
       // Command for "//tictactoe @player1 @player2"
       else if (command.startsWith('tictactoe')) {
-        require('../commands/tictactoe.js')(message, client, prefix);
+        require('../commands/tictactoe.js')(Discord, message, client, prefix);
       }
 
       // No such command

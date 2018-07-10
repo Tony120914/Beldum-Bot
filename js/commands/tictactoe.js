@@ -1,6 +1,6 @@
 
 // Command for ""//tictactoe @player1 @player2"
-module.exports = (message, client, prefix) => {
+module.exports = (Discord, message, client, prefix) => {
 
   // Array of @mentions in the message
   let array_of_mentions = message.mentions.users.array();
@@ -27,13 +27,19 @@ module.exports = (message, client, prefix) => {
     var symbol = symbols[0];
 
     // Initial message, calls the user a loser if they're playing the game alone
-    let initial_message = `Tic-tac-toe game between <@${player1_id}> and <@${player2_id}> !`;
+    let initial_message = `Game match between <@${player1_id}> and <@${player2_id}>!`;
     if (player1_id == player2_id) {
-      initial_message += ' _(What a loser, playing this game with yourself :joy:)_'
+      initial_message += '\n_(What a loser, playing this game with yourself :joy:)_'
     }
 
+    // RichEmbed
+    const rich_embed = new Discord.RichEmbed()
+    .setColor('DARK_GOLD')
+    // .setThumbnail('')
+    .addField('Tic-tac-toe!', initial_message, true)
+
     // Send initial message
-    message.channel.send(initial_message)
+    message.channel.send(rich_embed)
     .then(console.log("Successful tictactoe message initialization"))
     .catch(console.error);
 
