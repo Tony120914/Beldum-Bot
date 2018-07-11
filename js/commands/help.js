@@ -4,23 +4,23 @@ module.exports = (Discord, message, prefix) => {
 
   // In format of [[command name, command description], ...]
   var array_of_commands = [
-    [prefix + 'avatar @user', 'Show user\'s avatar url'],
-    [prefix + 'emoji :emoji:', 'Show custom emoji\'s url'],
-    [prefix + 'google keywords...', 'Google search your keywords'],
-    [prefix + 'help', 'Show info and list of commands'],
-    [prefix + 'ping', 'Show Beldum-Bot\'s ping'],
-    [prefix + 'rng n1,n2', 'Random number between n1 and n2'],
-    [prefix + 'rps r or p or s', 'Play rock paper scissors with bot'],
-    [prefix + 'server icon', 'Show server icon\'s url'],
-    [prefix + 'tictactoe @p1 @p2', 'Play tictactoe with another user'],
-    [prefix + 'youtube keywords...', 'YouTube search your keywords']
+    ['avatar @user', 'Show user\'s avatar url'],
+    ['emoji :emoji:', 'Show custom emoji\'s url'],
+    ['google keywords...', 'Google search your keywords'],
+    ['help', 'Show info and list of commands'],
+    ['ping', 'Show Beldum-Bot\'s ping'],
+    ['rng n1,n2', 'Random number between n1 and n2'],
+    ['rps r or p or s', 'Play rock paper scissors with bot'],
+    ['server icon', 'Show server icon\'s url'],
+    ['tictactoe @p1 @p2', 'Play tictactoe with another user'],
+    ['youtube keywords...', 'YouTube search your keywords']
   ];
 
   // formatted string holding the array_of_commands to reply
   let commands = '';
   let descs = '';
   for (let i = 0; i < array_of_commands.length; i++) {
-    commands += array_of_commands[i][0] + '\n';
+    commands += prefix + array_of_commands[i][0] + '\n';
     descs += array_of_commands[i][1] + '\n';
   }
 
@@ -34,7 +34,8 @@ module.exports = (Discord, message, prefix) => {
   .addField('Commands', `\`${commands}\``, true)
   .addField('Descriptions', `\`${descs}\``, true)
   .addBlankField(false)
-  .addField('Source code', '[GitHub](https://github.com/Tony120914/Beldum-Bot)', false)
+  .addField('Add Beldum-Bot to another server?', 'Click [here](https://discordbots.org/bot/454764425090433034)!', true)
+  .addField('Source code', '[GitHub](https://github.com/Tony120914/Beldum-Bot)', true)
   .setTimestamp();
   ;
 
