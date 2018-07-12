@@ -50,18 +50,19 @@ module.exports = (Discord, request, message, prefix) => {
 
     let ud_def = data.list[random];
     ud_author_url += ud_def.author.replace(/ /g, '+');
+    let date = new Date(ud_def.written_on);
 
     const rich_embed = new Discord.RichEmbed()
     .setColor('DARK_GOLD')
     .setThumbnail('https://github.com/Tony120914/Beldum-Bot/blob/master/images/ud.png?raw=true')
     .setAuthor('Urban Dictionary')
-    .addField('Search result', `[${ud_def.word}](${ud_def.permalink})`, true)
+    .addField('Search result', `[${ud_def.word}](${ud_def.permalink})`.substring(0, 1024), true)
     .addBlankField(false)
-    .addField('Definition', ud_def.definition.substring(0, 1000), true)
-    .addField('Example', ud_def.example, true)
+    .addField('Definition', ud_def.definition.substring(0, 1024), true)
+    .addField('Example', ud_def.example.substring(0, 1024), true)
     .addBlankField(false)
-    .addField(`:thumbsup::skin-tone-2: ${ud_def.thumbs_up} :thumbsdown::skin-tone-2: ${ud_def.thumbs_down}`, `By: [${ud_def.author}](${ud_author_url})`, true)
-    .setFooter(`Posted ${ud_def.written_on}`)
+    .addField(`:thumbsup::skin-tone-2: ${ud_def.thumbs_up} :thumbsdown::skin-tone-2: ${ud_def.thumbs_down}`, `By: [${ud_def.author}](${ud_author_url})`.substring(0, 1024), true)
+    .setFooter(`Posted: ${date.toDateString()}`)
     ;
 
     // Send RichEmbed

@@ -22,8 +22,8 @@ module.exports = (Discord, message, prefix) => {
   .setColor('DARK_GOLD')
   .setThumbnail('https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/images/youtube.png')
   .setAuthor('Youtube')
-  .addField('Searched for', keywords, true)
-  .addField('Result', youtube_url, true)
+  .addField('Searched for', keywords.substring(0, 1024), true)
+  .addField('Result', youtube_url.substring(0, 1024), true)
 
   // Send RichEmbed
   message.channel.send(rich_embed)
