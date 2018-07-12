@@ -34,4 +34,5 @@ It's a Pokemon! One of my favourites.
 | //rps r or p or s | Play rock paper scissors with bot | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/rps.JPG?raw=true" width="300"> |
 | //server icon | Show server icon's url | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/servericon.JPG?raw=true" width="300"> |
 | //tictactoe @p1 @p2 | Play tictactoe with another user | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/tictactoe.jpg?raw=true" width="300"> |
+| //ud keywords... | Urban Dictionary (no keywords = random) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/ud.JPG?raw=true" width="300"> |
 | //youtube keywords... | YouTube search your keywords | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/youtube.JPG?raw=true" width="300"> |
