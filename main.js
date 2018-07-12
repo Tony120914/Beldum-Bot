@@ -4,11 +4,12 @@ require('dotenv').config()
 const token = process.env.TOKEN;
 const token_discordbot = process.env.TOKEN_DISCORDBOT;
 
-// Init discord
+// Init
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const DBL = require("dblapi.js");
 const dbl = new DBL(token_discordbot, client);
+var request = require('request');
 
 // Posting server count for discordbots
 dbl.on('posted', () => {
@@ -36,4 +37,4 @@ client.on('ready', () => {
 const prefix = '//';
 
 // My imports
-require('./js/listeners/message_listener.js')(Discord, client, prefix);
+require('./js/listeners/message_listener.js')(Discord, client, request, prefix);

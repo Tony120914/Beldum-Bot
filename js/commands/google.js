@@ -1,7 +1,7 @@
 
 // Command for "//google keywords..."
 module.exports = (Discord, message, prefix) => {
-  let keywords = message.content.substring((prefix + 'google ').length);
+  let keywords = message.content.substring((prefix + 'google ').length).trim();
 
   // Didn't search for anything
   if (keywords == '') {

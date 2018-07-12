@@ -1,6 +1,6 @@
 
 // Event listener for messages
-module.exports = (Discord, client, prefix) => {
+module.exports = (Discord, client, request, prefix) => {
 
   // Listen on message
   client.on('message', message => {
@@ -73,6 +73,12 @@ module.exports = (Discord, client, prefix) => {
       else if (command.startsWith('8ball')) {
         if (!have_all_permissions(client, message)) return;
         require('../commands/8ball.js')(Discord, message, prefix);
+      }
+
+      // Command for "//ud [keywords...]"
+      else if (command.startsWith('ud')) {
+        if (!have_all_permissions(client, message)) return;
+        require('../commands/ud.js')(Discord, request, message, prefix);
       }
 
       // No such command

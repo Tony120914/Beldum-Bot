@@ -1,7 +1,7 @@
 
 // Command for "//youtube keywords..."
 module.exports = (Discord, message, prefix) => {
-  let keywords = message.content.substring((prefix + 'youtube ').length);
+  let keywords = message.content.substring((prefix + 'youtube ').length).trim();
 
   // Didn't search for anything
   if (keywords == '') {

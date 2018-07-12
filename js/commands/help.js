@@ -14,6 +14,7 @@ module.exports = (Discord, message, prefix) => {
     ['rps r or p or s', 'Play rock paper scissors with bot'],
     ['server icon', 'Show server icon\'s url'],
     ['tictactoe @p1 @p2', 'Play tictactoe with another user'],
+    ['ud keywords...', 'Urban Dict. (no keywords = random)'],
     ['youtube keywords...', 'YouTube search your keywords'],
   ];
 
