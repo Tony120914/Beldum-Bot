@@ -24,7 +24,7 @@ It's a Pokemon! One of my favourites.
 ## Commands (Be sure to check back for more!)
 | List of commands: | Description | Showcase |
 | --- | --- | --- |
-| //8ball | Ask the magic 8-ball | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/8ball.JPG?raw=true" width="300"> |
+| //8ball question... | Ask the magic 8-ball | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/8ball.JPG?raw=true" width="300"> |
 | //avatar @user | Show user's avatar url | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/avatar.JPG?raw=true" width="300"> |
 | //emoji :emoji: | Show custom emoji's url | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/emoji.JPG?raw=true" width="300"> |
 | //google keywords... | Google search your keywords | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/google.JPG?raw=true" width="300"> |
