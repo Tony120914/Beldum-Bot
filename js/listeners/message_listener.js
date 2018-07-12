@@ -69,6 +69,12 @@ module.exports = (Discord, client, prefix) => {
         require('../commands/tictactoe.js')(Discord, message, client, prefix);
       }
 
+      // Command for "//8ball question..."
+      else if (command.startsWith('8ball')) {
+        if (!have_all_permissions(client, message)) return;
+        require('../commands/8ball.js')(Discord, message, prefix);
+      }
+
       // No such command
       // else {
       //   message.reply('_Beldum Beldum_ :anger: \`(Command does not exist. Use //help to search for commands.)\`')

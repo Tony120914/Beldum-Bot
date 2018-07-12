@@ -4,6 +4,7 @@ module.exports = (Discord, message, prefix) => {
 
   // In format of [[command name, command description], ...]
   var array_of_commands = [
+    ['8ball question...', 'Ask the magic 8-ball'],
     ['avatar @user', 'Show user\'s avatar url'],
     ['emoji :emoji:', 'Show custom emoji\'s url'],
     ['google keywords...', 'Google search your keywords'],
@@ -13,7 +14,7 @@ module.exports = (Discord, message, prefix) => {
     ['rps r or p or s', 'Play rock paper scissors with bot'],
     ['server icon', 'Show server icon\'s url'],
     ['tictactoe @p1 @p2', 'Play tictactoe with another user'],
-    ['youtube keywords...', 'YouTube search your keywords']
+    ['youtube keywords...', 'YouTube search your keywords'],
   ];
 
   // formatted string holding the array_of_commands to reply
