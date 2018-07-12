@@ -11,73 +11,73 @@ module.exports = (Discord, client, request, prefix) => {
 
       // Command for "//help"
       if (command == 'help') {
-        if (!have_all_permissions(client, message)) return;
+        if (!require('../helpers/check_permissions.js')(client, message)) return;
         require('../commands/help.js')(Discord, message, prefix);
       }
 
       // Command for "//avatar @name"
       else if (command.startsWith('avatar')) {
-        if (!have_all_permissions(client, message)) return;
+        if (!require('../helpers/check_permissions.js')(client, message)) return;
         require('../commands/avatar.js')(message, prefix);
       }
 
       // Command for "//emoji :custom emoji:"
       else if (command.startsWith('emoji')) {
-        if (!have_all_permissions(client, message)) return;
+        if (!require('../helpers/check_permissions.js')(client, message)) return;
         require('../commands/emoji.js')(message, prefix);
       }
 
       // Command for "//server icon"
       else if (command == 'server icon') {
-        if (!have_all_permissions(client, message)) return;
+        if (!require('../helpers/check_permissions.js')(client, message)) return;
         require('../commands/server_icon.js')(message);
       }
 
       // Command for "//ping"
       else if (command == 'ping') {
-        if (!have_all_permissions(client, message)) return;
+        if (!require('../helpers/check_permissions.js')(client, message)) return;
         require('../commands/ping.js')(message, client);
       }
 
       // Command for "//rng num1,num2"
       else if (command.startsWith('rng')) {
-        if (!have_all_permissions(client, message)) return;
+        if (!require('../helpers/check_permissions.js')(client, message)) return;
         require('../commands/rng.js')(Discord, message, prefix);
       }
 
       // Command for "//google keywords..."
       else if (command.startsWith('google')) {
-        if (!have_all_permissions(client, message)) return;
+        if (!require('../helpers/check_permissions.js')(client, message)) return;
         require('../commands/google.js')(Discord, message, prefix);
       }
 
       // Command for "//youtube keywords..."
       else if (command.startsWith('youtube')) {
-        if (!have_all_permissions(client, message)) return;
+        if (!require('../helpers/check_permissions.js')(client, message)) return;
         require('../commands/youtube.js')(Discord, message, prefix);
       }
 
       // Command for "//rps r or p or s"
       else if (command.startsWith('rps')) {
-        if (!have_all_permissions(client, message)) return;
+        if (!require('../helpers/check_permissions.js')(client, message)) return;
         require('../commands/rps.js')(Discord, message, prefix);
       }
 
       // Command for "//tictactoe @player1 @player2"
       else if (command.startsWith('tictactoe')) {
-        if (!have_all_permissions(client, message)) return;
+        if (!require('../helpers/check_permissions.js')(client, message)) return;
         require('../commands/tictactoe.js')(Discord, message, client, prefix);
       }
 
       // Command for "//8ball question..."
       else if (command.startsWith('8ball')) {
-        if (!have_all_permissions(client, message)) return;
+        if (!require('../helpers/check_permissions.js')(client, message)) return;
         require('../commands/8ball.js')(Discord, message, prefix);
       }
 
       // Command for "//ud [keywords...]"
       else if (command.startsWith('ud')) {
-        if (!have_all_permissions(client, message)) return;
+        if (!require('../helpers/check_permissions.js')(client, message)) return;
         require('../commands/ud.js')(Discord, request, message, prefix);
       }
 
@@ -89,36 +89,5 @@ module.exports = (Discord, client, request, prefix) => {
       // }
     }
   });
-
-  const required_permissions = new Map([
-    ['VIEW_CHANNEL', ' Read Text Channels & See Voice Channels'],
-    ['SEND_MESSAGES', ' Send Messages'],
-    ['EMBED_LINKS', ' Embed Links'],
-    ['READ_MESSAGE_HISTORY', ' Read Message History'],
-    ['USE_EXTERNAL_EMOJIS', ' Use External Emojis'],
-    ['ADD_REACTIONS', ' Add Reactions'],
-  ]);
-
-  // Helper functions to ensure bot is granted required permissions:
-  function have_all_permissions(client, message) {
-
-    let missing_permissions = message.guild.members.get(client.user.id).missingPermissions(Array.from(required_permissions.keys()));
-
-    for (let i = 0; i < missing_permissions.length; i++) {
-      missing_permissions[i] = required_permissions.get(missing_permissions[i]);
-    }
-
-    if (missing_permissions.length != 0) {
-        message.reply('_Beldum Beldum_ :warning:\n\n' +
-                      '\`Beldum-Bot may at one point need the following permissions to function properly.\`\n\n' +
-                      missing_permissions + '\n\n' +
-                      '\`Please update Beldum-Bot\'s role in (Server Settings -> Roles), ' +
-                      'or reinvite the bot using the updated invite link found here:\` https://discordapp.com/api/oauth2/authorize?client_id=454764425090433034&permissions=347200&scope=bot')
-        .then(console.log("Successful missing permissions reply"))
-        .catch(console.error);
-        return false;
-    }
-    return true;
-  }
 
 }
