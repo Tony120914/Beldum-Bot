@@ -4,7 +4,7 @@ module.exports = (Discord, message, prefix) => {
 
   // In format of [[command name, command description], ...]
   var array_of_commands = [
-    ['8ball question...', 'Ask the magic 8-ball'],
+    ['8ball question...', 'Ask the magic 8ball a question'],
     ['avatar @user', 'Show user\'s avatar url'],
     ['emoji :emoji:', 'Show custom emoji\'s url'],
     ['google keywords...', 'Google search your keywords'],
@@ -13,7 +13,7 @@ module.exports = (Discord, message, prefix) => {
     ['rng n1,n2', 'Random number between n1 and n2'],
     ['rps r or p or s', 'Play rock paper scissors with bot'],
     ['server icon', 'Show server icon\'s url'],
-    ['tictactoe @p1 @p2', 'Play tictactoe with another user'],
+    ['tictactoe @p1 @p2', 'Play tic tac toe with another user'],
     ['ud keywords...', 'Urban Dict. (no keywords = random)'],
     ['youtube keywords...', 'YouTube search your keywords'],
   ];
@@ -36,7 +36,8 @@ module.exports = (Discord, message, prefix) => {
   .addField('Commands', `\`${commands}\``, true)
   .addField('Descriptions', `\`${descs}\``, true)
   .addBlankField(false)
-  .addField('Add Beldum-Bot to another server?', 'Click [here](https://discordbots.org/bot/454764425090433034)!', true)
+  .addField('Are you enjoying Beldum-bot?', 'Click [here](https://discordapp.com/api/oauth2/authorize?client_id=454764425090433034&permissions=347200&scope=bot) to invite Beldum-Bot to another server!' + '\n' +
+                                            'Click [here](https://discordbots.org/bot/454764425090433034/vote) to vote for Beldum-Bot daily!', true)
   .addField('Source code', '[GitHub](https://github.com/Tony120914/Beldum-Bot)', true)
   .setTimestamp();
   ;

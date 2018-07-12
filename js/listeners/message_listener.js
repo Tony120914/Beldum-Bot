@@ -113,7 +113,7 @@ module.exports = (Discord, client, request, prefix) => {
                       '\`Beldum-Bot may at one point need the following permissions to function properly.\`\n\n' +
                       missing_permissions + '\n\n' +
                       '\`Please update Beldum-Bot\'s role in (Server Settings -> Roles), ' +
-                      'or reinvite the bot using the updated invite link found here:\` https://discordbots.org/bot/454764425090433034')
+                      'or reinvite the bot using the updated invite link found here:\` https://discordapp.com/api/oauth2/authorize?client_id=454764425090433034&permissions=347200&scope=bot')
         .then(console.log("Successful missing permissions reply"))
         .catch(console.error);
         return false;
