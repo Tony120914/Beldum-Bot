@@ -57,7 +57,7 @@ module.exports = (Discord, request, message, prefix) => {
     .setAuthor('Urban Dictionary')
     .addField('Search result', `[${ud_def.word}](${ud_def.permalink})`, true)
     .addBlankField(false)
-    .addField('Definition', ud_def.definition, true)
+    .addField('Definition', ud_def.definition.substring(0, 1000), true)
     .addField('Example', ud_def.example, true)
     .addBlankField(false)
     .addField(`:thumbsup::skin-tone-2: ${ud_def.thumbs_up} :thumbsdown::skin-tone-2: ${ud_def.thumbs_down}`, `By: [${ud_def.author}](${ud_author_url})`, true)
