@@ -13,8 +13,10 @@ It's a Pokemon! One of my favourites.
 ---
 
 ## Invite this bot!
-You can add Beldum-Bot to your Discord server using this link here:
-https://discordbots.org/bot/454764425090433034
+You can add Beldum-Bot to your Discord server by clicking here:
+
+
+[![Discord Bots](https://discordbots.org/api/widget/454764425090433034.svg)](https://discordbots.org/bot/454764425090433034)
 
 (Remember to vote as well!)
 
