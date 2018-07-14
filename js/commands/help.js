@@ -5,11 +5,11 @@ module.exports = (Discord, message, prefix) => {
   // In format of [[command name, command description], ...]
   var array_of_commands = [
     ['8ball question...', 'Ask the magic 8ball a question'],
-    ['avatar @user', 'Show user\'s avatar url'],
-    ['emoji :emoji:', 'Show custom emoji\'s url'],
+    ['avatar @user', 'Show user\'s avatar (full res)'],
+    ['emoji :emoji:', 'Show custom emoji (full res)'],
     ['google keywords...', 'Google search your keywords'],
     ['help', 'Show info and list of commands'],
-    ['icon', 'Show server icon\'s url'],
+    ['icon', 'Show server icon (full res)'],
     ['ping', 'Show Beldum-Bot\'s ping'],
     ['rng n1,n2', 'Random number between n1 and n2'],
     ['rps r or p or s', 'Play rock paper scissors with bot'],
