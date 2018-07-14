@@ -19,7 +19,7 @@ module.exports = (Discord, message, prefix) => {
   }
 
   else {
-    message.reply(`_Beldum Beldum_ :anger: \`Server icon unavailable.)\``)
+    message.reply(`_Beldum Beldum_ :anger: \`(Server icon unavailable.)\``)
     .then(console.log("Successful error reply"))
     .catch(console.error);
   }
