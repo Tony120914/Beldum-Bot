@@ -7,6 +7,7 @@ module.exports = (Discord, message, prefix) => {
     ['8ball question...', 'Ask the magic 8ball a question'],
     ['avatar @user', 'Show user\'s avatar (full res)'],
     ['emoji :emoji:', 'Show custom emoji (full res)'],
+    ['flip', 'Flip a coin'],
     ['google keywords...', 'Google search your keywords'],
     ['help', 'Show info and list of commands'],
     ['icon', 'Show server icon (full res)'],

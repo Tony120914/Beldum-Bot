@@ -81,6 +81,12 @@ module.exports = (Discord, client, request, prefix) => {
         require('../commands/ud.js')(Discord, request, message, prefix);
       }
 
+      // Command for "//flip"
+      else if (command == 'flip') {
+        if (!require('../helpers/check_permissions.js')(client, message)) return;
+        require('../commands/flip.js')(Discord, message, prefix);
+      }
+
       // No such command
       // else {
       //   message.reply('_Beldum Beldum_ :anger: \`(Command does not exist. Use //help to search for commands.)\`')
