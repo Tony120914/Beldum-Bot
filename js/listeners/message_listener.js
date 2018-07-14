@@ -27,10 +27,10 @@ module.exports = (Discord, client, request, prefix) => {
         require('../commands/emoji.js')(Discord, message, prefix);
       }
 
-      // Command for "//server icon"
-      else if (command == 'server icon') {
+      // Command for "//icon"
+      else if (command == 'icon') {
         if (!require('../helpers/check_permissions.js')(client, message)) return;
-        require('../commands/server_icon.js')(Discord, message, prefix);
+        require('../commands/icon.js')(Discord, message, prefix);
       }
 
       // Command for "//ping"

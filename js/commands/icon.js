@@ -1,5 +1,5 @@
 
-// Command for "//server icon"
+// Command for "//icon"
 module.exports = (Discord, message, prefix) => {
 
   let icon = message.guild.iconURL;
@@ -19,7 +19,7 @@ module.exports = (Discord, message, prefix) => {
   }
 
   else {
-    message.reply(`_Beldum Beldum_ :anger: \`(Use it like this: ${prefix}server icon, or server icon unavailable.)\``)
+    message.reply(`_Beldum Beldum_ :anger: \`Server icon unavailable.)\``)
     .then(console.log("Successful error reply"))
     .catch(console.error);
   }
