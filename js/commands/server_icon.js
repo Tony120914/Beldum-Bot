@@ -1,10 +1,12 @@
 
 // Command for "//server icon"
-module.exports = (Discord, message) => {
+module.exports = (Discord, message, prefix) => {
 
   let icon = message.guild.iconURL;
 
   if (icon != null) {
+
+    icon = icon.replace('.jpg', '.png');
 
     const rich_embed = new Discord.RichEmbed()
     .setColor('DARK_GOLD')
@@ -13,6 +15,12 @@ module.exports = (Discord, message) => {
 
     message.channel.send(rich_embed)
     .then(console.log("Successful icon url"))
+    .catch(console.error);
+  }
+
+  else {
+    message.reply(`_Beldum Beldum_ :anger: \`(Use it like this: ${prefix}server icon, or server icon unavailable.)\``)
+    .then(console.log("Successful error reply"))
     .catch(console.error);
   }
 

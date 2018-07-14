@@ -30,7 +30,7 @@ module.exports = (Discord, client, request, prefix) => {
       // Command for "//server icon"
       else if (command == 'server icon') {
         if (!require('../helpers/check_permissions.js')(client, message)) return;
-        require('../commands/server_icon.js')(Discord, message);
+        require('../commands/server_icon.js')(Discord, message, prefix);
       }
 
       // Command for "//ping"
