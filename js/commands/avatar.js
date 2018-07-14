@@ -1,13 +1,19 @@
 
 // Command for "//avatar <name>"
-module.exports = (message, prefix) => {
+module.exports = (Discord, message, prefix) => {
 
   // Array of @mentions in the message
   let array_of_mentions = message.mentions.users.array();
 
   // Only 1 mention and must have avatar
   if (array_of_mentions.length == 1 && message.mentions.users.first().avatar != null) {
-    message.channel.send(message.mentions.users.first().avatarURL)
+
+    const rich_embed = new Discord.RichEmbed()
+    .setColor('DARK_GOLD')
+    .setImage(message.mentions.users.first().avatarURL)
+    ;
+
+    message.channel.send(rich_embed)
     .then(console.log("Successful avatar url"))
     .catch(console.error);
   }

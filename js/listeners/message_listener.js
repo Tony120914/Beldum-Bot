@@ -18,19 +18,19 @@ module.exports = (Discord, client, request, prefix) => {
       // Command for "//avatar @name"
       else if (command.startsWith('avatar')) {
         if (!require('../helpers/check_permissions.js')(client, message)) return;
-        require('../commands/avatar.js')(message, prefix);
+        require('../commands/avatar.js')(Discord, message, prefix);
       }
 
       // Command for "//emoji :custom emoji:"
       else if (command.startsWith('emoji')) {
         if (!require('../helpers/check_permissions.js')(client, message)) return;
-        require('../commands/emoji.js')(message, prefix);
+        require('../commands/emoji.js')(Discord, message, prefix);
       }
 
       // Command for "//server icon"
       else if (command == 'server icon') {
         if (!require('../helpers/check_permissions.js')(client, message)) return;
-        require('../commands/server_icon.js')(message);
+        require('../commands/server_icon.js')(Discord, message);
       }
 
       // Command for "//ping"

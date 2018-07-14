@@ -1,6 +1,6 @@
 
 // Command for "//emoji :custom emoji:"
-module.exports = (message, prefix) => {
+module.exports = (Discord, message, prefix) => {
 
   // Format should be '<:name:id>'
   let emoji_name = message.content.substring((prefix + 'emoji ').length);
@@ -16,7 +16,12 @@ module.exports = (message, prefix) => {
   }
 
   else {
-    message.channel.send(emoji.url)
+    const rich_embed = new Discord.RichEmbed()
+    .setColor('DARK_GOLD')
+    .setImage(emoji.url)
+    ;
+
+    message.channel.send(rich_embed)
     .then(console.log("Successful emoji url"))
     .catch(console.error);
   }
