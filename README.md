@@ -1,24 +1,21 @@
 # Beldum-Bot
 <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/images/374Beldum-Shiny.png?raw=true" width="200" align="right">
 
-This is a Discord bot in development. It is developed in Javascript, utilizing node.js, discord.js, request, dotenv, and dblapi.js.
+This is a Discord bot in development. It is developed in Javascript, utilizing [node.js](https://nodejs.org/en/), [discord.js](https://discord.js.org/), [request](https://www.npmjs.com/package/request), [dotenv](https://www.npmjs.com/package/dotenv), and [dblapi.js](https://www.npmjs.com/package/dbl-api).
 
 (Certain images used do not belong to me and is used solely for aesthetic reasons.)
 
-In case you don't know what a Beldum is...
-https://bulbapedia.bulbagarden.net/wiki/Beldum_(Pok%C3%A9mon)
-
-It's a Pokemon! One of my favourites.
+What's a Beldum you ask? Well it's a [Pokemon](https://bulbapedia.bulbagarden.net/wiki/Beldum_(Pok%C3%A9mon))! One of my favourites.
 
 ---
 
 ## Invite this bot!
-You can add Beldum-Bot to your Discord server by clicking the widget here:
+You can add Beldum Bot to your Discord server by clicking the widget here:
 
 
 [![Discord Bots](https://discordbots.org/api/widget/454764425090433034.svg)](https://discordbots.org/bot/454764425090433034)
 
-(Remember to vote as well!)
+(Remember to [vote](https://discordbots.org/bot/454764425090433034/vote) as well!)
 
 ---
 
