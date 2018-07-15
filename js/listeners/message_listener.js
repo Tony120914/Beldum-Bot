@@ -4,8 +4,8 @@ module.exports = (Discord, client, request, prefix) => {
 
   // Listen on message
   client.on('message', message => {
-    // Starting with prefix "//" and ignore other bots
-    if (message.content.startsWith(prefix) && !message.author.bot) {
+    // Starting with prefix "//" and ignore other bots and guild not null and guild available
+    if (message.content.startsWith(prefix) && !message.author.bot && message.guild != null && message.guild.available) {
 
       let command = message.content.substring(prefix.length);
 
