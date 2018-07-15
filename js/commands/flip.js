@@ -10,22 +10,22 @@ module.exports = (Discord, message, prefix) => {
   ];
 
   let min = 1;
-  let max = 6000;
+  let max = 12000;
   // Inclusive random integers from Math.random() MDN web docs
   let random = Math.floor(Math.random() * (max - min + 1)) + min;
 
   let result;
   let image;
-  if (random > 3000) {
-    result = 'Heads';
+  if (random > 6001) {
+    result = 'Heads'; // 5999/12000 chance of heads
     image = result_images[0];
   }
-  else if (random > 1) {
-    result = 'Tails';
+  else if (random > 2) {
+    result = 'Tails'; // 5999/12000 chance of tails
     image = result_images[1];
   }
   else {
-    result = 'What the...';
+    result = 'What the...'; // 1/6000 chance of edge
     image = result_images[2];
   }
 
