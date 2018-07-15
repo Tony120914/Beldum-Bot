@@ -14,6 +14,10 @@ module.exports = (Discord, message, prefix) => {
   // Inclusive random integers from Math.random() MDN web docs
   let random = Math.floor(Math.random() * (max - min + 1)) + min;
 
+  const rich_embed = new Discord.RichEmbed()
+  .setColor('DARK_GOLD')
+  ;
+
   let result;
   let image;
   if (random > 6001) {
@@ -27,10 +31,10 @@ module.exports = (Discord, message, prefix) => {
   else {
     result = 'What the...'; // 1/6000 chance of edge
     image = result_images[2];
+    rich_embed.setFooter('(Fun fact: There\'s a 1/6000 chance of a coin landing on its edge!)');
   }
 
-  const rich_embed = new Discord.RichEmbed()
-  .setColor('DARK_GOLD')
+  rich_embed
   .setAuthor(result)
   .setImage(image)
   ;
