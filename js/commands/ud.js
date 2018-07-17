@@ -52,14 +52,19 @@ module.exports = (Discord, request, message, prefix) => {
     ud_author_url += ud_def.author.replace(/ /g, '+');
     let date = new Date(ud_def.written_on);
 
+    ud_def.word = check_and_change_if_empty(ud_def.word);
+    ud_def.permalink = check_and_change_if_empty(ud_def.permalink);
+    ud_def.definition = check_and_change_if_empty(ud_def.definition);
+    ud_def.example = check_and_change_if_empty(ud_def.example);
+
     const rich_embed = new Discord.RichEmbed()
     .setColor('DARK_GOLD')
     .setThumbnail('https://github.com/Tony120914/Beldum-Bot/blob/master/images/ud.png?raw=true')
     .setAuthor('Urban Dictionary')
-    .addField('Search result', `[${ud_def.word}](${ud_def.permalink})`.substring(0, 1024), true)
+    .addField('Search result', `[${ud_def.word}](${ud_def.permalink})`.substring(0, 1024 - 24) + '_ _', true)
     .addBlankField(false)
-    .addField('Definition', ud_def.definition.substring(0, 1024), true)
-    .addField('Example', ud_def.example.substring(0, 1024), true)
+    .addField('Definition', ud_def.definition.substring(0, 1024 - 24) + '_ _', true)
+    .addField('Example', ud_def.example.substring(0, 1024 - 24) + '_ _', true)
     .addBlankField(false)
     .addField(`:thumbsup::skin-tone-2: ${ud_def.thumbs_up} :thumbsdown::skin-tone-2: ${ud_def.thumbs_down}`, `By: [${ud_def.author}](${ud_author_url})`.substring(0, 1024), true)
     .setFooter(`Posted: ${date.toDateString()}`)
@@ -69,6 +74,16 @@ module.exports = (Discord, request, message, prefix) => {
     message.channel.send(rich_embed)
     .then(console.log('Successful ud search'))
     .catch(console.error);
+  }
+
+  // Helper for checking and changing empty strings to N/A
+  function check_and_change_if_empty(s) {
+    if (s.trim() == '') {
+      return 'N/A'
+    }
+    else {
+      return s;
+    }
   }
 
 }
