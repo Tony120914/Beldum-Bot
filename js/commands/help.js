@@ -9,8 +9,9 @@ module.exports = (Discord, message, prefix) => {
     ['emoji :emoji:', 'Show custom emoji (full res)'],
     ['flip', 'Flip a coin'],
     ['google keywords...', 'Google search your keywords'],
-    ['help', 'Show info and list of commands'],
+    ['help', 'Show list of commands'],
     ['icon', 'Show server icon (full res)'],
+    ['info', 'Show Beldum-Bot\'s info'],
     ['ping', 'Show Beldum-Bot\'s ping'],
     ['rng n1,n2', 'Random number between n1 and n2'],
     ['rps r or p or s', 'Play rock paper scissors with bot'],
@@ -30,16 +31,17 @@ module.exports = (Discord, message, prefix) => {
   // RichEmbed to get that awesome style
   const rich_embed = new Discord.RichEmbed()
   .setColor('DARK_GOLD')
-  .setThumbnail('https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/images/374Beldum-Shiny.png')
+  .setThumbnail('https://github.com/Tony120914/Beldum-Bot/blob/master/images/479Rotom-Pok%C3%A9dex.png?raw=true')
   .setAuthor('Beldum-Bot', 'https://github.com/Tony120914/Beldum-Bot/blob/master/images/Bag_Ultra_Ball_Sprite.png?raw=true')
   .addBlankField(false)
-  .setDescription('Holding an [Everstone](https://bulbapedia.bulbagarden.net/wiki/Everstone)')
+  .setDescription('[Rotom-Dex](https://bulbapedia.bulbagarden.net/wiki/Rotom_Pok%C3%A9dex) to the rescue!')
   .addField('Commands', `\`${commands}\``, true)
   .addField('Descriptions', `\`${descs}\``, true)
   .addBlankField(false)
-  .addField('Are you enjoying Beldum-bot?', 'Click [here](https://discordapp.com/api/oauth2/authorize?client_id=454764425090433034&permissions=347200&scope=bot) to invite Beldum-Bot to another server!' + '\n' +
-                                            'Click [here](https://discordbots.org/bot/454764425090433034/vote) to vote for Beldum-Bot daily!', true)
-  .addField('Source code', '[GitHub](https://github.com/Tony120914/Beldum-Bot)', true)
+  .addField('Need more info?', 'Use //info', true)
+  .addField('Need more help with commands?', 'Visit [here](https://github.com/Tony120914/Beldum-Bot) or [here](https://discordbots.org/bot/454764425090433034)' + '\n' +
+            'to view more detailed descriptions' + '\n' +
+            'and usage examples of commands!', true)
   .setTimestamp();
   ;
 

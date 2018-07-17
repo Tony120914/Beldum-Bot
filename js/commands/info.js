@@ -11,7 +11,7 @@ module.exports = (Discord, client, message, prefix) => {
   .addField('Prefix?', '\`//\`', true)
   .addField('List of commands?', '\`//help\`', true)
   .addBlankField(false)
-  .addField('What\'s a beldum?', 'It\'s a [Pokemon!](https://bulbapedia.bulbagarden.net/wiki/Beldum_%28Pok%C3%A9mon%29)', true)
+  .addField('What\'s a beldum?', 'It\'s a [Pokemon](https://bulbapedia.bulbagarden.net/wiki/Beldum_%28Pok%C3%A9mon%29)!', true)
   .addField('But why?...', 'Don\'t judge me, I\'m a nerd :nerd:', true)
   .addBlankField(false)
   .addField('Are you enjoying Beldum-bot?', 'Click [here](https://discordapp.com/api/oauth2/authorize?client_id=454764425090433034&permissions=347200&scope=bot) to invite Beldum-Bot to another server!' + '\n' +
