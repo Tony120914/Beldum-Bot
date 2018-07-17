@@ -4,8 +4,13 @@ module.exports = (Discord, client, request, prefix) => {
 
   // Listen on message
   client.on('message', message => {
-    // Starting with prefix "//" and ignore other bots and guild not null and guild available
-    if (message.content.startsWith(prefix) && !message.author.bot && message.guild != null && message.guild.available) {
+    // Ignore bots, and must be valid guild
+    if (message.author.bot || message.guild == null || !message.guild.available) {
+      return;
+    }
+
+    // Starting with prefix "//"
+    else if (message.content.startsWith(prefix)) {
 
       let command = message.content.substring(prefix.length);
 
@@ -87,12 +92,12 @@ module.exports = (Discord, client, request, prefix) => {
         require('../commands/flip.js')(Discord, message, prefix);
       }
 
-      // No such command
-      // else {
-      //   message.reply('_Beldum Beldum_ :anger: \`(Command does not exist. Use //help to search for commands.)\`')
-      //   .then(console.log("Successful error reply"))
-      //   .catch(console.error);
-      // }
+      // Command for "//info"
+      else if (command == 'info') {
+        if (!require('../helpers/check_permissions.js')(client, message)) return;
+        require('../commands/info.js')(Discord, client, message, prefix);
+      }
+
     }
   });
 

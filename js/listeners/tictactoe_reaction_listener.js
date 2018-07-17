@@ -62,7 +62,7 @@ module.exports = (client, message, new_message, player1_id, player2_id, turn_id,
       grid_message.edit(grid_message.content.replace(emoji, symbol))
       .then((new_mes) => {
         grid_message = new_mes;
-        console.log("Successful # tile to symbol switch");
+        console.log("Successful number to symbol switch");
       })
       .catch(console.error);
 

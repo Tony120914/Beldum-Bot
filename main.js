@@ -13,7 +13,7 @@ var request = require('request');
 
 // Posting server count for discordbots
 dbl.on('posted', () => {
-  console.log('Server count posted!');
+  console.log(`Server count posted! ${client.guilds.size}`);
 })
 dbl.on('error', e => {
  console.log(e);
@@ -26,7 +26,7 @@ client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 
   // Set bot's playing status
-  client.user.setActivity("with an Everstone, //help")
+  client.user.setActivity("with an Everstone, //info")
   .then(console.log("Successful set activity"))
   .catch(console.error);
 
