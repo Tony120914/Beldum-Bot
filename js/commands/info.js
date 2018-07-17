@@ -1,6 +1,6 @@
 
 // Command for "//info"
-module.exports = (Discord, client, message, prefix) => {
+module.exports = (Discord, client, message, prefix, creator_id) => {
 
   // RichEmbed
   const rich_embed = new Discord.RichEmbed()
@@ -16,7 +16,7 @@ module.exports = (Discord, client, message, prefix) => {
   .addBlankField(false)
   .addField('Are you enjoying Beldum-bot?', 'Click [here](https://discordapp.com/api/oauth2/authorize?client_id=454764425090433034&permissions=347200&scope=bot) to invite Beldum-Bot to another server!' + '\n' +
                                             'Click [here](https://discordbots.org/bot/454764425090433034/vote) to vote for Beldum-Bot daily!', false)
-  .addField('Creator', `<@${184111117650493440}>`, true)
+  .addField('Creator', `<@${creator_id}>`, true)
   .addField('Source code', '[GitHub](https://github.com/Tony120914/Beldum-Bot)', true)
   .setFooter(`Currently in ${client.guilds.size} servers`)
   .setTimestamp();

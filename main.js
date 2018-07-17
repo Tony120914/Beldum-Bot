@@ -36,5 +36,9 @@ client.on('ready', () => {
 // Prefix for commands
 const prefix = '//';
 
+// Creator's mention (ME!)
+// No need to hide this since anyone can just turn on dev mode and right click -> Copy ID
+const creator_id = 184111117650493440;
+
 // My imports
-require('./js/listeners/message_listener.js')(Discord, client, request, prefix);
+require('./js/listeners/message_listener.js')(Discord, client, request, prefix, creator_id);

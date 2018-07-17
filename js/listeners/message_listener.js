@@ -1,9 +1,12 @@
 
 // Event listener for messages
-module.exports = (Discord, client, request, prefix) => {
+module.exports = (Discord, client, request, prefix, creator_id) => {
 
   // Listen on message
   client.on('message', message => {
+
+    const prefix_mention = `<@${client.user.id}>`;
+
     // Ignore bots, and must be valid guild
     if (message.author.bot || message.guild == null || !message.guild.available) {
       return;
@@ -95,10 +98,24 @@ module.exports = (Discord, client, request, prefix) => {
       // Command for "//info"
       else if (command == 'info') {
         if (!require('../helpers/check_permissions.js')(client, message)) return;
-        require('../commands/info.js')(Discord, client, message, prefix);
+        require('../commands/info.js')(Discord, client, message, prefix, creator_id);
       }
 
     }
+
+    // Starting with prefix "@Beldum-Bot"
+    else if (message.content.startsWith(prefix_mention)) {
+      if (false) {
+        // Secret commands... soon...
+      }
+
+      else {
+        message.reply(':star2:_Beldum Beldum_:star2: \`(Hey there! Want to know more about me? Type //info)\`')
+        .then(console.log('Successful @bot reply'))
+        .catch(console.error);
+      }
+    }
+
   });
 
 }
