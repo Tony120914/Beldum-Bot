@@ -14,7 +14,7 @@ module.exports = (Discord, message, prefix) => {
     ;
 
     message.channel.send(rich_embed)
-    .then(console.log("Successful avatar url"))
+    .then(console.log("Successful avatar"))
     .catch(console.error);
   }
   else {

@@ -62,7 +62,7 @@ module.exports = (client, message, new_message, player1_id, player2_id, turn_id,
       grid_message.edit(grid_message.content.replace(emoji, symbol))
       .then((new_mes) => {
         grid_message = new_mes;
-        console.log("Successful number to symbol conversion");
+        console.log("Successful # tile to symbol switch");
       })
       .catch(console.error);
 
@@ -76,7 +76,7 @@ module.exports = (client, message, new_message, player1_id, player2_id, turn_id,
       let temp_message = new_message.content.replace(`<@${turn_id}>`, `<@${toggle_player(turn_id, player1_id, player2_id)}>`);
       temp_message = temp_message.replace(symbol, toggle_symbol(symbol));
       new_message.edit(temp_message)
-      .then(console.log("Successful turn and symbol switch"))
+      .then(console.log("Successful turn switch"))
       .catch(console.error);
 
       // Toggle symbols between O and X and players 1 and 2

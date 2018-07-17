@@ -14,7 +14,7 @@ module.exports = (Discord, message, prefix) => {
     ;
 
     message.channel.send(rich_embed)
-    .then(console.log("Successful icon url"))
+    .then(console.log("Successful icon"))
     .catch(console.error);
   }
 

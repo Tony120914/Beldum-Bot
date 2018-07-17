@@ -22,7 +22,7 @@ module.exports = (Discord, message, prefix) => {
     ;
 
     message.channel.send(rich_embed)
-    .then(console.log("Successful emoji url"))
+    .then(console.log("Successful emoji"))
     .catch(console.error);
   }
 

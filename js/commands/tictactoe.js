@@ -40,7 +40,7 @@ module.exports = (Discord, message, client, prefix) => {
 
     // Send initial message
     message.channel.send(rich_embed)
-    .then(console.log("Successful tictactoe message initialization"))
+    .then(console.log("Successful tictactoe introduction"))
     .catch(console.error);
 
     // Send Tic-tac-toe grid
@@ -78,7 +78,7 @@ module.exports = (Discord, message, client, prefix) => {
 
 
     })
-    .then(console.log("Successful tictactoe react (and listener) initialization"))
+    .then(console.log("Successful tictactoe react initialization"))
     .catch(console.error);
 
   }
