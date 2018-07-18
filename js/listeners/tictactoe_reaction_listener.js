@@ -9,8 +9,9 @@ module.exports = (client, message, new_message, player1_id, player2_id, turn_id,
   ];
   var will_end_game = false;
 
-  client.on('messageReactionAdd', listener = (reaction, user) => {
-    
+
+  var listener = (reaction, user) => {
+
     if (reaction.message.id == new_message.id && turn_id == user.id && !will_end_game) {
 
       let emoji;
@@ -86,7 +87,7 @@ module.exports = (client, message, new_message, player1_id, player2_id, turn_id,
       symbol = toggle_symbol(symbol);
       turn_id = toggle_player(turn_id, player1_id, player2_id);
     }
-  })
+  }; client.on('messageReactionAdd', listener);
 
 
   // Function for toggling players
