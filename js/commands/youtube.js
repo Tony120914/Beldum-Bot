@@ -11,7 +11,7 @@ module.exports = (Discord, message, prefix) => {
     return;
   }
 
-  // Youtube URL for searching
+  // YouTube URL for searching
   let youtube_url = 'https://www.youtube.com/results?search_query=';
   youtube_url += keywords;
 
@@ -21,7 +21,7 @@ module.exports = (Discord, message, prefix) => {
   const rich_embed = new Discord.RichEmbed()
   .setColor('DARK_GOLD')
   .setThumbnail('https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/images/youtube.png')
-  .setAuthor('Youtube')
+  .setAuthor('YouTube')
   .addField('Searched for', keywords.substring(0, 1024), true)
   .addField('Result', youtube_url.substring(0, 1024), true)
 
