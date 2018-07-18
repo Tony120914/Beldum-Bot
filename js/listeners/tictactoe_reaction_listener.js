@@ -9,7 +9,8 @@ module.exports = (client, message, new_message, player1_id, player2_id, turn_id,
   ];
   var will_end_game = false;
 
-  client.on('messageReactionAdd', (reaction, user) => {
+  client.on('messageReactionAdd', listener = (reaction, user) => {
+    
     if (reaction.message.id == new_message.id && turn_id == user.id && !will_end_game) {
 
       let emoji;
@@ -69,6 +70,8 @@ module.exports = (client, message, new_message, player1_id, player2_id, turn_id,
       // Check if the game has concluded
       if (didPlayerWin(symbols[0], player1_id) || didPlayerWin(symbols[1], player2_id) || didItTie()) {
         will_end_game = true;
+        // Kill this messageReactionAdd listener
+        client.removeListener('messageReactionAdd', listener);
         return;
       }
 
