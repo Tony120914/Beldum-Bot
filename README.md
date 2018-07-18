@@ -15,7 +15,7 @@ You can add Beldum Bot to your Discord server by clicking the widget here:
 
 [![Discord Bots](https://discordbots.org/api/widget/454764425090433034.svg)](https://discordbots.org/bot/454764425090433034)
 
-(Remember to [vote](https://discordbots.org/bot/454764425090433034/vote) as well!)
+(Remember to [vote](https://discordbots.org/bot/454764425090433034/vote) for the bot as well!)
 
 ---
 
@@ -27,8 +27,9 @@ You can add Beldum Bot to your Discord server by clicking the widget here:
 | //emoji :emoji: | Show the custom emoji in full resolution | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/emoji.JPG?raw=true" width="300"> |
 | //flip | Flip a coin </br> (Fun fact: There's a 1/6000 chance of a coin landing on its edge!) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/flip.JPG?raw=true" width="300"> |
 | //google keywords... | Performs a Google search using your keywords | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/google.JPG?raw=true" width="300"> |
-| //help | Show info and list of commands | You're reading it right now! |
+| //help | Show Beldum-Bot's list of commands | You're reading it right now! |
 | //icon | Show the server icon in full resolution | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/icon.JPG?raw=true" width="300"> |
+| //info | Show Beldum-Bot's info | All the info you can get is on this page! |
 | //ping | Show Beldum-Bot's ping (ms) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/ping.JPG?raw=true" width="300"> |
 | //rng n1,n2 | Generates a random number between n1 and n2 <br/> (Inclusive) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/rng.JPG?raw=true" width="300"> |
 | //rps r or p or s | Play rock paper scissors with Beldum-Bot <br/> (r=rock, p=paper, s=scissors) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/rps.JPG?raw=true" width="300"> |
