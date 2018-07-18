@@ -13,6 +13,7 @@ module.exports = (Discord, message, prefix) => {
     ['icon', 'Show server icon (full res)'],
     ['info', 'Show Beldum-Bot\'s info'],
     ['ping', 'Show Beldum-Bot\'s ping'],
+    ['report', 'Show how to report a bug'],
     ['rng n1,n2', 'Random number between n1 and n2'],
     ['rps r or p or s', 'Play rock paper scissors with bot'],
     ['tictactoe @p1 @p2', 'Play tic tac toe with another user'],

@@ -101,6 +101,12 @@ module.exports = (Discord, client, request, prefix, creator_id) => {
         require('../commands/info.js')(Discord, client, message, prefix, creator_id);
       }
 
+      // Command for "//report"
+      else if (command == 'report') {
+        if (!require('../helpers/check_permissions.js')(client, message)) return;
+        require('../commands/report.js')(Discord, message, prefix, creator_id);
+      }
+
     }
 
     // Starting with prefix "@Beldum-Bot"

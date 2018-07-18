@@ -17,7 +17,8 @@ module.exports = (Discord, client, message, prefix, creator_id) => {
   .addField('Are you enjoying Beldum-bot?', 'Click [here](https://discordapp.com/api/oauth2/authorize?client_id=454764425090433034&permissions=347200&scope=bot) to invite Beldum-Bot to another server!' + '\n' +
                                             'Click [here](https://discordbots.org/bot/454764425090433034/vote) to vote for Beldum-Bot daily!', false)
   .addBlankField(false)
-  .addField('Want to report a bug?', `Join the [Discord API server](https://discord.gg/discord-api) and private message <@${creator_id}> or create a GitHub issue [here](https://github.com/Tony120914/Beldum-Bot/issues).`, false)
+  .addField('Want to report a bug?', `Join the [Discord API server](https://discord.gg/discord-api) and private message <@${creator_id}>` + '\n' +
+            'or create a GitHub issue [here](https://github.com/Tony120914/Beldum-Bot/issues).', false)
   .addField('Creator', `<@${creator_id}>`, true)
   .addField('Source code', '[GitHub](https://github.com/Tony120914/Beldum-Bot)', true)
   .setFooter(`Currently in ${client.guilds.size} servers`)
