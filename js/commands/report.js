@@ -4,7 +4,7 @@ module.exports = (Discord, message, prefix, creator_id) => {
 
   const rich_embed = new Discord.RichEmbed()
   .setColor('DARK_GOLD')
-  .addField('You found a :bug: and you want to report it?', 'Join my [support server](https://discord.gg/V4w4Bxu) and ask away! Or create a [GitHub issue](https://github.com/Tony120914/Beldum-Bot/issues).' + '\n\n' +
+  .addField('You found a :bug: and you want to report it?', 'Join my [support server](https://discord.gg/V4w4Bxu) and report it there! Or create a [GitHub issue](https://github.com/Tony120914/Beldum-Bot/issues)!' + '\n\n' +
             'Thank you so much! Beldum-Bot will be sure to level :up:', true)
 
   // Send RichEmbed
