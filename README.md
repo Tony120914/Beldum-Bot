@@ -25,15 +25,15 @@ You can add Beldum Bot to your Discord server by clicking the widget here:
 | //8ball question... | Ask the magic 8 ball a yes/no question | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/8ball.JPG?raw=true" width="300"> |
 | //avatar @user | Show the user's avatar in full resolution | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/avatar.JPG?raw=true" width="300"> |
 | //emoji :emoji: | Show the custom emoji in full resolution | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/emoji.JPG?raw=true" width="300"> |
-| //flip | Flip a coin </br> (Fun fact: There's a 1/6000 chance of a coin landing on its edge!) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/flip.JPG?raw=true" width="300"> |
+| //flip | Flip a coin <br/><br/> (Fun fact: There's a 1/6000 chance of a coin landing on its edge!) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/flip.JPG?raw=true" width="300"> |
 | //google keywords... | Performs a Google search using your keywords | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/google.JPG?raw=true" width="300"> |
 | //help | Show Beldum-Bot's list of commands | You're reading it right now! |
 | //icon | Show the server icon in full resolution | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/icon.JPG?raw=true" width="300"> |
 | //info | Show Beldum-Bot's info | All the info you can get is on this page! |
 | //ping | Show Beldum-Bot's ping (ms) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/ping.JPG?raw=true" width="300"> |
-| //report | Show a user how to report a bug if they find one. <br/> (Join the [Discord API server](https://discord.gg/discord-api) and private message @Tony#8065 or create a [GitHub issue](https://github.com/Tony120914/Beldum-Bot/issues).) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/report.JPG?raw=true" width="300"> |
-| //rng n1,n2 | Generates a random number between n1 and n2 <br/> (Inclusive) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/rng.JPG?raw=true" width="300"> |
-| //rps r or p or s | Play rock paper scissors with Beldum-Bot <br/> (r=rock, p=paper, s=scissors) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/rps.JPG?raw=true" width="300"> |
-| //tictactoe @p1 @p2 | Play tic tac toe using reactions with another user <br/> (or by yourself) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/tictactoe.jpg?raw=true" width="300"> |
-| //ud keywords... | Performs an Urban Dictionary search using your keywords <br/> (If no keywords are provided, the search will be randomized) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/ud.JPG?raw=true" width="300"> |
+| //report | Show a user how to report a bug if they find one. <br/><br/> (Join the [Discord API server](https://discord.gg/discord-api) and private message @Tony#8065 <br/><br/> or create a [GitHub issue](https://github.com/Tony120914/Beldum-Bot/issues).) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/report.JPG?raw=true" width="300"> |
+| //rng n1,n2 | Generates a random number between n1 and n2 <br/><br/> (Inclusive) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/rng.JPG?raw=true" width="300"> |
+| //rps r or p or s | Play rock paper scissors with Beldum-Bot <br/><br/> (r=rock, p=paper, s=scissors) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/rps.JPG?raw=true" width="300"> |
+| //tictactoe @p1 @p2 | Play tic tac toe using reactions with another user <br/><br/> (or by yourself) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/tictactoe.jpg?raw=true" width="300"> |
+| //ud keywords... | Performs an Urban Dictionary search using your keywords <br/><br/> (If no keywords are provided, the search will be randomized) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/ud.JPG?raw=true" width="300"> |
 | //youtube keywords... | Performs a YouTube search using your keywords | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/youtube.JPG?raw=true" width="300"> |
