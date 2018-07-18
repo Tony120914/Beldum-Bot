@@ -42,3 +42,4 @@ const creator_id = 184111117650493440;
 
 // My imports
 require('./js/listeners/message_listener.js')(Discord, client, request, prefix, creator_id);
+require('./js/listeners/error_listener.js')(client);
