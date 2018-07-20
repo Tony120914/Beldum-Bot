@@ -1,0 +1,46 @@
+<style>
+
+  /* Bot name */
+  .bot-name {
+  	color: Gold;
+  }
+
+  /* Vote button */
+  .btn-like {
+  	background: WhiteSmoke;
+  }
+
+  /* Library */
+  .lib a {
+  	color: LightSkyBlue!important;
+  }
+
+  /* Bot Description */
+  .bot-description {
+  	color: White;
+  }
+
+  /* Bot page buttons */
+  .botpagebutton {
+  	color: DarkGoldenRod;
+  }
+
+  /* Bot tags */
+  .atag {
+  	color: DarkGoldenRod;
+  }
+
+  /* Body */
+  body {
+  	background-image: url("https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/images/discord_bot_list_background.png");
+    background-attachment: fixed;
+  	color: White;
+  }
+
+  /* GitHub README */
+  .longdescription .content {
+  	background-color: GhostWhite;
+  	color: Black;
+  }
+
+</style>
