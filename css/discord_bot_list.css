@@ -1,0 +1,60 @@
+/* CSS for Discord Bot List */
+
+/* Bot name */
+.bot-name {
+	color: Gold;
+}
+
+/* Vote button */
+.btn-like {
+	background: White;
+}
+.btn-like:hover {
+	background: LightGrey;
+}
+
+/* Library */
+.lib a {
+	color: LightBlue!important;
+}
+.lib a:hover {
+	color: LightSkyBlue!important;
+}
+
+/* Bot Description */
+.bot-description {
+	color: White;
+}
+
+/* General buttons (vote, invite, server count) */
+.btn-orange {
+	background-color: DarkOrange;
+}
+
+/* Bot page buttons */
+.botpagebutton {
+	color: DarkGoldenRod;
+}
+
+/* Bot tags */
+.atag {
+	color: DarkGoldenRod;
+}
+
+/* Owner tag */
+.owners a {
+	color: DarkRed;
+}
+
+/* GitHub README */
+.longdescription .content {
+	background-color: GhostWhite;
+	color: Black;
+}
+
+/* Body */
+body {
+	background-image: url("https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/images/discord_bot_list_background.png");
+  	background-attachment: fixed;
+	color: White;
+}
