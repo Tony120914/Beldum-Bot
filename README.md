@@ -1,5 +1,5 @@
 
-<link rel="stylesheet" href="https://cdn.rawgit.com/Tony120914/Beldum-Bot/master/discord_bot_list.css">
+<link rel="stylesheet" href="https://cdn.rawgit.com/Tony120914/Beldum-Bot/master/css/discord_bot_list.css">
 
 # Beldum-Bot
 <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/images/374Beldum-Shiny.png?raw=true" width="200" align="right">
