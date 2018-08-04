@@ -28,7 +28,7 @@ module.exports = (Discord, request, message, prefix) => {
       console.log('ud statusCode:', response && response.statusCode); // Print the response status code if a response was received
 
       let data = JSON.parse(body); // parse string -> object
-      if (data.result_type == 'no_results'){
+      if (data.list == undefined || data.list.length == 0 || data.result_type == 'no_results') {
         message.reply('Urban Dictionary has no results for this set of keywords.')
         .then(console.log('Successful ud search (no results)'))
         .catch(console.error);
