@@ -10,17 +10,21 @@ module.exports = (Discord, message, prefix) => {
 
     const rich_embed = new Discord.RichEmbed()
     .setColor('DARK_GOLD')
+    .setDescription(`${message.mentions.users.first()}'s avatar`)
     .setImage(message.mentions.users.first().avatarURL)
     ;
 
     message.channel.send(rich_embed)
-    .then(console.log("Successful avatar"))
+    .then(console.log(`Successful command reply to ${message.content}`))
     .catch(console.error);
+    return rich_embed;
   }
   else {
+    let log = `Successful error reply to ${message.content}`;
     message.reply(`_Beldum Beldum_ :anger: \`(Use it like this: ${prefix}avatar @user, or avatar unavailable.)\``)
-    .then(console.log("Successful error reply"))
+    .then(console.log(log))
     .catch(console.error);
+    return log;
   }
 
 }

@@ -3,6 +3,8 @@ const Discord = require('discord.js');
 
 module.exports = {
 
+  prefix : '//',
+
   mock_message : () => {
     let message = new Discord.Message('somechannel');
     message.channel = mock_property(message);

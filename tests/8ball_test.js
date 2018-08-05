@@ -7,15 +7,15 @@ const _8ball = require('../js/commands/8ball.js');
 
 //util
 const util = require('./util.js');
-
+let prefix = util.prefix;
 let message = util.mock_message();
 
 describe('8ball: invalid syntax', () => {
-  it('should return log string of error reply', () => {
+  it('should return an error reply logged as a string', () => {
 
-    message.content = "//8ball";
+    message.content = prefix + "8ball";
     let expected = `Successful error reply to ${message.content}`;
-    let actual = _8ball(Discord, message, '//');
+    let actual = _8ball(Discord, message, prefix);
 
     assert.equal(expected, actual);
   });
@@ -24,7 +24,7 @@ describe('8ball: invalid syntax', () => {
 describe('8ball: valid command', () => {
   it('should return RichEmbed with certain properties', () => {
 
-    message.content = "//8ball yes/no question";
+    message.content = prefix + "8ball yes/no question";
     let answers = [
       // Yes - answers
       'Oh yeah, 100%',
@@ -42,17 +42,13 @@ describe('8ball: valid command', () => {
       'Probably not',
       '_Beldum interrupts_ **NEGATIVE.**',
     ];
-    let expect = new Discord.RichEmbed()
-    .setColor('DARK_GOLD')
-    .addField(':8ball: The Magic 8-ball', 'ignore', false)
-    ;
 
-    let actual = _8ball(Discord, message, '//');
+    let actual = _8ball(Discord, message, prefix);
 
-    assert.equal(expect.color, actual.color);
-    assert.equal(expect.fields[0].name, actual.fields[0].name);
-    assert.equal(expect.fields[0].inline, actual.fields[0].inline);
+    // instance of RichEmbed
+    assert.instanceOf(actual, Discord.RichEmbed);
+
+    // 8ball reply is within answers
     assert.isTrue(answers.includes(actual.fields[0].value));
-
   })
 })
