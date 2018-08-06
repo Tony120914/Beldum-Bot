@@ -4,7 +4,7 @@ module.exports = (Discord, message, prefix) => {
 
   // [Heads, Tails, Edge]
   const result_images = [
-    'https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/images/heads.png',
+    'https://github.com/Tony120914/Beldum-Bot/blob/master/images/heads.png?raw=true',
     'https://github.com/Tony120914/Beldum-Bot/blob/master/images/tails.png?raw=true',
     'https://github.com/Tony120914/Beldum-Bot/blob/master/images/edge.jpg?raw=true'
   ];
