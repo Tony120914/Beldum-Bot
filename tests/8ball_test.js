@@ -43,12 +43,15 @@ describe('8ball: valid command', () => {
       '_Beldum interrupts_ **NEGATIVE.**',
     ];
 
-    let actual = _8ball(Discord, message, prefix);
+    // test multi times because of rng
+    for (let i = 0; i < answers.length; i++) {
+      let actual = _8ball(Discord, message, prefix);
 
-    // instance of RichEmbed
-    assert.instanceOf(actual, Discord.RichEmbed);
+      // instance of RichEmbed
+      assert.instanceOf(actual, Discord.RichEmbed);
 
-    // 8ball reply is within answers
-    assert.isTrue(answers.includes(actual.fields[0].value));
+      // 8ball reply is within answers
+      assert.isTrue(answers.includes(actual.fields[0].value));
+    }
   })
 })

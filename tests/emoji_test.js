@@ -42,7 +42,6 @@ describe('emoji: valid command', () => {
       enumerable: true,
       configurable: true,
     })
-    console.log(message.guild.emojis.find('name', 123))
 
     let actual = emoji(Discord, message, prefix);
 
