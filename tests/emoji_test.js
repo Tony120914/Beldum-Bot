@@ -46,7 +46,15 @@ describe('emoji: valid command', () => {
     let actual = emoji(Discord, message, prefix);
 
     // instance of RichEmbed
-    assert.instanceOf(actual, Discord.RichEmbed);
+    let expect = Discord.RichEmbed;
+    assert.instanceOf(actual, expect);
+    // correct description
+    expect = ':valid_emoji_name:';
+    assert.equal(expect, actual.description);
+    // correct image
+    expect = message.guild.emojis.find();
+    assert.equal(expect.url, actual.image.url);
+
 
   })
 })

@@ -36,12 +36,19 @@ describe('avatar: valid command', () => {
 
     message.content = prefix + "avatar @someone_with_avatar";
     message.mentions = {users : {array : function(){return ['@someone_with_avatar'];}}};
-    message.mentions.users.first = function(){return {avatar : 'avatar_id', avatarURL: 'avatar.png'};};
+    message.mentions.users.first = function(){return {avatar : 'avatar_id', avatarURL: {url : 'avatar.png'}};};
 
     let actual = avatar(Discord, message, prefix);
 
     // instance of RichEmbed
-    assert.instanceOf(actual, Discord.RichEmbed);
+    let expect = Discord.RichEmbed;
+    assert.instanceOf(actual, expect);
+    // correct description
+    expect = `${message.mentions.users.first()}'s avatar`;
+    assert.equal(expect, actual.description);
+    // correct image
+    expect = `${message.mentions.users.first().avatarURL}`;
+    assert.equal(expect, actual.image);
 
   })
 })
