@@ -51,7 +51,8 @@ module.exports = (Discord, message, prefix) => {
 
   // Send RichEmbed message
   message.channel.send(rich_embed)
-  .then(console.log("Successful help reply"))
+  .then(console.log(`Successful command reply to ${message.content}`))
   .catch(console.error);
+  return rich_embed;
 
 }

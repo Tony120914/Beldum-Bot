@@ -10,18 +10,22 @@ module.exports = (Discord, message, prefix) => {
 
     const rich_embed = new Discord.RichEmbed()
     .setColor('DARK_GOLD')
+    .setDescription(`${message.guild.name}'s server icon`)
     .setImage(icon)
     ;
 
     message.channel.send(rich_embed)
-    .then(console.log("Successful icon"))
+    .then(console.log(`Successful command reply to ${message.content}`))
     .catch(console.error);
+    return rich_embed;
   }
 
   else {
+    let log = `Successful error reply to ${message.content}`;
     message.reply(`_Beldum Beldum_ :anger: \`(Server icon unavailable.)\``)
-    .then(console.log("Successful error reply"))
+    .then(console.log(log))
     .catch(console.error);
+    return log;
   }
 
 }

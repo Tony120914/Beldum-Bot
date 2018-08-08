@@ -27,7 +27,8 @@ module.exports = (Discord, client, message, prefix, creator_id) => {
   ;
 
   message.channel.send(rich_embed)
-  .then(console.log('Successful info reply'))
+  .then(console.log(`Successful command reply to ${message.content}`))
   .catch(console.error);
+  return rich_embed;
 
 }
