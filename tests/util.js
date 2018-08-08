@@ -1,10 +1,14 @@
 
 const Discord = require('discord.js');
 
+const ORIGINAL_CONSOLE_LOG = console.log;
+const SUPPRESSED_CONSOLE_LOG = function(){};
+
 module.exports = {
 
   prefix : '//',
 
+  // creates a mock message
   mock_message : () => {
     let message = new Discord.Message('somechannel');
     message.channel = mock_property(message);
@@ -14,6 +18,16 @@ module.exports = {
     message.send = mock_function(message);
     return message;
   },
+
+  // toggles console.log to log or not
+  toggle_log : () => {
+    if (console.log === SUPPRESSED_CONSOLE_LOG) {
+      console.log = ORIGINAL_CONSOLE_LOG;
+    }
+    else {
+      console.log = SUPPRESSED_CONSOLE_LOG;
+    }
+  }
 
 }
 

@@ -9,6 +9,7 @@ const flip = require('../js/commands/flip.js');
 const util = require('./util.js');
 let prefix = util.prefix;
 let message = util.mock_message();
+let toggle_log = util.toggle_log;
 
 describe('flip: valid command', () => {
   it('should return RichEmbed with certain properties', () => {
@@ -31,7 +32,9 @@ describe('flip: valid command', () => {
 
     // multi tests because of rng
     for (let i = 0; i < (results.length * result_images.length); i++) {
+      toggle_log();
       let actual = flip(Discord, message, prefix);
+      toggle_log();
 
       // instance of RichEmbed
       let expect = Discord.RichEmbed;

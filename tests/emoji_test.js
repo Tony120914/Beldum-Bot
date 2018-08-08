@@ -9,6 +9,7 @@ const emoji = require('../js/commands/emoji.js');
 const util = require('./util.js');
 let prefix = util.prefix;
 let message = util.mock_message();
+let toggle_log = util.toggle_log;
 
 describe('emoji: invalid syntax or invalid emoji', () => {
   it('should return an error reply logged as a string', () => {
@@ -21,13 +22,17 @@ describe('emoji: invalid syntax or invalid emoji', () => {
       configurable: true,
     })
     let expect = `Successful error reply to ${message.content}`;
+    toggle_log();
     let actual = emoji(Discord, message, prefix);
+    toggle_log();
     assert.equal(expect, actual);
 
     // emoji doesn't exist or unavailable to server
     message.content = prefix + "emoji <:invalid_emoji_name:123456>";
     expect = `Successful error reply to ${message.content}`;
+    toggle_log();
     actual = emoji(Discord, message, prefix);
+    toggle_log();
     assert.equal(expect, actual);
 
   })
@@ -43,7 +48,9 @@ describe('emoji: valid command', () => {
       configurable: true,
     })
 
+    toggle_log();
     let actual = emoji(Discord, message, prefix);
+    toggle_log();
 
     // instance of RichEmbed
     let expect = Discord.RichEmbed;

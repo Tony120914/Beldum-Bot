@@ -9,13 +9,16 @@ const _8ball = require('../js/commands/8ball.js');
 const util = require('./util.js');
 let prefix = util.prefix;
 let message = util.mock_message();
+let toggle_log = util.toggle_log;
 
 describe('8ball: invalid syntax', () => {
   it('should return an error reply logged as a string', () => {
 
     message.content = prefix + "8ball";
     let expected = `Successful error reply to ${message.content}`;
+    toggle_log();
     let actual = _8ball(Discord, message, prefix);
+    toggle_log();
 
     assert.equal(expected, actual);
   });
@@ -45,7 +48,9 @@ describe('8ball: valid command', () => {
 
     // test multi times because of rng
     for (let i = 0; i < answers.length; i++) {
+      toggle_log();
       let actual = _8ball(Discord, message, prefix);
+      toggle_log();
 
       // instance of RichEmbed
       assert.instanceOf(actual, Discord.RichEmbed);

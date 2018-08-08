@@ -27,7 +27,7 @@ client.on('ready', () => {
 
   // Set bot's playing status
   client.user.setActivity("with an Everstone, //info")
-  .then(console.log("Successful set activity"))
+  .then(console.log(`Successful set activity to => Playing ${client.user.presence.game.name}`))
   .catch(console.error);
 
 });
