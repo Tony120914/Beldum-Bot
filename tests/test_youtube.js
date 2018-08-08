@@ -1,9 +1,9 @@
 
-// test google command
+// test youtube command
 
 const assert = require('chai').assert;
 const Discord = require('discord.js');
-const google = require('../js/commands/google.js');
+const youtube = require('../js/commands/youtube.js');
 
 //util
 const util = require('./util.js');
@@ -12,16 +12,16 @@ let message = util.mock_message();
 let toggle_log = util.toggle_log;
 
 
-describe('google: invalid syntax', () => {
+describe('youtube: invalid syntax', () => {
   it('should return an error reply logged as a string', () => {
 
     // no arguments (didn't search for anythng)
-    message.content = prefix + "google";
+    message.content = prefix + "youtube";
 
     let expect = `Successful error reply to ${message.content}`;
 
     toggle_log();
-    let actual = google(Discord, message, prefix);
+    let actual = youtube(Discord, message, prefix);
     toggle_log();
 
     assert.equal(expect, actual);
@@ -29,20 +29,20 @@ describe('google: invalid syntax', () => {
   })
 })
 
-describe('google: valid command', () => {
+describe('youtube: valid command', () => {
   it('should return RichEmbed with certain properties (casual usage)', () => {
 
-    let keywords = "what is the meaning of life?";
-    message.content = prefix + 'google ' + keywords;
+    let keywords = "rick roll";
+    message.content = prefix + 'youtube ' + keywords;
 
-    // Google URL for searching
-    let google_url = 'https://www.google.com/search?q=';
-    google_url += keywords;
+    // YouTube URL for searching
+    let youtube_url = 'https://www.youtube.com/results?search_query=';
+    youtube_url += keywords;
     // Replacing spaces with +
-    google_url = google_url.replace(/ /g, '+');
+    youtube_url = youtube_url.replace(/ /g, '+');
 
     toggle_log();
-    let actual = google(Discord, message, prefix);
+    let actual = youtube(Discord, message, prefix);
     toggle_log();
 
     // instance of RichEmbed
@@ -52,7 +52,7 @@ describe('google: valid command', () => {
     expect = keywords.substring(0, 1024);
     assert.equal(expect, actual.fields[0].value);
     // correct resulting URL
-    expect = google_url.substring(0, 1024);
+    expect = youtube_url.substring(0, 1024);
     assert.equal(expect, actual.fields[1].value);
   })
 
@@ -62,16 +62,16 @@ describe('google: valid command', () => {
     let keywords = "blah".repeat(256 + 1);
     assert.isAtLeast(keywords.length, 1024);
 
-    message.content = prefix + 'google ' + keywords;
+    message.content = prefix + 'youtube ' + keywords;
 
-    // Google URL for searching
-    let google_url = 'https://www.google.com/search?q=';
-    google_url += keywords;
+    // YouTube URL for searching
+    let youtube_url = 'https://www.youtube.com/results?search_query=';
+    youtube_url += keywords;
     // Replacing spaces with +
-    google_url = google_url.replace(/ /g, '+');
+    youtube_url = youtube_url.replace(/ /g, '+');
 
     toggle_log();
-    let actual = google(Discord, message, prefix);
+    let actual = youtube(Discord, message, prefix);
     toggle_log();
 
     // instance of RichEmbed
@@ -81,7 +81,7 @@ describe('google: valid command', () => {
     expect = keywords.substring(0, 1024);
     assert.equal(expect, actual.fields[0].value);
     // correct resulting URL
-    expect = google_url.substring(0, 1024);
+    expect = youtube_url.substring(0, 1024);
     assert.equal(expect, actual.fields[1].value);
   })
 })
