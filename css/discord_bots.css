@@ -1,0 +1,18 @@
+/* CSS for Discord Bots */
+
+/* Bot name */
+.title {
+	color: Gold;
+}
+
+/* Headers */
+.content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
+  color: goldenrod;
+}
+
+/* Body */
+body {
+  background-image: url("https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/images/discord_bot_list_background.png");
+  background-attachment: fixed;
+  color: White;
+}
