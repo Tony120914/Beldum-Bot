@@ -11,8 +11,8 @@ let prefix = util.prefix;
 let message = util.mock_message();
 let toggle_log = util.toggle_log;
 
-describe('icon: invalid icon', () => {
-  it('should return an error reply logged as a string', () => {
+describe('icon', () => {
+  it('should return an error reply logged as a string (no icon)', () => {
 
     // icon doesn't exist
     message.content = prefix + "icon";
@@ -29,10 +29,8 @@ describe('icon: invalid icon', () => {
     assert.equal(expect, actual);
 
   })
-})
 
-describe('icon: valid command', () => {
-  it('should return RichEmbed with certain properties (png => png)', () => {
+  it('should return RichEmbed with icon properties (png => png)', () => {
 
     message.content = prefix + "icon";
     Object.defineProperty(message, 'guild', {
@@ -56,7 +54,7 @@ describe('icon: valid command', () => {
     assert.equal(expect, actual.image.url);
   })
 
-  it('should return RichEmbed with certain properties (jpg => png)', () => {
+  it('should return RichEmbed with icon properties (jpg => png)', () => {
 
     message.content = prefix + "icon";
     Object.defineProperty(message, 'guild', {

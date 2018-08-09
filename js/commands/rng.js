@@ -11,22 +11,15 @@ module.exports = (Discord, message, prefix) => {
   num2 = parseInt(num2);
 
   if (comma_index == -1 || isNaN(num1) || isNaN(num2)) {
+    let log = `Successful error reply to ${message.content}`;
     message.reply(`_Beldum Beldum_ :anger: \`(Use it like this: ${prefix}rng n1,n2)\``)
-    .then(console.log("Successful error reply"))
+    .then(console.log(log))
     .catch(console.error);
-    return;
+    return log;
   }
 
-  let min = 0;
-  let max = 0;
-  if (num1 < num2) {
-    min = num1;
-    max = num2;
-  }
-  else {
-    min = num2;
-    max = num1;
-  }
+  let min = Math.min(num1, num2);
+  let max = Math.max(num1, num2);
 
   // Inclusive random integers from Math.random() MDN web docs
   let random = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -41,7 +34,8 @@ module.exports = (Discord, message, prefix) => {
   ;
 
   message.channel.send(rich_embed)
-  .then(console.log('Successful random number generated'))
+  .then(console.log(`Successful command reply to ${message.content}`))
   .catch(console.error);
+  return rich_embed;
 
 }

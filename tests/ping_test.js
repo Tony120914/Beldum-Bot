@@ -12,7 +12,7 @@ let prefix = util.prefix;
 let message = util.mock_message();
 let toggle_log = util.toggle_log;
 
-describe('ping: valid command', () => {
+describe('ping', () => {
   it('should return the client\'s ping as an integer', () => {
 
     message.content = prefix + "ping";

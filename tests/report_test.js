@@ -12,8 +12,8 @@ let creator_id = util.creator_id;
 let message = util.mock_message();
 let toggle_log = util.toggle_log;
 
-describe('report: valid command', () => {
-  it('should return RichEmbed with certain properties', () => {
+describe('report', () => {
+  it('should return RichEmbed with report properties', () => {
 
     message.content = prefix + "report";
 

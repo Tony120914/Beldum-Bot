@@ -11,8 +11,8 @@ let prefix = util.prefix;
 let message = util.mock_message();
 let toggle_log = util.toggle_log;
 
-describe('avatar: invalid syntax or invalid avatar', () => {
-  it('should return an error reply logged as a string', () => {
+describe('avatar', () => {
+  it('should return an error reply logged as a string (no arguments)', () => {
 
     // no arguments
     message.content = prefix + "avatar";
@@ -23,21 +23,23 @@ describe('avatar: invalid syntax or invalid avatar', () => {
     toggle_log();
     assert.equal(expect, actual);
 
+  })
+
+  it('should return an error reply logged as a string (no avatar)', () => {
+
     // no avatar
     message.content = prefix + "avatar @someone_without_avatar";
     message.mentions.users.array = function(){return ['@someone_without_avatar'];};
     message.mentions.users.first = function(){return {avatar : null};};
-    expect = `Successful error reply to ${message.content}`;
+    let expect = `Successful error reply to ${message.content}`;
     toggle_log();
-    actual = avatar(Discord, message, prefix);
+    let actual = avatar(Discord, message, prefix);
     toggle_log();
     assert.equal(expect, actual);
 
   })
-})
 
-describe('avatar: valid command', () => {
-  it('should return RichEmbed with certain properties', () => {
+  it('should return RichEmbed with avatar properties', () => {
 
     message.content = prefix + "avatar @someone_with_avatar";
     message.mentions = {users : {array : function(){return ['@someone_with_avatar'];}}};
@@ -58,4 +60,5 @@ describe('avatar: valid command', () => {
     assert.equal(expect, actual.image);
 
   })
+
 })

@@ -11,8 +11,8 @@ let prefix = util.prefix;
 let message = util.mock_message();
 let toggle_log = util.toggle_log;
 
-describe('flip: valid command', () => {
-  it('should return RichEmbed with certain properties', () => {
+describe('flip', () => {
+  it('should return RichEmbed with flip properties', () => {
 
     message.content = prefix + "flip";
 

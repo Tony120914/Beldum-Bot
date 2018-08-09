@@ -12,8 +12,8 @@ let message = util.mock_message();
 let toggle_log = util.toggle_log;
 
 
-describe('google: invalid syntax', () => {
-  it('should return an error reply logged as a string', () => {
+describe('google', () => {
+  it('should return an error reply logged as a string (no arguments)', () => {
 
     // no arguments (didn't search for anythng)
     message.content = prefix + "google";
@@ -27,10 +27,8 @@ describe('google: invalid syntax', () => {
     assert.equal(expect, actual);
 
   })
-})
 
-describe('google: valid command', () => {
-  it('should return RichEmbed with certain properties (casual usage)', () => {
+  it('should return RichEmbed with google properties (casual usage)', () => {
 
     let keywords = "what is the meaning of life?";
     message.content = prefix + 'google ' + keywords;
@@ -56,7 +54,7 @@ describe('google: valid command', () => {
     assert.equal(expect, actual.fields[1].value);
   })
 
-  it('should return RichEmbed with certain properties (extreme usage)', () => {
+  it('should return RichEmbed with google properties (extreme usage)', () => {
 
     // testing the 1024 character limit
     let keywords = "blah".repeat(256 + 1);

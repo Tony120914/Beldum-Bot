@@ -11,8 +11,8 @@ let prefix = util.prefix;
 let message = util.mock_message();
 let toggle_log = util.toggle_log;
 
-describe('emoji: invalid syntax or invalid emoji', () => {
-  it('should return an error reply logged as a string', () => {
+describe('emoji', () => {
+  it('should return an error reply logged as a string (no arguments)', () => {
 
     // no arguments
     message.content = prefix + "emoji";
@@ -21,25 +21,34 @@ describe('emoji: invalid syntax or invalid emoji', () => {
       enumerable: true,
       configurable: true,
     })
+
     let expect = `Successful error reply to ${message.content}`;
     toggle_log();
     let actual = emoji(Discord, message, prefix);
     toggle_log();
     assert.equal(expect, actual);
 
+  })
+
+  it('should return an error reply logged as a string (emoji unavailable)', () => {
+
     // emoji doesn't exist or unavailable to server
     message.content = prefix + "emoji <:invalid_emoji_name:123456>";
-    expect = `Successful error reply to ${message.content}`;
+    Object.defineProperty(message, 'guild', {
+      value: {emojis : {find : function(type, id){return null;}}},
+      enumerable: true,
+      configurable: true,
+    })
+
+    let expect = `Successful error reply to ${message.content}`;
     toggle_log();
-    actual = emoji(Discord, message, prefix);
+    let actual = emoji(Discord, message, prefix);
     toggle_log();
     assert.equal(expect, actual);
 
   })
-})
 
-describe('emoji: valid command', () => {
-  it('should return RichEmbed with certain properties', () => {
+  it('should return RichEmbed with emoji properties', () => {
 
     message.content = prefix + "emoji <:valid_emoji_name:123456>";
     Object.defineProperty(message, 'guild', {
@@ -61,7 +70,6 @@ describe('emoji: valid command', () => {
     // correct image
     expect = message.guild.emojis.find();
     assert.equal(expect.url, actual.image.url);
-
 
   })
 })
