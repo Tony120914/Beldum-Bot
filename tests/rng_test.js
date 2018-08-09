@@ -62,10 +62,10 @@ describe('rng', () => {
     assert.instanceOf(actual, expect);
     // check min
     expect = min;
-    assert.equal(min, actual.fields[0].value);
+    assert.equal(expect, actual.fields[0].value);
     // check max
     expect = max;
-    assert.equal(max, actual.fields[1].value);
+    assert.equal(expect, actual.fields[1].value);
     //check result inside interval of [min, max]
     let random = actual.fields[2].value.substring(1, actual.fields[2].value.length - 1);
     assert.isAtLeast(parseInt(random), min);
@@ -87,10 +87,10 @@ describe('rng', () => {
     assert.instanceOf(actual, expect);
     // check min
     expect = min;
-    assert.equal(min, actual.fields[0].value);
+    assert.equal(expect, actual.fields[0].value);
     // check max
     expect = max;
-    assert.equal(max, actual.fields[1].value);
+    assert.equal(expect, actual.fields[1].value);
     //check result inside interval of [min, max]
     let random = actual.fields[2].value.substring(1, actual.fields[2].value.length - 1);
     assert.isAtLeast(parseInt(random), min);
@@ -112,10 +112,10 @@ describe('rng', () => {
     assert.instanceOf(actual, expect);
     // check min
     expect = min;
-    assert.equal(min, actual.fields[0].value);
+    assert.equal(expect, actual.fields[0].value);
     // check max
     expect = max;
-    assert.equal(max, actual.fields[1].value);
+    assert.equal(expect, actual.fields[1].value);
     //check result inside interval of [min, max]
     let random = actual.fields[2].value.substring(1, actual.fields[2].value.length - 1);
     assert.isAtLeast(parseInt(random), min);
@@ -137,10 +137,10 @@ describe('rng', () => {
     assert.instanceOf(actual, expect);
     // check min
     expect = min;
-    assert.equal(min, actual.fields[0].value);
+    assert.equal(expect, actual.fields[0].value);
     // check max
     expect = max;
-    assert.equal(max, actual.fields[1].value);
+    assert.equal(expect, actual.fields[1].value);
     //check result inside interval of [min, max]
     let random = actual.fields[2].value.substring(1, actual.fields[2].value.length - 1);
     assert.isAtLeast(parseInt(random), min);
@@ -162,10 +162,10 @@ describe('rng', () => {
     assert.instanceOf(actual, expect);
     // check min
     expect = min;
-    assert.equal(min, actual.fields[0].value);
+    assert.equal(expect, actual.fields[0].value);
     // check max
     expect = max;
-    assert.equal(max, actual.fields[1].value);
+    assert.equal(expect, actual.fields[1].value);
     //check result inside interval of [min, max]
     let random = actual.fields[2].value.substring(1, actual.fields[2].value.length - 1);
     assert.isAtLeast(parseInt(random), min);
@@ -187,10 +187,10 @@ describe('rng', () => {
     assert.instanceOf(actual, expect);
     // check min
     expect = min;
-    assert.equal(min, actual.fields[0].value);
+    assert.equal(expect, actual.fields[0].value);
     // check max
     expect = max;
-    assert.equal(max, actual.fields[1].value);
+    assert.equal(expect, actual.fields[1].value);
     //check result inside interval of [min, max]
     let random = actual.fields[2].value.substring(1, actual.fields[2].value.length - 1);
     assert.isAtLeast(parseInt(random), min);
