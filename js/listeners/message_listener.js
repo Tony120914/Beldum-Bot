@@ -111,15 +111,26 @@ module.exports = (Discord, client, request, prefix, creator_id) => {
 
     // Starting with prefix "@Beldum-Bot"
     else if (message.content.startsWith(prefix_mention)) {
-      if (false) {
-        // Secret commands... soon...
+
+      // @bot mention by anyone (no args)
+      if (message.content == prefix_mention) {
+        if (!require('../helpers/check_permissions.js')(client, message)) return;
+        require('../commands/@bot.js')(message);
       }
 
-      else {
-        message.reply(':star2:_Beldum Beldum_:star2: \`(Hey there! Want to know more about me? Type //info)\`')
-        .then(console.log('Successful @bot reply'))
-        .catch(console.error);
+      // Admin commands below
+
+      // stop here if user is not admin
+      if (message.author.id != creator_id) return;
+
+      let command = message.content.substring(prefix_mention.length + 1);
+
+      // Command for "@bot tell @name... "message""
+      if (command.startsWith('tell')) {
+        if (!require('../helpers/check_permissions.js')(client, message)) return;
+        require('../admin_commands/tell.js')(client, message);
       }
+
     }
 
   });

@@ -7,6 +7,7 @@ const SUPPRESSED_CONSOLE_LOG = function(){};
 module.exports = {
 
   prefix : '//',
+  prefix_mention : '<@bot_id>',
   creator_id : 184111117650493440,
 
   // creates a mock message
