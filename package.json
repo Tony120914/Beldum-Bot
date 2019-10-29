@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Tony120914/Beldum-Bot#readme",
   "dependencies": {
+    "@discordjs/uws": "^10.149.0",
     "chai": "^4.1.2",
     "dblapi.js": "^2.1.0",
     "discord.js": "^11.3.2",
