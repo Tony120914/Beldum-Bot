@@ -1,6 +1,10 @@
 
 // Command for "//info"
-module.exports = (Discord, client, message, prefix, creator_id) => {
+module.exports = async (Discord, client, message, prefix, creator_id) => {
+
+  // Get total server count throughout all shards
+  let Fetch_Server_Counts = require('../helpers/utils.js').Fetch_Server_Counts;
+  const server_count = await Fetch_Server_Counts(client);
 
   // RichEmbed
   const rich_embed = new Discord.RichEmbed()
@@ -15,14 +19,13 @@ module.exports = (Discord, client, message, prefix, creator_id) => {
   .addField('Are you enjoying Beldum-bot?', 'Click [here](https://discordapp.com/api/oauth2/authorize?client_id=454764425090433034&permissions=347200&scope=bot) to invite Beldum-Bot to another server!' + '\n' +
                                             'Click [here](https://discordbots.org/bot/454764425090433034/vote) to vote for Beldum-Bot daily!', false)
   .addBlankField(false)
-  .addField('Want to report a bug?', 'Join the [support server](https://discord.gg/V4w4Bxu) and report it there!' + '\n' +
-                                     'Or alternatively create a [GitHub issue](https://github.com/Tony120914/Beldum-Bot/issues)!', false)
+  .addField('Want to report a bug?', 'Create a [GitHub issue](https://github.com/Tony120914/Beldum-Bot/issues)!', false)
   .addBlankField(false)
   .addField('Websites', '[GitHub](https://github.com/Tony120914/Beldum-Bot) (source code)' + '\n' +
                         '[Discord Bot List](https://discordbots.org/bot/454764425090433034)' + '\n' +
                         '[Discord Bots](https://bots.discord.pw/bots/454764425090433034)', true)
   .addField('Creator', `<@${creator_id}>`, true)
-  .setFooter(`Currently in ${client.guilds.size} servers`)
+  .setFooter(`Currently in ${server_count} servers`)
   .setTimestamp();
   ;
 
@@ -30,5 +33,4 @@ module.exports = (Discord, client, message, prefix, creator_id) => {
   .then(console.log(`Successful command reply to ${message.content}`))
   .catch(console.error);
   return rich_embed;
-
 }
