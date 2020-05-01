@@ -42,9 +42,7 @@ module.exports = (Discord, message, prefix) => {
   .addField('Need more info?', 'Use //info', true)
   .addField('Need more help with commands?', 'Visit [here](https://github.com/Tony120914/Beldum-Bot) or [here](https://discordbots.org/bot/454764425090433034)' + '\n' +
             'to view more detailed descriptions' + '\n' +
-            'and usage examples of commands!' + '\n' +
-            'Alternatively, you can join the' + '\n' +
-            '[support server](https://discord.gg/V4w4Bxu) for more help!'
+            'and usage examples of commands!'
             , true)
   .setTimestamp();
   ;

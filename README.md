@@ -16,9 +16,9 @@ What's a Beldum you ask? Well it's a [Pokemon](https://bulbapedia.bulbagarden.ne
 You can add Beldum Bot to your Discord server by clicking the widget here:
 
 
-[![Discord Bots](https://discordbots.org/api/widget/454764425090433034.svg)](https://discordbots.org/bot/454764425090433034)
+[![Discord Bots](https://top.gg/api/widget/454764425090433034.svg)](https://top.gg/bot/454764425090433034)
 
-(Remember to [vote](https://discordbots.org/bot/454764425090433034/vote) for the bot as well!)
+(Remember to [vote](https://top.gg/bot/454764425090433034/vote) for the bot as well!)
 
 ---
 
@@ -34,7 +34,7 @@ You can add Beldum Bot to your Discord server by clicking the widget here:
 | //icon | Show the server icon in full resolution | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/icon.JPG?raw=true" width="300"> |
 | //info | Show Beldum-Bot's info | All the info you can get is on this page! |
 | //ping | Show Beldum-Bot's ping (ms) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/ping.JPG?raw=true" width="300"> |
-| //report | Show a user how to report a bug if they find one. <br/><br/> (Join my [support server](https://discord.gg/V4w4Bxu) and report it there! <br/> Or create a [GitHub issue](https://github.com/Tony120914/Beldum-Bot/issues)!) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/report.JPG?raw=true" width="300"> |
+| //report | Show a user how to report a bug if they find one. <br/><br/> (Create a [GitHub issue](https://github.com/Tony120914/Beldum-Bot/issues)!) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/report.JPG?raw=true" width="300"> |
 | //rng n1,n2 | Generates a random number between n1 and n2 <br/><br/> (Inclusive) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/rng.JPG?raw=true" width="300"> |
 | //rps r or p or s | Play rock paper scissors with Beldum-Bot <br/><br/> (r=rock, p=paper, s=scissors) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/rps.JPG?raw=true" width="300"> |
 | //tictactoe @p1 @p2 | Play tic tac toe using reactions with another user <br/><br/> (or by yourself) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/tictactoe.jpg?raw=true" width="300"> |
