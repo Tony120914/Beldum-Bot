@@ -1,54 +1,44 @@
+const { MessageEmbed } = require("discord.js");
+const { default_embed_color } = require('../../config.json');
+const { Get_Random_Int, Reply_Successful_Command } = require('../utilities.js');
 
-// Command for "//flip"
-module.exports = (Discord, message, prefix) => {
+module.exports = {
+  name: 'flip',
+  aliases: ['coin', 'toss'],
+  description: 'Toss a coin, heads or tails.',
+  args: false,
+  usage: '',
 
-  // [Heads, Tails, Edge]
-  const results = [
-    'Heads',
-    'Tails',
-    'What the...',
-  ];
+  execute(message, arguments) {
 
-  // [Heads, Tails, Edge]
-  const result_images = [
-    'https://github.com/Tony120914/Beldum-Bot/blob/master/images/heads.png?raw=true',
-    'https://github.com/Tony120914/Beldum-Bot/blob/master/images/tails.png?raw=true',
-    'https://github.com/Tony120914/Beldum-Bot/blob/master/images/edge.jpg?raw=true'
-  ];
+    let result;
+    let image;
+    const random = Get_Random_Int(1, 12000);
+    const embed = new MessageEmbed()
 
-  let min = 1;
-  let max = 12000;
-  // Inclusive random integers from Math.random() MDN web docs
-  let random = Math.floor(Math.random() * (max - min + 1)) + min;
+    if (random > 6001) { // 5999/12000 chance of heads
+      result = 'Heads';
+      image = 'https://github.com/Tony120914/Beldum-Bot/blob/master/images/flip_heads.png?raw=true';
+    }
+    else if (random > 2) { // 5999/12000 chance of tails
+      result = 'Tails';
+      image = 'https://github.com/Tony120914/Beldum-Bot/blob/master/images/flip_tails.png?raw=true';
+    }
+    else { // 1/6000 chance of edge
+      result = 'What the...';
+      image = 'https://github.com/Tony120914/Beldum-Bot/blob/master/images/flip_edge.jpg?raw=true';
+      embed
+      .setURL('https://en.wikipedia.org/wiki/Coin_flipping')
+      .setFooter('Fun fact: There\'s a 1/6000 chance of a coin landing on its edge!');
+    }
 
-  const rich_embed = new Discord.RichEmbed()
-  .setColor('DARK_GOLD')
-  ;
+    embed
+    .setAuthor(result)
+    .setImage(image)
+    .setColor(default_embed_color);
 
-  let result;
-  let image;
-  if (random > 6001) {
-    result = results[0]; // 5999/12000 chance of heads
-    image = result_images[0];
+    Reply_Successful_Command(embed, message);
+    
+    return embed;
   }
-  else if (random > 2) {
-    result = results[1]; // 5999/12000 chance of tails
-    image = result_images[1];
-  }
-  else {
-    result = results[2]; // 1/6000 chance of edge
-    image = result_images[2];
-    rich_embed.setFooter('(Fun fact: There\'s a 1/6000 chance of a coin landing on its edge!)');
-  }
-
-  rich_embed
-  .setAuthor(result)
-  .setImage(image)
-  ;
-
-  message.channel.send(rich_embed)
-  .then(console.log(`Successful command reply to ${message.content}`))
-  .catch(console.error);
-  return rich_embed;
-
 }

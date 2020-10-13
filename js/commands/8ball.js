@@ -1,46 +1,43 @@
+const { MessageEmbed } = require("discord.js");
+const { default_embed_color } = require('../../config.json');
+const { Get_Random_Int, Reply_Successful_Command } = require("../utilities.js");
 
-// Command for "//8ball question"
-module.exports = (Discord, message, prefix) => {
+module.exports = {
+  name: '8ball',
+  aliases: ['8-ball', 'eightball', 'eight-ball'],
+  description: 'Ask the magic 8-ball a yes/no question.',
+  args: true,
+  usage: '<yes/no question>',
+  
+  execute(message, arguments) {
 
-  if (message.content == (prefix + '8ball')) {
-    let log = `Successful error reply to ${message.content}`;
-    message.reply(`_Beldum Beldum_ :anger: \`You didn't ask any questions!\``)
-    .then(console.log(log))
-    .catch(console.error);
-    return log;
+    const answers = [
+      // Yes - answers
+      ':white_check_mark: Oh yeah, 100%.',
+      ':white_check_mark: Of course!',
+      ':white_check_mark: Obviously...',
+      ':white_check_mark: Science says yes.',
+
+      // Maybe - answers
+      ':grey_question: Maybe...',
+      ':grey_question: My crystal ball is foggy...',
+
+      // No - answers
+      ':no_entry_sign: Hahaha. No.',
+      ':no_entry_sign: In your dreams...',
+      ':no_entry_sign: Nope. Nope. Nope. Nope. Nope.',
+      ':no_entry_sign: Absolutely not.',
+    ];
+    
+    const random = Get_Random_Int(0, answers.length - 1);
+
+    const embed = new MessageEmbed()
+    .addField('The Magic :8ball:-ball', answers[random], false)
+    .setColor(default_embed_color);
+
+    Reply_Successful_Command(embed, message);
+
+    return embed;
   }
-
-  const answers = [
-    // Yes - answers
-    'Oh yeah, 100%',
-    'Very likely',
-    'Science says yes',
-    '_Beldum interrupts_ **AFFIRMATIVE.**',
-
-    // Maybe - answers
-    'Maybe...',
-    '_Beldum interrupts_ **INDETERMINATE**',
-
-    // No - answers
-    'Hahaha. No.',
-    'Only in your wildest dreams',
-    'Probably not',
-    '_Beldum interrupts_ **NEGATIVE.**',
-  ];
-
-  let min = 0;
-  let max = answers.length - 1;
-  // Inclusive random integers from Math.random() MDN web docs
-  let random = Math.floor(Math.random() * (max - min + 1)) + min;
-
-  const rich_embed = new Discord.RichEmbed()
-  .setColor('DARK_GOLD')
-  .addField(':8ball: The Magic 8-ball', answers[random], false)
-  ;
-
-  message.channel.send(rich_embed)
-  .then(console.log(`Successful command reply to ${message.content}`))
-  .catch(console.error);
-  return rich_embed;
 
 }

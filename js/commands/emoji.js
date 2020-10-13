@@ -1,33 +1,35 @@
+const { MessageEmbed } = require("discord.js");
+const { default_embed_color } = require('../../config.json');
+const { Reply_Successful_Command, Reply_Usage_Error } = require('../utilities.js');
 
-// Command for "//emoji :custom emoji:"
-module.exports = (Discord, message, prefix) => {
+module.exports = {
+  name: 'emoji',
+  aliases: ['emote', 'emoticon'],
+  description: 'Get the specified custom emoji\'s image.',
+  args: true,
+  usage: '<:emoji:>',
 
-  // Format should be '<:name:id>'
-  let emoji_name = message.content.substring((prefix + 'emoji ').length);
-  // Now format should be 'name'
-  emoji_name = emoji_name.substring(emoji_name.indexOf(':') + 1, emoji_name.lastIndexOf(':'));
+  execute(message, arguments) {
 
-  let emoji = message.guild.emojis.find('name', emoji_name);
+    // Raw format of emoji should be '<:name:id>'
+    const last_colon_index = arguments[0].lastIndexOf(':');
+    const emoji_id = arguments[0].slice(last_colon_index + 1, -1);
+    const emoji = message.guild.emojis.cache.get(emoji_id);
 
-  if (emoji == null || emoji.url == null) {
-    let log = `Successful error reply to ${message.content}`;
-    message.reply(`_Beldum Beldum_ :anger: \`(Use it like this: ${prefix}emoji :emoji:, or it is not a custom emoji, or it is unavailable to this server.)\``)
-    .then(console.log(log))
-    .catch(console.error);
-    return log;
+    // Custom emojis only
+    if (emoji && emoji.url) {
+      const embed = new MessageEmbed()
+      .setAuthor(`:${emoji.name}:`)
+      .setImage(emoji.url)
+      .setColor(default_embed_color);
+
+      Reply_Successful_Command(embed, message);
+
+      return embed;
+    }
+
+    else {
+      return Reply_Usage_Error(message, this.name, this.usage, '(custom emojis in this server only)');
+    }
   }
-
-  else {
-    const rich_embed = new Discord.RichEmbed()
-    .setColor('DARK_GOLD')
-    .setDescription(`:${emoji_name}:`)
-    .setImage(emoji.url)
-    ;
-
-    message.channel.send(rich_embed)
-    .then(console.log(`Successful command reply to ${message.content}`))
-    .catch(console.error);
-    return rich_embed;
-  }
-
 }

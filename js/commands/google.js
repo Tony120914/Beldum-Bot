@@ -1,34 +1,35 @@
+const { MessageEmbed } = require("discord.js");
+const { default_embed_color, embed_field_value_limit } = require('../../config.json');
+const { Reply_Successful_Command, Reply_Usage_Error } = require('../utilities.js');
 
-// Command for "//google keywords..."
-module.exports = (Discord, message, prefix) => {
-  let keywords = message.content.substring((prefix + 'google ').length).trim();
+module.exports = {
+  name: 'google',
+  aliases: ['search'],
+  description: 'Performs a Google search with the specified keywords.',
+  args: true,
+  usage: '<keywords>',
 
-  // Didn't search for anything
-  if (keywords == '') {
-    let log = `Successful error reply to ${message.content}`;
-    message.reply(`_Beldum Beldum_ :anger: \`(Use it like this: ${prefix}google keywords...\``)
-    .then(console.log(log))
-    .catch(console.error);
-    return log;
+  execute(message, arguments) {
+
+    const keywords = arguments.join(' ');
+
+    // Enforce character limit
+    if (keywords.length > embed_field_value_limit) {
+      return Reply_Usage_Error(message, this.name, this.usage, `(keywords have exceeded ${embed_field_value_limit} characters)`);
+    }
+
+    // Google URL for searching
+    const google_url = `https://www.google.com/search?q=${encodeURI(keywords)}`;
+
+    const embed = new MessageEmbed()
+    .setThumbnail('https://github.com/Tony120914/Beldum-Bot/blob/master/images/google.png?raw=true')
+    .setAuthor('Google Search', 'https://github.com/Tony120914/Beldum-Bot/blob/master/images/google.png?raw=true')
+    .setDescription(`Click [here](${google_url}) for your search results.`)
+    .addField('Keywords', keywords)
+    .setColor(default_embed_color);
+
+    Reply_Successful_Command(embed, message);
+
+    return embed;
   }
-
-  // Google URL for searching
-  let google_url = 'https://www.google.com/search?q=';
-  google_url += keywords;
-
-  // Replacing spaces with +
-  google_url = google_url.replace(/ /g, '+');
-
-  const rich_embed = new Discord.RichEmbed()
-  .setColor('DARK_GOLD')
-  .setThumbnail('https://github.com/Tony120914/Beldum-Bot/blob/master/images/google.png?raw=true')
-  .setAuthor('Google')
-  .addField('Searched for', keywords.substring(0, 1024), true)
-  .addField('Result', google_url.substring(0, 1024), true)
-
-  // Send RichEmbed
-  message.channel.send(rich_embed)
-  .then(console.log(`Successful command reply to ${message.content}`))
-  .catch(console.error);
-  return rich_embed;
 }

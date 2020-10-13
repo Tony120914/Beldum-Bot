@@ -1,77 +1,69 @@
+const { MessageEmbed } = require("discord.js");
+const { default_embed_color } = require('../../config.json');
+const { Reply_Successful_Command, Reply_Usage_Error, Get_Random_Int } = require('../utilities.js');
 
-// Command for ""//rps"
-module.exports = (Discord, message, prefix) => {
+module.exports = {
+  name: 'rps',
+  aliases: ['rockpaperscissors'],
+  description: 'Play rock paper scissors with Beldum-Bot',
+  args: true,
+  usage: '<r or p or s>',
 
-  // Rock, paper, scissors
-  const rps_emojis = [':new_moon:',
-               ':newspaper:',
-               ':scissors:'
-              ];
-  // Win, Lose, Tie
-  const results = ['_it\'s super effective!_',
-                   '_it\'s not very effective..._',
-                   '_but nothing happened..._'
-                  ];
+  execute(message, arguments) {
 
-  let user_choice = message.content.substring((prefix + 'rps ').length);
+    // rock paper scissors object
+    const rps = [
+      {
+        names: ['r', 'rock'],
+        emoji: ":rock:",
+        strong_against: 2,
+        weak_against: 1,
+        tie_against: 0
+      },
+      {
+        names: ['p', 'paper'],
+        emoji: ":roll_of_paper:",
+        strong_against: 0,
+        weak_against: 2,
+        tie_against: 1
+      },
+      {
+        names: ['s', 'scissors'],
+        emoji: ":scissors:",
+        strong_against: 1,
+        weak_against: 0,
+        tie_against: 2
+      }
+    ];
 
-  // Validity check
-  if (user_choice != 'r' && user_choice != 'p' && user_choice != 's') {
-    let log = `Successful error reply to ${message.content}`;
-    message.reply(`_Beldum Beldum_ :anger: \`(Use it like this: ${prefix}rps r or p or s\``)
-    .then(console.log(log))
-    .catch(console.error);
-    return log;
+    // win, lose, tie messages
+    const win = ':boom: _it\'s super effective!_';
+    const lose = ':skull: _it\'s not very effective..._';
+    const tie = ':zzz: _but nothing happened._';
+
+    // User input validity check
+    const user_index = rps.findIndex(item => item.names.includes(arguments[0]));
+    if (rps[user_index]) {
+      const bot_index = Get_Random_Int(0, 2);
+      let result;
+      if (rps[user_index].strong_against == bot_index) result = win;
+      else if (rps[user_index].weak_against == bot_index) result = lose;
+      else if (rps[user_index].tie_against == bot_index) result = tie;
+
+      const embed = new MessageEmbed()
+      .setAuthor(`Rock-Paper-Scissors`)
+      .addField('You used', rps[user_index].emoji, true)
+      .addField('Beldum used', rps[bot_index].emoji, true)
+      .addField('Result', result)
+      .setColor(default_embed_color);
+
+      Reply_Successful_Command(embed, message);
+      
+      return embed;
+    }
+    else {
+      return Reply_Usage_Error(message, this.name, this.usage);
+    }
+
   }
-
-  // Convert r/p/s to emoji variant
-  if (user_choice == 'r') {
-    user_choice = rps_emojis[0];
-  }
-  else if (user_choice == 'p') {
-    user_choice = rps_emojis[1];
-  }
-  else if (user_choice == 's') {
-    user_choice = rps_emojis[2];
-  }
-
-  // Randomly choose rps for bot
-  let min = 0;
-  let max = 2;
-  // Inclusive random integers from Math.random() MDN web docs
-  let bot_choice = rps_emojis[Math.floor(Math.random() * (max - min + 1)) + min];
-
-  const rich_embed = new Discord.RichEmbed()
-  .setColor('DARK_GOLD')
-  .setThumbnail('https://github.com/Tony120914/Beldum-Bot/blob/master/images/rps.PNG?raw=true')
-  .setAuthor('Rock-paper-scissors')
-  .addField('You used', user_choice, true)
-  .addField('Beldum used', bot_choice, true)
-  ;
-
-  // Case 1: user wins
-  if (user_choice == rps_emojis[0] && bot_choice == rps_emojis[2] ||
-      user_choice == rps_emojis[2] && bot_choice == rps_emojis[1] ||
-      user_choice == rps_emojis[1] && bot_choice == rps_emojis[0]) {
-        rich_embed.addField('Result', results[0], true);
-  }
-
-  // Case 2: bot wins
-  else if (user_choice == rps_emojis[0] && bot_choice == rps_emojis[1] ||
-           user_choice == rps_emojis[1] && bot_choice == rps_emojis[2] ||
-           user_choice == rps_emojis[2] && bot_choice == rps_emojis[0]) {
-             rich_embed.addField('Result', results[1], true);
-  }
-
-  // Case 3: tie
-  else {
-    rich_embed.addField('Result', results[2], true);
-  }
-
-  // Send RichEmbed
-  message.channel.send(rich_embed)
-  .then(console.log(`Successful command reply to ${message.content}`))
-  .catch(console.error);
-  return rich_embed;
-
 }

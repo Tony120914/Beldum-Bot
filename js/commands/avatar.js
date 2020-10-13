@@ -1,30 +1,33 @@
+const { MessageEmbed } = require("discord.js");
+const { default_embed_color } = require('../../config.json');
+const { Reply_Successful_Command, Reply_Usage_Error } = require('../utilities.js');
 
-// Command for "//avatar <name>"
-module.exports = (Discord, message, prefix) => {
+module.exports = {
+  name: 'avatar',
+  aliases: ['pfp'],
+  description: 'Get the avatar image of a tagged user.',
+  args: true,
+  usage: '<@user>',
 
-  // Array of @mentions in the message
-  let array_of_mentions = message.mentions.users.array();
+  execute(message, arguments) {
 
-  // Only 1 mention and must have avatar
-  if (array_of_mentions.length == 1 && message.mentions.users.first().avatar != null) {
+    const mentions = message.mentions.users.array();
 
-    const rich_embed = new Discord.RichEmbed()
-    .setColor('DARK_GOLD')
-    .setDescription(`${message.mentions.users.first()}'s avatar`)
-    .setImage(message.mentions.users.first().avatarURL)
-    ;
+    // Only 1 mention
+    if (mentions.length == 1) {
+      
+      const embed = new MessageEmbed()
+      .setDescription(`${message.mentions.users.first()}'s avatar`)
+      .setImage(message.mentions.users.first().displayAvatarURL({ format: "png", dynamic: true, size: 4096 }))
+      .setColor(default_embed_color);
 
-    message.channel.send(rich_embed)
-    .then(console.log(`Successful command reply to ${message.content}`))
-    .catch(console.error);
-    return rich_embed;
-  }
-  else {
-    let log = `Successful error reply to ${message.content}`;
-    message.reply(`_Beldum Beldum_ :anger: \`(Use it like this: ${prefix}avatar @user, or avatar unavailable.)\``)
-    .then(console.log(log))
-    .catch(console.error);
-    return log;
+      Reply_Successful_Command(embed, message);
+
+      return embed;
+    }
+    else {
+      return Reply_Usage_Error(message, this.name, this.usage);
+    }
   }
 
 }

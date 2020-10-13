@@ -1,34 +1,35 @@
+const { MessageEmbed } = require("discord.js");
+const { default_embed_color, embed_field_value_limit } = require('../../config.json');
+const { Reply_Successful_Command, Reply_Usage_Error } = require('../utilities.js');
 
-// Command for "//youtube keywords..."
-module.exports = (Discord, message, prefix) => {
-  let keywords = message.content.substring((prefix + 'youtube ').length).trim();
+module.exports = {
+  name: 'youtube',
+  aliases: ['utube'],
+  description: 'Performs a Youtube search using the specified keywords.',
+  args: true,
+  usage: '<keywords>',
 
-  // Didn't search for anything
-  if (keywords == '') {
-    let log = `Successful error reply to ${message.content}`;
-    message.reply(`_Beldum Beldum_ :anger: \`(Use it like this: ${prefix}youtube keywords...\``)
-    .then(console.log(log))
-    .catch(console.error);
-    return log;
+  execute(message, arguments) {
+
+    const keywords = arguments.join(' ');
+
+    // Enforce character limit
+    if (keywords.length > embed_field_value_limit) {
+      return Reply_Usage_Error(message, this.name, this.usage, `(keywords have exceeded ${embed_field_value_limit} characters)`);
+    }
+
+    // YouTube URL for searching
+    const youtube_url = `https://www.youtube.com/results?search_query=${encodeURI(keywords)}`;
+
+    const embed = new MessageEmbed()
+    .setThumbnail('https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/images/youtube.png')
+    .setAuthor('YouTube Search', 'https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/images/youtube.png')
+    .setDescription(`Click [here](${youtube_url}) for your search results.`)
+    .addField('Keywords', keywords)
+    .setColor(default_embed_color);
+
+    Reply_Successful_Command(embed, message);
+
+    return embed;
   }
-
-  // YouTube URL for searching
-  let youtube_url = 'https://www.youtube.com/results?search_query=';
-  youtube_url += keywords;
-
-  // Replacing spaces with +
-  youtube_url = youtube_url.replace(/ /g, '+');
-
-  const rich_embed = new Discord.RichEmbed()
-  .setColor('DARK_GOLD')
-  .setThumbnail('https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/images/youtube.png')
-  .setAuthor('YouTube')
-  .addField('Searched for', keywords.substring(0, 1024), true)
-  .addField('Result', youtube_url.substring(0, 1024), true)
-
-  // Send RichEmbed
-  message.channel.send(rich_embed)
-  .then(console.log(`Successful command reply to ${message.content}`))
-  .catch(console.error);
-  return rich_embed;
 }

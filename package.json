@@ -1,10 +1,10 @@
 {
   "name": "Beldum-Bot",
   "version": "1.0.0",
-  "description": "",
-  "main": "main.js",
+  "description": "Discord Bot",
+  "main": "index.js",
   "scripts": {
-    "start": "node main.js",
+    "start": "node index.js",
     "test": "mocha ./tests/"
   },
   "repository": {
@@ -19,12 +19,11 @@
   },
   "homepage": "https://github.com/Tony120914/Beldum-Bot#readme",
   "dependencies": {
-    "@discordjs/uws": "^10.149.0",
     "chai": "^4.1.2",
-    "dblapi.js": "^2.1.0",
-    "discord.js": "^11.3.2",
-    "dotenv": "^6.0.0",
+    "dblapi.js": "^2.4.1",
+    "discord.js": "^12.3.1",
+    "dotenv": "^8.2.0",
     "mocha": "^5.2.0",
-    "request": "^2.87.0"
+    "node-fetch": "^2.6.1"
   }
 }

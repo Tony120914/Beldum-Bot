@@ -1,16 +1,23 @@
+const { MessageEmbed } = require("discord.js");
+const { default_embed_color } = require('../../config.json');
+const { Reply_Successful_Command } = require('../utilities.js');
 
-// Command for "//report"
-module.exports = (Discord, message, prefix, creator_id) => {
+module.exports = {
+  name: 'report',
+  aliases: ['bug', 'issue'],
+  description: 'Found a bug? Get instructions on how to report a bug',
+  args: false,
+  usage: '',
 
-  const rich_embed = new Discord.RichEmbed()
-  .setColor('DARK_GOLD')
-  .addField('You found a :bug: and you want to report it?', 'Create a [GitHub issue](https://github.com/Tony120914/Beldum-Bot/issues)!' + '\n\n' +
-            'Thank you so much! Beldum-Bot will be sure to level :up:', true)
+  execute(message, arguments) {
 
-  // Send RichEmbed
-  message.channel.send(rich_embed)
-  .then(console.log(`Successful command reply to ${message.content}`))
-  .catch(console.error);
-  return rich_embed;
-  
+    const embed = new MessageEmbed()
+    .addField('You found a :bug: and you want to report it?', 'Create a [GitHub issue](https://github.com/Tony120914/Beldum-Bot/issues)!')
+    .addField('Thank you!', 'Beldum-Bot will be sure to level :up:')
+    .setColor(default_embed_color);
+
+    Reply_Successful_Command(embed, message);
+    
+    return embed;
+  }
 }

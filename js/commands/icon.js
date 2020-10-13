@@ -1,31 +1,33 @@
+const { MessageEmbed } = require("discord.js");
+const { default_embed_color } = require('../../config.json');
+const { Reply_Successful_Command, Reply_Usage_Error } = require('../utilities.js');
 
-// Command for "//icon"
-module.exports = (Discord, message, prefix) => {
+module.exports = {
+  name: 'icon',
+  aliases: ['servericon', 'serverpicture', 'serverpfp'],
+  description: 'Get the server icon image.',
+  args: false,
+  usage: '',
 
-  let icon = message.guild.iconURL;
+  execute(message, arguments) {
 
-  if (icon != null) {
+    const icon = message.guild.iconURL({ format: "png", dynamic: true, size: 4096 });
 
-    icon = icon.replace('.jpg', '.png');
+    // Server icon must exist
+    if (icon) {
 
-    const rich_embed = new Discord.RichEmbed()
-    .setColor('DARK_GOLD')
-    .setDescription(`${message.guild.name}'s server icon`)
-    .setImage(icon)
-    ;
+      const embed = new MessageEmbed()
+      .setDescription(`${message.guild.name}'s server icon`)
+      .setImage(icon)
+      .setColor(default_embed_color);
 
-    message.channel.send(rich_embed)
-    .then(console.log(`Successful command reply to ${message.content}`))
-    .catch(console.error);
-    return rich_embed;
-  }
-
-  else {
-    let log = `Successful error reply to ${message.content}`;
-    message.reply(`_Beldum Beldum_ :anger: \`(Server icon unavailable.)\``)
-    .then(console.log(log))
-    .catch(console.error);
-    return log;
+      Reply_Successful_Command(embed, message);
+      
+      return embed;
+    }
+    else {
+      return Reply_Usage_Error(message, this.name, this.usage, '(server icon does not exist)');
+    }
   }
 
 }

@@ -1,46 +1,41 @@
 
 // Acquire token from .env
 require('dotenv').config()
-const token = process.env.TOKEN;
-const token_discordbot = process.env.TOKEN_DISCORDBOT;
 
 // Init
-const Discord = require('discord.js');
-const client = new Discord.Client();
-var request = require('request');
+const { Client } = require('discord.js');
+const client = new Client();
 
-// Posting server count for discordbots
-const DBL = require("dblapi.js");
-const dbl = new DBL(token_discordbot, client);
+if (process.env.LIVE) {
+  // Posting server count for top.gg
+  const DBL = require("dblapi.js");
+  const dbl = new DBL(process.env.TOKEN_TOPGG, client);
 
-dbl.on('posted', () => {
-  console.log(`Server count posted for shard ${client.shard.id}!`);
-})
-dbl.on('error', e => {
-console.log(e);
-})
-
-client.login(token);
+  dbl.on('posted', () => {
+    console.log(`Server count posted for shard ${client.shard.id}!`);
+  })
+  dbl.on('error', e => {
+  console.log(e);
+  })
+}
 
 // Ready check
-client.on('ready', () => {
+client.once('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 
   // Set bot's playing status
-  client.user.setActivity("with an Everstone, //info")
-  .then(console.log(`Successful set activity to => Playing ${client.user.presence.game.name}`))
+  client.user.setActivity("with an Everstone. //info", { type: "PLAYING" })
+  .then(() => console.log(`Set activity to => Playing ${client.user.presence.activities}`))
   .catch(console.error);
-
 });
 
+client.login(process.env.TOKEN)
 
-// Prefix for commands
-const prefix = '//';
+// Listen on API errors
+process.on('unhandledRejection', error => {
+	console.error('Unhandled promise rejection:', error);
+});
 
-// Creator's mention (ME!)
-// No need to hide this since anyone can just turn on dev mode and right click -> Copy ID
-const creator_id = 184111117650493440;
-
-// My imports
-require('./js/listeners/message_listener.js')(Discord, client, request, prefix, creator_id);
-require('./js/listeners/error_listener.js')(client);
+// init command handler
+const command_handler = require('./js/command_handler.js');
+command_handler(client);
