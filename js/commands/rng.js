@@ -14,7 +14,7 @@ module.exports = {
     const num1 = parseInt(arguments[0]);
     const num2 = parseInt(arguments[1]);
 
-    if (num1 && num2) {
+    if (!isNaN(num1) && !isNaN(num2)) {
       const min = Math.min(num1, num2);
       const max = Math.max(num1, num2);
       const random = Get_Random_Int(min, max);

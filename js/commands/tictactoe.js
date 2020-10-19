@@ -7,7 +7,7 @@ module.exports = {
   aliases: ['ttt', 'tic-tac-toe'],
   description: 'Play tictactoe with another user using reactions! (Please wait for the :ok: reaction before beginning.)',
   args: true,
-  usage: '<@player1 @player2',
+  usage: '<@player1> <@player2>',
 
   async execute(message, arguments) {
 

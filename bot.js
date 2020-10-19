@@ -12,7 +12,7 @@ if (process.env.LIVE) {
   const dbl = new DBL(process.env.TOKEN_TOPGG, client);
 
   dbl.on('posted', () => {
-    console.log(`Server count posted for shard ${client.shard.ids}!`);
+    console.log(`Server count posted for shard ${client.shard.ids}.`);
   })
   dbl.on('error', e => {
   console.log(e);

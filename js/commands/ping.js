@@ -4,7 +4,7 @@ const { Reply_Successful_Command } = require('../utilities.js');
 
 module.exports = {
   name: 'ping',
-  aliases: [],
+  aliases: ['pong'],
   description: 'Check Beldum-Bot\'s ping to see how its doing.',
   args: false,
   usage: '',
