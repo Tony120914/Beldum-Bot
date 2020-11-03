@@ -1,0 +1,14 @@
+{
+    "_id": {
+        "description": "MongoDB auto generated unique id",
+        "type": "Object"
+    },
+    "user_id": {
+        "description": "Discord user id",
+        "type": "string"
+    },
+    "utc": {
+        "description": "User time zone offset",
+        "type": "int"
+    }
+}

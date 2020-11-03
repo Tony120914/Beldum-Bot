@@ -18,8 +18,8 @@ module.exports = {
     },
 
     // Replies and log successful command
-    Reply_Successful_Command: (embed, message) => {
-        message.channel.send(embed)
+    Reply_Successful_Command: (reply, message) => {
+        message.reply(reply)
         .then(() => console.log(`Successful command reply to: ${message.content}`))
         .catch(console.error);
     },

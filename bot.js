@@ -1,8 +1,7 @@
-
-// Acquire token from .env
 require('dotenv').config()
+const mongodb = require("./js/mongodb.js")
 
-// Init
+// Init discord client
 const { Client } = require('discord.js');
 const client = new Client();
 
@@ -18,6 +17,11 @@ if (process.env.LIVE) {
   console.log(e);
   })
 }
+
+// Connect to MongoDB
+mongodb.connect()
+.then(() => console.log(`Successful connection to MongoDB for shard ${client.shard.ids}`))
+.catch(console.error);
 
 // Ready check
 client.once('ready', () => {
