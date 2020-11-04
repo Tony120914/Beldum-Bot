@@ -38,13 +38,15 @@ module.exports = {
   
         if (reminder) {
           const channel = discord_client.channels.cache.find(channel => channel.id == reminder.channel_id);
-          channel.send(`<@${reminder.user_id}> \n>>> ${reminder.reminder}`)
-          .then(() => console.log("Successful reminder trigger and message"))
-          .catch(console.err);
+          if (channel) {
+            channel.send(`<@${reminder.user_id}> \n>>> ${reminder.reminder}`)
+            .then(() => console.log("Successful reminder trigger and message"))
+            .catch(console.err);
 
-          await reminders_clone.deleteOne(query)
-          .then(() => console.log("Successful deletion of copy reminder"))
-          .catch(console.err);
+            await reminders_clone.deleteOne(query)
+            .then(() => console.log("Successful deletion of copy reminder"))
+            .catch(console.err);
+          }
         }
 
       }
