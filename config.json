@@ -6,6 +6,7 @@
     "embed_field_value_limit": 1024,
     "collections": {
         "users": "users",
-        "reminders": "reminders"
+        "reminders": "reminders",
+        "reminders_clone": "reminders_clone"
     }
 }

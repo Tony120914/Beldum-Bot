@@ -1,0 +1,10 @@
+{
+    "date": {
+        "fields": {
+            "date": 1
+        },
+        "options": {
+            "expireAfterSeconds": 1
+        }
+    }
+}

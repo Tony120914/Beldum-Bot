@@ -20,9 +20,10 @@ module.exports = {
   usage: '<?d?h?m> <reminder>\n//remindme utc <offset>\n//remindme show\n//remindme remove <reminder# or all>',
   
   async execute(message, arguments) {
-    
+
     const users = mongodb.get_collection(collections.users);
     const reminders = mongodb.get_collection(collections.reminders);
+    const reminders_clone = mongodb.get_collection(collections.reminders_clone);
 
     const mode = arguments[0];
     
@@ -78,7 +79,8 @@ module.exports = {
     if (mode == modes.show) {
         const embed = new MessageEmbed()
         .setDescription(`<@${message.author.id}>'s reminders`)
-        .addField("Time zone", `UTC ${user.utc}`);
+        .addField("Time zone", `UTC ${user.utc}`)
+        .setColor(default_embed_color);
 
         //populate reminders to show
         for (let i = 0; i < user_reminders.length; i++) {
@@ -101,12 +103,20 @@ module.exports = {
             const query = {
                 user_id: message.author.id,
             };
+
+            // remove all copies of reminders first so it doesn't trigger the watch
+            await reminders_clone.deleteMany(query)
+            .then(() => console.log(`Successful all reminder copies removal`))
+            .catch(console.err);
+
+            // then remove all originals
             await reminders.deleteMany(query)
             .then(() => {
                 Reply_Successful_Command("All your reminders have been removed", message);
                 console.log(`Successful all reminder removal for user id: ${message.author.id}`)
             })
             .catch(console.err);
+
             return;
         }
 
@@ -117,13 +127,21 @@ module.exports = {
         }
         else if (number >= 1 && number <= user_reminders.length) {
             // remove specific reminder
-            const to_remove = { _id: user_reminders[number-1]._id }
+            const to_remove = { _id: user_reminders[number-1]._id };
+
+            // remove specific reminder copy first so it doesn't trigger the watch
+            await reminders_clone.deleteOne(to_remove)
+            .then(() => console.log(`Successful single reminder copy removal`))
+            .catch(console.err);
+            
+            // then remove the original
             await reminders.deleteOne(to_remove)
             .then(() => {
                 Reply_Successful_Command(`Reminder #${number} has been removed.`, message);
                 console.log(`Successful single reminder removal for user id: ${message.author.id}`)
             })
             .catch(console.err);
+
             return;
         }
         else {
@@ -189,10 +207,15 @@ module.exports = {
             .setDescription(`<@${message.author.id}>\nYour reminder has been set for:`)
             .addField("Date and time", `${date.toDateString()} ${date.toLocaleTimeString()}`)
             .addField("Reminder", reminder)
-            .setThumbnail("https://github.com/Tony120914/Beldum-Bot/blob/master/images/remindme_sticky_note.png?raw=true");
+            .setThumbnail("https://github.com/Tony120914/Beldum-Bot/blob/master/images/remindme_sticky_note.png?raw=true")
+            .setColor(default_embed_color);
             Reply_Successful_Command(embed, message);
             console.log(`Successful reminder for user id: ${message.author.id} in channel id: ${message.channel.id}`)
         })
+        .catch(console.err);
+        // send a copy of the reminder for the watch
+        await reminders_clone.insertOne(insert)
+        .then(() => console.log(`Successful reminder copy uploaded`))
         .catch(console.err);
     }
     // ?am/pm format

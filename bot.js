@@ -1,5 +1,5 @@
 require('dotenv').config()
-const mongodb = require("./js/mongodb.js")
+const mongodb = require("./js/mongodb.js");
 
 // Init discord client
 const { Client } = require('discord.js');
@@ -14,13 +14,18 @@ if (process.env.LIVE) {
     console.log(`Server count posted for shard ${client.shard.ids}.`);
   })
   dbl.on('error', e => {
-  console.log(e);
+    console.log(e);
   })
 }
 
 // Connect to MongoDB
 mongodb.connect()
 .then(() => console.log(`Successful connection to MongoDB for shard ${client.shard.ids}`))
+.then(() => {
+  // Watch MongoDB collection(s)
+  mongodb.trigger_on_reminder_date(client);
+  console.log("Started reminder date watch")
+})
 .catch(console.error);
 
 // Ready check
