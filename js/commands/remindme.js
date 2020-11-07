@@ -2,6 +2,7 @@ const { MessageEmbed } = require("discord.js");
 const { default_embed_color, collections } = require('../../config.json');
 const { Reply_Successful_Command, Reply_Usage_Error } = require('../utilities.js');
 const mongodb = require("../mongodb.js");
+const chrono = require('chrono-node');
 
 const remindme_message_limit = 500;
 const remindme_count_limit = 10;
@@ -15,9 +16,14 @@ const modes = {
 module.exports = {
   name: 'remindme',
   aliases: ['remind', 'reminder', 'stickynote'],
-  description: '**BETA** Reminds you of the specified reminder at the specified time (you can only have up to 10 reminders).',
+  description: 'Reminds you of the specified reminder at the specified time (you can only have up to 10 reminders).\n' +
+    '\n**All //remindme commands:**' +
+    '\n`//remindme <reminder>` sets a reminder.' +
+    '\n`//remindme utc <offset>` sets the user\'s time zone.' +
+    '\n`//remindme show` shows the user\'s current reminders.' +
+    '\n`//remindme remove <reminder# or all>` removes the user\'s specified reminder # or all their reminders.',
   args: true,
-  usage: '<?d?h?m> <reminder>\n//remindme utc <offset>\n//remindme show\n//remindme remove <reminder# or all>',
+  usage: '<reminder>',
   
   async execute(message, arguments) {
 
@@ -51,7 +57,7 @@ module.exports = {
         .then(() => {
             let date = new Date();
             date.setHours(date.getHours() + offset);
-            Reply_Successful_Command(`\nYour time zone is set to **UTC ${offset}**.\nIt should be **${date.toDateString()} ${date.toLocaleTimeString()}** for you right now.\n(Does not account for daylight savings.)`, message);
+            Reply_Successful_Command(`\nYour time zone is set to **UTC ${offset}**.\nIt should be **${date.toDateString()} ${date.toLocaleTimeString()}** for you right now (does not account for daylight savings).\nYou can always change your time zone again with \`//remindme utc <offset>\``, message);
             console.log(`Successful upsert UTC: ${offset} for user id: ${message.author.id}`)
         })
         .catch(console.err);
@@ -77,9 +83,13 @@ module.exports = {
 
     // MODE: show
     if (mode == modes.show) {
+        
+        let date = new Date();
+        date.setHours(date.getHours() + user.utc);
+
         const embed = new MessageEmbed()
         .setDescription(`<@${message.author.id}>'s reminders`)
-        .addField("Time zone", `UTC ${user.utc}`)
+        .addField("Time zone", `UTC ${user.utc}, ${date.toDateString()} ${date.toLocaleTimeString()}\n(Wrong? Use \`//remindme utc <offset>\` to change your time zone.)`)
         .setColor(default_embed_color);
 
         //populate reminders to show
@@ -155,79 +165,51 @@ module.exports = {
         Reply_Successful_Command(`You cannot have more than ${remindme_count_limit} reminders.`, message);
         return;
     }
-    
-    // ?d?h?m format
-    if (/^(\d+d)?(\d+h)?(\d+m)?$/.test(mode)) {
-        // parse reminder
-        const reminder = arguments.slice(1).join(' ').slice(0, remindme_message_limit);
-        if (!reminder) {
-            Reply_Usage_Error(message, this.name, this.usage, "\nYou want me to remind you to do what?");
-            return;
-        }
 
-        // parse days/hours/minutes
-        let days = mode.match(/\d+d/);
-        let hours = mode.match(/\d+h/);
-        let minutes = mode.match(/\d+m/);
+    // parse reminder into string
+    const reminder = arguments.join(' ').slice(0, remindme_message_limit);
 
-        // reminder offset from current time
-        let date = new Date();
-        if (days) {
-            days = parseInt(days[0].slice(0, -1));
-            date.setDate(date.getDate() + days);
-        }
-        if (hours) {
-            hours = parseInt(hours[0].slice(0, -1));
-            date.setHours(date.getHours() + hours);
-        }
-        if (minutes) {
-            minutes = parseInt(minutes[0].slice(0, -1));
-            date.setMinutes(date.getMinutes() + minutes);
-        }
-
-        // make sure the reminder is at least some minutes
-        let date2 = new Date();
-        let diff = Math.abs(date2 - date) / 1000 / 60;
-        if (diff < remindme_min_minutes - 1) {
-            Reply_Successful_Command(`Reminder must be at least ${remindme_min_minutes} minutes.`, message)
-            return;
-        }
-
-        // insert reminder
-        const insert = {
-            user_id: message.author.id,
-            channel_id: message.channel.id,
-            date: date,
-            reminder: reminder,
-        };
-        await reminders.insertOne(insert)
-        .then(() => {
-            date.setHours(date.getHours() + user.utc);
-            const embed = new MessageEmbed()
-            .setDescription(`<@${message.author.id}>\nYour reminder has been set for:`)
-            .addField("Date and time", `${date.toDateString()} ${date.toLocaleTimeString()}`)
-            .addField("Reminder", reminder)
-            .setThumbnail("https://github.com/Tony120914/Beldum-Bot/blob/master/images/remindme_sticky_note.png?raw=true")
-            .setColor(default_embed_color);
-            Reply_Successful_Command(embed, message);
-            console.log(`Successful reminder for user id: ${message.author.id} in channel id: ${message.channel.id}`)
-        })
-        .catch(console.err);
-        // send a copy of the reminder for the watch
-        await reminders_clone.insertOne(insert)
-        .then(() => console.log(`Successful reminder copy uploaded`))
-        .catch(console.err);
-    }
-    // ?am/pm format
-    else if (/TODO/.test(mode)) {
-        // TODO
-    }
-    // wrong mode
-    else {
-        Reply_Usage_Error(message, this.name, this.usage);
+    // NLP parse the reminder with chrono-node
+    const nlp = chrono.parse(reminder, new Date(), { forwardDate: true })[0];
+    if (!nlp || !nlp.start) {
+        Reply_Successful_Command("Sorry, I couldn't understand your reminder. Can you be more concise with the date/time?", message);
         return;
     }
+    const date = nlp.start.date();
+    date.setHours(date.getHours() - user.utc); // convert to utc
 
+    // make sure the reminder is at least some minutes
+    let diff = (date - new Date()) / 1000 / 60;
+    if (diff < remindme_min_minutes - 1) {
+        Reply_Successful_Command(`Reminder must be at least ${remindme_min_minutes} minutes from now.`, message)
+        return;
+    }
+    
+    // insert reminder
+    const insert = {
+        user_id: message.author.id,
+        channel_id: message.channel.id,
+        date: date,
+        reminder: reminder,
+    };
+    await reminders.insertOne(insert)
+    .then(() => {
+        date.setHours(date.getHours() + user.utc);
+        const embed = new MessageEmbed()
+        .setDescription(`<@${message.author.id}> Your reminder has been set for:`)
+        .addField("Date and time", `${date.toDateString()} ${date.toLocaleTimeString()}`)
+        .addField("Reminder", reminder)
+        .addField("How to manage reminders?", "`//help remindme`")
+        .setThumbnail("https://github.com/Tony120914/Beldum-Bot/blob/master/images/remindme_sticky_note.png?raw=true")
+        .setColor(default_embed_color);
+        Reply_Successful_Command(embed, message);
+        console.log(`Successful reminder for user id: ${message.author.id} in channel id: ${message.channel.id}`)
+    })
+    .catch(console.err);
+    // send a copy of the reminder for the watch
+    await reminders_clone.insertOne(insert)
+    .then(() => console.log(`Successful reminder copy uploaded`))
+    .catch(console.err);
     
   }
 

@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Tony120914/Beldum-Bot#readme",
   "dependencies": {
+    "chrono-node": "^2.1.9",
     "dblapi.js": "^2.4.1",
     "discord.js": "^12.4.1",
     "dotenv": "^8.2.0",

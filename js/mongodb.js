@@ -31,14 +31,15 @@ module.exports = {
   trigger_on_reminder_date: (discord_client) => {
     reminder_date_stream.on("change", async next => {
       if (next && next.operationType == "delete") {
-        const reminders_clone = database.collection(collections.reminders_clone);
 
+        // find the reminder clone that was just deleted from TTL to recover data
+        const reminders_clone = database.collection(collections.reminders_clone);
         const query = { _id: next.documentKey._id };
         const reminder = await reminders_clone.findOne(query);
   
         if (reminder) {
           const channel = discord_client.channels.cache.find(channel => channel.id == reminder.channel_id);
-          if (channel) {
+          if (channel) { // prevent shards not responsible for this channel to ignore
             channel.send(`<@${reminder.user_id}> \n>>> ${reminder.reminder}`)
             .then(() => console.log("Successful reminder trigger and message"))
             .catch(console.err);
