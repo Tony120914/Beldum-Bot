@@ -40,7 +40,7 @@ module.exports = {
         const offset_upper_limit = +14.0;
         const offset = parseFloat(arguments[1]);
         if (isNaN(offset) || offset < offset_lower_limit || offset > offset_upper_limit) {
-            Reply_Usage_Error(message, this.name, this.usage, `\n(UTC timezone offsets can be numbers only between ${offset_lower_limit} and ${offset_upper_limit} inclusively)`);
+            Reply_Successful_Command(`(UTC timezone offsets can be numbers only between ${offset_lower_limit} and ${offset_upper_limit} inclusively)`, message);
             return;
         }
 
@@ -132,7 +132,7 @@ module.exports = {
 
         number = parseInt(number);
         if (isNaN(number)) {
-            Reply_Usage_Error(message, this.name, this.usage, "\nWhich reminder number do you want to remove?");
+            Reply_Successful_Command("Which reminder number do you want to remove?", message);
             return;
         }
         else if (number >= 1 && number <= user_reminders.length) {
@@ -169,14 +169,28 @@ module.exports = {
     // parse reminder into string
     const reminder = arguments.join(' ').slice(0, remindme_message_limit);
 
-    // NLP parse the reminder with chrono-node
-    const nlp = chrono.parse(reminder, new Date(), { forwardDate: true })[0];
+    // # NLP parse the reminder with chrono-node
+
+    // Custom refiner to deal with time zones
+    // https://github.com/wanasit/chrono/issues/327#issuecomment-626092607
+    const custom_chrono = new chrono.Chrono();
+    custom_chrono.refiners.push({
+        refine: (text, results, options) => {
+            results.forEach(r => {
+                r.start.imply('timezoneOffset', user.utc * 60);
+            })
+            return results;
+        }
+    });
+
+    const now = new Date();
+    now.setHours(now.getHours() + user.utc);
+    const nlp = custom_chrono.parse(reminder, now, { forwardDate: true })[0];
     if (!nlp || !nlp.start) {
         Reply_Successful_Command("Sorry, I couldn't understand your reminder. Can you be more concise with the date/time?", message);
         return;
     }
     const date = nlp.start.date();
-    date.setHours(date.getHours() - user.utc); // convert to utc
 
     // make sure the reminder is at least some minutes
     let diff = (date - new Date()) / 1000 / 60;
