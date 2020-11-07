@@ -167,7 +167,7 @@ module.exports = {
     }
 
     // parse reminder into string
-    const reminder = arguments.join(' ').slice(0, remindme_message_limit);
+    var reminder = arguments.join(' ').slice(0, remindme_message_limit);
 
     // # NLP parse the reminder with chrono-node
 
@@ -196,6 +196,13 @@ module.exports = {
     let diff = (date - new Date()) / 1000 / 60;
     if (diff < remindme_min_minutes - 1) {
         Reply_Successful_Command(`Reminder must be at least ${remindme_min_minutes} minutes from now.`, message)
+        return;
+    }
+
+    // remove the time from the reminder and make sure the reminder isn't empty
+    reminder = reminder.replace(nlp.text, '');
+    if (!reminder) {
+        Reply_Successful_Command(`You want me to remind you to do what?`, message)
         return;
     }
     
