@@ -1,5 +1,5 @@
 const { MessageEmbed } = require("discord.js");
-const { default_embed_color } = require('../../config.json');
+const { prefix, default_embed_color } = require('../../config.json');
 const { Get_Random_Int, Reply_Successful_Command } = require("../utilities.js");
 
 module.exports = {
@@ -8,6 +8,7 @@ module.exports = {
   description: 'Ask the magic 8-ball a yes/no question.',
   args: true,
   usage: '<yes/no question>',
+  examples: `${prefix}8ball do you know the way?`,
   
   execute(message, arguments) {
 

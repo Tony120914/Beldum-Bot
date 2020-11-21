@@ -1,5 +1,5 @@
 const { MessageEmbed } = require("discord.js");
-const { creator_id, default_embed_color } = require('../../config.json');
+const { prefix, default_embed_color, creator_id } = require('../../config.json');
 const { Reply_Successful_Command, Fetch_Server_Counts } = require('../utilities.js');
 
 module.exports = {
@@ -8,6 +8,7 @@ module.exports = {
   description: 'Basic information about this bot',
   args: false,
   usage: '',
+  examples: `${prefix}info`,
 
   async execute(message, arguments) {
 

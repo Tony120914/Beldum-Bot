@@ -1,13 +1,14 @@
 const { MessageEmbed } = require("discord.js");
-const { default_embed_color } = require('../../config.json');
+const { prefix, default_embed_color } = require('../../config.json');
 const { Reply_Successful_Command } = require('../utilities.js');
 
 module.exports = {
   name: 'ping',
   aliases: ['pong'],
-  description: 'Check Beldum-Bot\'s ping to see how its doing.',
+  description: 'Check Beldum-Bot\'s ping to see how it\'s doing.',
   args: false,
   usage: '',
+  examples: `${prefix}ping`,
 
   execute(message, arguments) {
 

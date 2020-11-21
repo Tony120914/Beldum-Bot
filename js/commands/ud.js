@@ -1,5 +1,5 @@
 const { MessageEmbed } = require("discord.js");
-const { default_embed_color, embed_field_value_limit } = require('../../config.json');
+const { prefix, default_embed_color, embed_field_value_limit } = require('../../config.json');
 const { Reply_Successful_Command, Reply_Usage_Error } = require('../utilities.js');
 const fetch = require('node-fetch');
 
@@ -9,6 +9,7 @@ module.exports = {
   description: 'Performs a Urban Dictionary search using the specified keywords (it will return the top definition).',
   args: true,
   usage: '<keywords>',
+  examples: `${prefix}ud tfti`,
 
   execute(message, arguments) {
 

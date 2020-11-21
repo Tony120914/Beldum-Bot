@@ -1,13 +1,14 @@
 const { MessageEmbed } = require("discord.js");
-const { default_embed_color } = require('../../config.json');
+const { prefix, default_embed_color } = require('../../config.json');
 const { Get_Random_Int, Reply_Successful_Command } = require('../utilities.js');
 
 module.exports = {
   name: 'flip',
   aliases: ['coin', 'toss'],
-  description: 'Toss a coin, heads or tails.',
+  description: 'Toss a coin, heads or tails.\n(Fun fact: there is a 1/6000 chance of a coin landing on its edge.)',
   args: false,
   usage: '',
+  examples: `${prefix}flip`,
 
   execute(message, arguments) {
 

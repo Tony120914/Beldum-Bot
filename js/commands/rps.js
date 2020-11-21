@@ -1,13 +1,14 @@
 const { MessageEmbed } = require("discord.js");
-const { default_embed_color } = require('../../config.json');
+const { prefix, default_embed_color } = require('../../config.json');
 const { Reply_Successful_Command, Reply_Usage_Error, Get_Random_Int } = require('../utilities.js');
 
 module.exports = {
   name: 'rps',
-  aliases: ['rockpaperscissors'],
-  description: 'Play rock paper scissors with Beldum-Bot',
+  aliases: ['roshambo'],
+  description: 'Play rock paper scissors with Beldum-Bot.\n\nr = rock\np = paper\ns = scissors',
   args: true,
   usage: '<r or p or s>',
+  examples: `${prefix}rps r\n${prefix}rps p\n${prefix}rps s`,
 
   execute(message, arguments) {
 

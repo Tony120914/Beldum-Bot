@@ -1,13 +1,14 @@
 const { MessageEmbed } = require("discord.js");
-const { default_embed_color } = require('../../config.json');
+const { prefix, default_embed_color } = require('../../config.json');
 const { Reply_Successful_Command, Reply_Usage_Error } = require('../utilities.js');
 
 module.exports = {
   name: 'icon',
   aliases: ['servericon', 'serverpicture', 'serverpfp'],
-  description: 'Get the server icon image.',
+  description: 'Get the server icon image in the highest possible resolution.',
   args: false,
   usage: '',
+  examples: `${prefix}icon`,
 
   execute(message, arguments) {
 

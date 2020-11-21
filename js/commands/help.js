@@ -5,9 +5,10 @@ const { Reply_Successful_Command, Reply_Usage_Error } = require('../utilities.js
 module.exports = {
   name: 'help',
   aliases: ['command', 'commands'],
-  description: 'List all commands (detailed help presented if specific command name is provided as argument).',
+  description: 'List all commands (detailed help presented if specific command name is provided as an argument).',
   args: false, // optional arguments
   usage: '<optional command name>',
+  examples: `${prefix}help\n${prefix}help 8ball`,
 
   execute(message, arguments) {
     const commands = message.client.commands;

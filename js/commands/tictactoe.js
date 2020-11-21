@@ -1,13 +1,14 @@
 const { MessageEmbed, Message } = require("discord.js");
-const { default_embed_color } = require('../../config.json');
+const { prefix, default_embed_color } = require('../../config.json');
 const { Reply_Successful_Command, Reply_Usage_Error, Get_Random_Int } = require('../utilities.js');
 
 module.exports = {
   name: 'tictactoe',
   aliases: ['ttt', 'tic-tac-toe'],
-  description: 'Play tictactoe with another user using reactions! (Please wait for the :ok: reaction before beginning.)',
+  description: 'Play tictactoe with another user using reactions. (Please wait for the :ok: reaction before beginning.)',
   args: true,
   usage: '<@player1> <@player2>',
+  examples: `${prefix}tictactoe @john @bob`,
 
   async execute(message, arguments) {
 

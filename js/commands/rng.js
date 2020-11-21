@@ -1,13 +1,14 @@
 const { MessageEmbed, Message } = require("discord.js");
-const { default_embed_color } = require('../../config.json');
+const { prefix, default_embed_color } = require('../../config.json');
 const { Reply_Successful_Command, Reply_Usage_Error, Get_Random_Int } = require('../utilities.js');
 
 module.exports = {
   name: 'rng',
-  aliases: ['random', 'randomnumbergenerator', 'roll'],
+  aliases: ['random', 'roll'],
   description: 'A random number generator that generates a random number between two values inclusively.',
   args: true,
   usage: '<number> <number>',
+  examples: `${prefix}rng 1 100`,
 
   execute(message, arguments) {
 

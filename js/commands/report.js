@@ -1,13 +1,14 @@
 const { MessageEmbed } = require("discord.js");
-const { default_embed_color } = require('../../config.json');
+const { prefix, default_embed_color } = require('../../config.json');
 const { Reply_Successful_Command } = require('../utilities.js');
 
 module.exports = {
   name: 'report',
   aliases: ['bug', 'issue'],
-  description: 'Found a bug? Get instructions on how to report a bug',
+  description: 'Found a bug? Get instructions on how to report a bug.',
   args: false,
   usage: '',
+  examples: `${prefix}report`,
 
   execute(message, arguments) {
 

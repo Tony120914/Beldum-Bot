@@ -1,13 +1,14 @@
 const { MessageEmbed } = require("discord.js");
-const { default_embed_color } = require('../../config.json');
+const { prefix, default_embed_color } = require('../../config.json');
 const { Reply_Successful_Command, Reply_Usage_Error } = require('../utilities.js');
 
 module.exports = {
   name: 'emoji',
   aliases: ['emote', 'emoticon'],
-  description: 'Get the specified custom emoji\'s image.',
+  description: 'Get the specified custom emoji\'s image in the highest possible resolution.',
   args: true,
   usage: '<:emoji:>',
+  examples: `${prefix}emoji :pepehands:`,
 
   execute(message, arguments) {
 

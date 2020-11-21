@@ -1,5 +1,5 @@
 const { MessageEmbed } = require("discord.js");
-const { default_embed_color, embed_field_value_limit } = require('../../config.json');
+const { prefix, default_embed_color, embed_field_value_limit } = require('../../config.json');
 const { Reply_Successful_Command, Reply_Usage_Error } = require('../utilities.js');
 
 module.exports = {
@@ -8,6 +8,7 @@ module.exports = {
   description: 'Performs a Youtube search using the specified keywords.',
   args: true,
   usage: '<keywords>',
+  examples: `${prefix}youtube cute cat videos`,
 
   execute(message, arguments) {
 

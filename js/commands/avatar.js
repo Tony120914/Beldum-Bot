@@ -1,13 +1,14 @@
 const { MessageEmbed } = require("discord.js");
-const { default_embed_color } = require('../../config.json');
+const { prefix, default_embed_color } = require('../../config.json');
 const { Reply_Successful_Command, Reply_Usage_Error } = require('../utilities.js');
 
 module.exports = {
   name: 'avatar',
   aliases: ['pfp'],
-  description: 'Get the avatar image of a tagged user.',
+  description: 'Get the avatar image of a tagged user in the highest possible resolution.',
   args: true,
   usage: '<@user>',
+  examples: `${prefix}avatar @bob`,
 
   execute(message, arguments) {
 

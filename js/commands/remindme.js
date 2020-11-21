@@ -1,5 +1,5 @@
 const { MessageEmbed } = require("discord.js");
-const { default_embed_color, collections } = require('../../config.json');
+const { prefix, default_embed_color, collections } = require('../../config.json');
 const { Reply_Successful_Command, Reply_Usage_Error } = require('../utilities.js');
 const mongodb = require("../mongodb.js");
 const chrono = require('chrono-node');
@@ -16,7 +16,7 @@ const modes = {
 module.exports = {
   name: 'remindme',
   aliases: ['remind', 'reminder', 'stickynote'],
-  description: 'Reminds you of the specified reminder at the specified time (you can only have up to 10 reminders).\n' +
+  description: `Reminds you of the specified reminder at the specified time (you can only have up to 10 reminders and each reminder must be at least ${remindme_min_minutes} minutes).\n` +
     '\n**All //remindme commands:**' +
     '\n`//remindme <reminder>` sets a reminder.' +
     '\n`//remindme utc <offset>` sets the user\'s time zone.' +
@@ -24,6 +24,12 @@ module.exports = {
     '\n`//remindme remove <reminder# or all>` removes the user\'s specified reminder # or all their reminders.',
   args: true,
   usage: '<reminder>',
+  examples: `${prefix}remindme to go out tomorrow at 10am` +
+    `\n${prefix}remindme in 30 minutes to make food` +
+    `\n${prefix}remindme utc -5` +
+    `\n${prefix}remindme show` +
+    `\n${prefix}remindme remove 2` +
+    `\n${prefix}remindme remove all`,
   
   async execute(message, arguments) {
 
@@ -202,7 +208,7 @@ module.exports = {
     // remove the time from the reminder and make sure the reminder isn't empty
     reminder = reminder.replace(nlp.text, '');
     if (!reminder) {
-        Reply_Successful_Command(`You want me to remind you to do what?`, message)
+        Reply_Successful_Command(`It seems that you forgot to specify what the reminder is.`, message)
         return;
     }
     
