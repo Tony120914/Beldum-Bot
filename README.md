@@ -2,41 +2,42 @@
 <link rel="stylesheet" href="https://cdn.rawgit.com/Tony120914/Beldum-Bot/master/css/discord_bot_list.css">
 
 # Beldum-Bot
-<img src="https://github.com/Tony120914/Beldum-Bot/blob/master/images/374Beldum-Shiny.png?raw=true" width="200" align="right">
+<img src="https://github.com/Tony120914/Beldum-Bot/blob/master/images/374Beldum-Shiny.png?raw=true" width=200px align="right">
 
-This is a Discord bot in development. It is developed in Javascript, utilizing [node.js](https://nodejs.org/en/), [discord.js](https://discord.js.org/), [request](https://www.npmjs.com/package/request), [dotenv](https://www.npmjs.com/package/dotenv), and [dblapi.js](https://www.npmjs.com/package/dbl-api).
+This is a Discord bot developed using [discord.js](https://discord.js.org/), a node.js module.
+
+What's a Beldum? It's one of my favourite [Pokemon](https://bulbapedia.bulbagarden.net/wiki/Beldum_(Pok%C3%A9mon))!
 
 (Certain images used do not belong to me and is used solely for aesthetic reasons.)
 
-What's a Beldum you ask? Well it's a [Pokemon](https://bulbapedia.bulbagarden.net/wiki/Beldum_(Pok%C3%A9mon))! One of my favourites.
+---
+
+## How to invite this bot to your Discord server
+You can invite Beldum Bot to your Discord server by clicking the widget here:
+
+
+[![Discord Bots](https://top.gg/api/widget/454764425090433034.svg)](https://top.gg/bot/454764425090433034/invite)
+
+(Remember to [vote](https://top.gg/bot/454764425090433034/vote) for the bot if you like it.)
 
 ---
 
-## Invite this bot!
-You can add Beldum Bot to your Discord server by clicking the widget here:
-
-
-[![Discord Bots](https://top.gg/api/widget/454764425090433034.svg)](https://top.gg/bot/454764425090433034)
-
-(Remember to [vote](https://top.gg/bot/454764425090433034/vote) for the bot as well!)
-
----
-
-## Commands (Be sure to check back for more!)
-| List of commands: | Description | Showcase |
-| --- | --- | --- |
-| //8ball question... | Ask the magic 8 ball a yes/no question | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/8ball.JPG?raw=true" width="300"> |
-| //avatar @user | Show the user's avatar in full resolution | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/avatar.JPG?raw=true" width="300"> |
-| //emoji :emoji: | Show the custom emoji in full resolution | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/emoji.JPG?raw=true" width="300"> |
-| //flip | Flip a coin <br/><br/> (Fun fact: There's a 1/6000 chance of a coin landing on its edge!) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/flip.JPG?raw=true" width="300"> |
-| //google keywords... | Performs a Google search using your keywords | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/google.JPG?raw=true" width="300"> |
-| //help | Show Beldum-Bot's list of commands | You're reading it right now! |
-| //icon | Show the server icon in full resolution | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/icon.JPG?raw=true" width="300"> |
-| //info | Show Beldum-Bot's info | All the info you can get is on this page! |
-| //ping | Show Beldum-Bot's ping (ms) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/ping.JPG?raw=true" width="300"> |
-| //report | Show a user how to report a bug if they find one. <br/><br/> (Create a [GitHub issue](https://github.com/Tony120914/Beldum-Bot/issues)!) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/report.JPG?raw=true" width="300"> |
-| //rng n1,n2 | Generates a random number between n1 and n2 <br/><br/> (Inclusive) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/rng.JPG?raw=true" width="300"> |
-| //rps r or p or s | Play rock paper scissors with Beldum-Bot <br/><br/> (r=rock, p=paper, s=scissors) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/rps.JPG?raw=true" width="300"> |
-| //tictactoe @p1 @p2 | Play tic tac toe using reactions with another user <br/><br/> (or by yourself) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/tictactoe.jpg?raw=true" width="300"> |
-| //ud keywords... | Performs an Urban Dictionary search using your keywords <br/><br/> (If no keywords are provided, the search will be randomized) | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/ud.JPG?raw=true" width="300"> |
-| //youtube keywords... | Performs a YouTube search using your keywords | <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/screenshots/youtube.JPG?raw=true" width="300"> |
+## Commands Documentation
+| <img width=475px> Commands <img width=475px> | Aliases | <img width=500px> Usage Examples <img width=500px> | Descriptions |
+| --- | --- | --- | --- |
+| `//8ball <yes/no question>` | 8-ball<br>eightball<br>eight-ball | //8ball do you know the way? | Ask the magic 8-ball a yes/no question. |
+| `//avatar <@user>` | pfp | //avatar @bob | Get the avatar image of a tagged user in the highest possible resolution. |
+| `//emoji <:emoji:>` | emote<br>emoticon | //emoji :pepehands: | Get the specified custom emoji's image in the highest possible resolution. |
+| `//flip ` | coin<br>toss | //flip | Toss a coin, heads or tails.<br>(Fun fact: there is a 1/6000 chance of a coin landing on its edge.) |
+| `//google <keywords>` | search | //google how to internet | Performs a Google search with the specified keywords. |
+| `//help <optional command name>` | command<br>commands | //help<br>//help 8ball | List all commands (detailed help presented if specific command name is provided as an argument). |
+| `//icon ` | servericon<br>serverpicture<br>serverpfp | //icon | Get the server icon image in the highest possible resolution. |
+| `//info ` | information<br>about | //info | Basic information about this bot |
+| `//ping ` | pong | //ping | Check Beldum-Bot's ping to see how it's doing. |
+| `//remindme <reminder>` | remind<br>reminder<br>stickynote | //remindme to go out tomorrow at 10am<br>//remindme in 30 minutes to make food<br>//remindme utc -5<br>//remindme show<br>//remindme remove 2<br>//remindme remove all | Reminds you of the specified reminder at the specified time (you can only have up to 10 reminders and each reminder must be at least 5 minutes).<br><br>**All //remindme commands:**<br>`//remindme <reminder>` sets a reminder.<br>`//remindme utc <offset>` sets the user's time zone.<br>`//remindme show` shows the user's current reminders.<br>`//remindme remove <reminder# or all>` removes the user's specified reminder # or all their reminders. |
+| `//report ` | bug<br>issue | //report | Found a bug? Get instructions on how to report a bug. |
+| `//rng <number> <number>` | random<br>roll | //rng 1 100 | A random number generator that generates a random number between two values inclusively. |
+| `//rps <r or p or s>` | roshambo | //rps r<br>//rps p<br>//rps s | Play rock paper scissors with Beldum-Bot.<br><br>r = rock<br>p = paper<br>s = scissors |
+| `//tictactoe <@player1> <@player2>` | ttt<br>tic-tac-toe | //tictactoe @john @bob | Play tictactoe with another user using reactions. (Please wait for the :ok: reaction before beginning.) |
+| `//ud <keywords>` | udsearch<br>urbandictionary | //ud tfti | Performs a Urban Dictionary search using the specified keywords (it will return the top definition). |
+| `//youtube <keywords>` | utube | //youtube cute cat videos | Performs a Youtube search using the specified keywords. |
