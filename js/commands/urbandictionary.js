@@ -6,7 +6,7 @@ const fetch = require('node-fetch');
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('urbandictionary')
-    .setDescription('Perform a Urban Dictionary search (it will return the top definition)')
+    .setDescription('Perform an Urban Dictionary search (it will return the top definition)')
     .addStringOption(option =>
       option.setName('keywords')
         .setDescription('search keywords')
