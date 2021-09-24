@@ -2,6 +2,9 @@
   "name": "Beldum-Bot",
   "version": "1.0.0",
   "description": "Discord Bot",
+  "engines": {
+    "node": "16.9.1"
+  },
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
