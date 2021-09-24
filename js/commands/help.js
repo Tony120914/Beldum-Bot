@@ -1,59 +1,27 @@
-const { MessageEmbed, Message } = require("discord.js");
-const { prefix, default_embed_color } = require('../../config.json');
-const { Reply_Successful_Command, Reply_Usage_Error } = require('../utilities.js');
+const { MessageEmbed } = require("discord.js");
+const { default_embed_color } = require('../../config.json');
+const { SlashCommandBuilder } = require('@discordjs/builders');
 
 module.exports = {
-  name: 'help',
-  aliases: ['command', 'commands'],
-  description: 'List all commands (detailed help presented if specific command name is provided as an argument).',
-  args: false, // optional arguments
-  usage: '<optional command name>',
-  examples: `${prefix}help\n${prefix}help 8ball`,
+  data: new SlashCommandBuilder()
+    .setName('help')
+    .setDescription('List all Beldum Bot\'s commands'),
 
-  execute(message, arguments) {
-    const commands = message.client.commands;
+  async execute(interaction) {
+    const commands = interaction.client.commands;
 
-    // List help for all commands
-    if (arguments.length == 0) {
-      const command_usages = commands.map(command => `${prefix}${command.name} ${command.usage}`).join('\n');
+    // List help for all commands    
+    const command_usages = commands.map(command => `\`/${command.data.name}\``).join(' ');
 
-      embed = new MessageEmbed()
+    embed = new MessageEmbed()
       .setAuthor('Commands')
-      .setDescription(`\`${command_usages}\``)
-      .addField('Need help on specific command?', '//help <command>', true)
-      .addField('Need usage examples?',
-        'Visit [here](https://github.com/Tony120914/Beldum-Bot/blob/master/README.md) to view more detailed descriptions and usage examples of commands!', true)
+      .setDescription(`Type out any specific command to see details and usage\n${command_usages}`)
+      .addField('Want to see the commands on a web interface?',
+        'Click [here](https://github.com/Tony120914/Beldum-Bot/blob/master/README.md)', true)
       .setThumbnail('https://github.com/Tony120914/Beldum-Bot/blob/master/images/479Rotom-Pok%C3%A9dex.png?raw=true')
       .setColor(default_embed_color);
-      
-      Reply_Successful_Command(embed, message);
 
-      return embed;
-    }
-    // List help for a specific command
-    else if (arguments.length == 1) {
-      const command_name = arguments[0].toLowerCase();
-      const command = commands.get(command_name) || commands.find(com => com.aliases && com.aliases.includes(command_name));
-
-      if (!command) {
-        return Reply_Usage_Error(message, this.name, this.usage, '(this command does not exist)');
-      }
-
-      embed = new MessageEmbed()
-      .addField('Command', command.name, true)
-      .addField('Aliases', command.aliases.join(', '), true)
-      .addField('Description', command.description)
-      .addField('Usage', `\`${prefix}${command.name} ${command.usage}\``)
-      .setThumbnail('https://github.com/Tony120914/Beldum-Bot/blob/master/images/479Rotom-Pok%C3%A9dex.png?raw=true')
-      .setColor(default_embed_color);
-      
-      Reply_Successful_Command(embed, message);
-
-      return embed;
-    }
-    else {
-      return Reply_Usage_Error(message, this.name, this.usage);
-    }
+    await interaction.reply({ embeds: [embed]});
 
   }
 }

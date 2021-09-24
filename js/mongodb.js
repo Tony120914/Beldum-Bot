@@ -1,11 +1,13 @@
 require('dotenv').config()
 const { MongoClient } = require("mongodb");
-const { collections } = require('../config.json');
+const { mongodb_collections } = require('../config.json');
+const { MessageEmbed } = require("discord.js");
+const { default_embed_color } = require('../config.json');
 
 const uri = process.env.MONGODBKEY;
-const client = new MongoClient(uri, { useUnifiedTopology: true });
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 var database;
-var reminder_date_stream;
+var reminder_stream;
 
 module.exports = {
   connect: async () => {
@@ -13,40 +15,42 @@ module.exports = {
     database = client.db(); // db name in connection string
 
     // streams
-    reminder_date_stream = database.collection(collections.reminders).watch();
+    reminder_stream = database.collection(mongodb_collections.reminders).watch();
   },
 
-  get_db: () => {
+  getDb: () => {
     return database;
   },
 
-  get_collection: (collection_name) => {
+  getCollection: (collection_name) => {
     return database.collection(collection_name);
   },
 
-  get_reminder_date_stream: () => {
-    return reminder_date_stream;
+  getReminderDateStream: () => {
+    return reminder_stream;
   },
 
-  trigger_on_reminder_date: (discord_client) => {
-    reminder_date_stream.on("change", async next => {
+  triggerOnReminderDate: (discord_client) => {
+    reminder_stream.on("change", async next => {
       if (next && next.operationType == "delete") {
 
         // find the reminder clone that was just deleted from TTL to recover data
-        const reminders_clone = database.collection(collections.reminders_clone);
+        const reminders_clone = database.collection(mongodb_collections.reminders_clone);
         const query = { _id: next.documentKey._id };
         const reminder = await reminders_clone.findOne(query);
   
         if (reminder) {
           const channel = discord_client.channels.cache.find(channel => channel.id == reminder.channel_id);
           if (channel) { // prevent shards not responsible for this channel to ignore
-            channel.send(`<@${reminder.user_id}> \n>>> ${reminder.reminder}`)
-            .then(() => console.log("Successful reminder trigger and message"))
-            .catch(console.err);
+            const embed = new MessageEmbed()
+              .setAuthor(`Reminder`)
+              .setDescription(`${reminder.reminder}`)
+              .addField('Datetime', `${reminder.date.toDateString()} ${reminder.date.toLocaleTimeString()}`)
+              .setColor(default_embed_color);
+            channel.send({ content: `<@${reminder.user_id}>`, embeds: [embed] });
 
+            // remove the copy reminder as well
             await reminders_clone.deleteOne(query)
-            .then(() => console.log("Successful deletion of copy reminder"))
-            .catch(console.err);
           }
         }
 

@@ -1,207 +1,154 @@
-const { MessageEmbed, Message } = require("discord.js");
-const { prefix, default_embed_color } = require('../../config.json');
-const { Reply_Successful_Command, Reply_Usage_Error, Get_Random_Int } = require('../utilities.js');
+const { MessageEmbed, MessageButton, MessageActionRow, Message } = require("discord.js");
+const { default_embed_color } = require('../../config.json');
+const { SlashCommandBuilder } = require('@discordjs/builders');
 
 module.exports = {
-  name: 'tictactoe',
-  aliases: ['ttt', 'tic-tac-toe'],
-  description: 'Play tictactoe with another user using reactions. (Please wait for the :ok: reaction before beginning.)',
-  args: true,
-  usage: '<@player1> <@player2>',
-  examples: `${prefix}tictactoe @john @bob`,
+  data: new SlashCommandBuilder()
+    .setName('tictactoe')
+    .setDescription('Play tictactoe with another user (command user will start first)')
+    .addMentionableOption(option =>
+      option.setName('player2')
+        .setDescription('player2')
+        .setRequired(true)),
 
-  async execute(message, arguments) {
+  async execute(interaction) {
+    // Build TTT buttons on a grid
+    let grid = []
+    for (let i = 0; i < 3; i++) {
+      let row = new MessageActionRow()
+      for (let j = 0; j < 3; j++) {
+        row.addComponents(
+          new MessageButton()
+            .setCustomId(`${j+i*3}`)
+            .setLabel(' ')
+            .setStyle('PRIMARY')
+        );
+      } grid.push(row)
+    };
 
-    const mentions = message.mentions.users.array();
+    const arg1 = interaction.options.getMentionable('player2');
 
-    if (mentions.length == 1 || mentions.length == 2) {
+    // Get players' ids
+    const player1 = interaction.user;
+    const player2 = arg1.user;
+    let turn = player1;
+    let symbol = 'X';
+    let style = 'SUCCESS';
 
-      const X = ':x:';
-      const O = ':o:';
-      let random1 = Get_Random_Int(0, 1);
-      let random2 = Math.abs(random1 - 1); // ensures it being 0 or 1
+    // Initial message, calls the user a loser if they're playing the game with themself :)
+    let initial_message = `Game match between ${player1} and ${player2}\n(instance will timeout in 2 minutes)`;
+    if (player1.id == player2.id) initial_message += '\n**What a loser, playing this game with yourself :joy:**';
 
-      // If only both mentions are the same player
-      if (mentions.length == 1) {
-        random1 = 0;
-        random2 = 0;
-      }
-
-      // Randomly selects who goes first
-      const player1_id = mentions[random1].id;
-      const player2_id = mentions[random2].id;
-      var turn_id = player1_id;
-      var symbol = X;
-
-      // Initial message, calls the user a loser if they're playing the game with themself :)
-      let initial_message = `Game match between <@${player1_id}> and <@${player2_id}>!`;
-      if (player1_id == player2_id) {
-        initial_message += '\n_(What a loser, playing this game with yourself :joy:)_'
-      }
-
-      const embed = new MessageEmbed()
+    const embed = new MessageEmbed()
       .setThumbnail('https://github.com/Tony120914/Beldum-Bot/blob/master/images/tictactoe.png?raw=true')
-      .addField('Tic-tac-toe!', initial_message, true)
+      .addField('Tic-tac-toe', initial_message, true)
+      .setColor(default_embed_color);
+    
+    const embed_instructions = new MessageEmbed()
+      .addField('Instructions', `${turn}'s' turn to choose a cell, your symbol is ${symbol}`)
       .setColor(default_embed_color);
 
-      // Send initial message
-      Reply_Successful_Command(embed, message);
+    await interaction.reply({ content: ' ', embeds: [embed, embed_instructions], components: grid});
 
-      // Send Tic-tac-toe grid
-      // await to send first and get grid_message safely
-      var grid_message;
-      var grid = [
-        [':one:', ':two:', ':three:'],
-        [':four:', ':five:', ':six:'],
-        [':seven:', ':eight:', ':nine:']
-      ];
-      // Function to convert the grid array into readable emojis on Discord
-      const Join_2D_Array = (array, sep_inner, sep_outer) => {
-        let result = [];
-        array.forEach(row => {
-          result.push(row.join(sep_inner));
-        });
-        return result.join(sep_outer);
-      };
-      await message.channel.send(Join_2D_Array(grid, '', '\n'))
-      .then((mes) => grid_message = mes)
-      .then(() => console.log("Successful tictactoe grid message init"))
-      .catch(console.error);
-
-      // Send ui init
-      // await to send second and get reaction_message safetly
-      var reaction_message;
-      await message.channel.send('Loading... Please wait for the :ok: reaction.')
-      .then(async (mes) => { //Async to order requests
-        await mes.react('1⃣');
-        await mes.react('2⃣');
-        await mes.react('3⃣');
-        await mes.react('4⃣');
-        await mes.react('5⃣');
-        await mes.react('6⃣');
-        await mes.react('7⃣');
-        await mes.react('8⃣');
-        await mes.react('9⃣');
-        await mes.react('🆗');
-
-        reaction_message = await mes;
-      })
-      .then(() => console.log("Successful tictactoe reaction message init"))
-      .catch(console.error);
-
-      // After loading initial reactions, update to state which player's turn
-      // await to edit previous message safetly and get reaction_message safetly
-      await reaction_message.edit(`It\'s <@${turn_id}>\'s turn! Your symbol is ${symbol}`)
-      .then(() => console.log("Successful tictactoe reaction message edit"))
-      .catch(console.error);
-
-      // Reaction collector
-      const filter = (reaction, user) => user.id == turn_id;
-      const collector = reaction_message.createReactionCollector(filter, { time: 600000 , dispose: true });
-      console.log("Successful reaction collector init");
-
-      collector.on('collect', (reaction, user) => {
-
-        switch (reaction.emoji.identifier) {
-          case '1%E2%83%A3':
-            if (grid[0][0] != ':one:') return;
-            grid[0][0] = symbol;
-            break;
-          case '2%E2%83%A3':
-            if (grid[0][1] != ':two:') return;
-            grid[0][1] = symbol;
-            break;
-          case '3%E2%83%A3':
-            if (grid[0][2] != ':three:') return;
-            grid[0][2] = symbol;
-            break;
-          case '4%E2%83%A3':
-            if (grid[1][0] != ':four:') return;
-            grid[1][0] = symbol;
-            break;
-          case '5%E2%83%A3':
-            if (grid[1][1] != ':five:') return;
-            grid[1][1] = symbol;
-            break;
-          case '6%E2%83%A3':
-            if (grid[1][2] != ':six:') return;
-            grid[1][2] = symbol;
-            break;
-          case '7%E2%83%A3':
-            if (grid[2][0] != ':seven:') return;
-            grid[2][0] = symbol;
-            break;
-          case '8%E2%83%A3':
-            if (grid[2][1] != ':eight:') return;
-            grid[2][1] = symbol;
-            break;
-          case '9%E2%83%A3':
-            if (grid[2][2] != ':nine:') return;
-            grid[2][2] = symbol;
-            break;
-          default:
-            return;
-        };
-        
-        // Replace the number emoji with X or O
-        grid_message.edit(Join_2D_Array(grid, '', '\n'))
-        .then(() => console.log("Successful tictactoe grid message edit"))
-        .catch(console.error);
-
-        // Check if the game has concluded
-        let is_concluded_win = false;
-        let is_concluded_tie = false;
-        
-        // Diagonal checks
-        if (grid[0][0] == symbol && grid[1][1] == symbol && grid[2][2] == symbol) is_concluded_win = true;
-        else if (grid[0][2] == symbol && grid[1][1] == symbol && grid[2][0] == symbol) is_concluded_win = true;
-        else {
-          for (let i = 0; i < grid.length; i++) {
-            // Horizontal checks
-            if (grid[i][0] == symbol && grid[i][1] == symbol && grid[i][2] == symbol) is_concluded_win = true;
-            else if (grid[0][i] == symbol && grid[1][i] == symbol && grid[2][i] == symbol) is_concluded_win = true;
-          }
-        }
-        // Tie checks
-        if (grid.flat().every(cell => cell == X || cell == O) && !is_concluded_win) {
-          is_concluded_tie = true;
-        }
-        
-        // Conclusion edits
-        if (is_concluded_win) {
-          reaction_message.edit(`Congratulations! <@${turn_id}> won!`)
-          .then(() => console.log("Successful tictactoe reaction message edit"))
-          .catch(console.error);
-
-          collector.stop();
-          return;
-        }
-        else if (is_concluded_tie) {
-          reaction_message.edit('Boo! It\'s a tie.')
-          .then(() => console.log("Successful tictactoe reaction message edit"))
-          .catch(console.error);
-
-          collector.stop();
-          return;
-        }
-
-        // Turn system
-        turn_id = turn_id == player1_id ? player2_id : player1_id;
-        symbol = symbol == X ? O : X;
-        reaction_message.edit(`It\'s <@${turn_id}>\'s turn! Your symbol is ${symbol}`)
-        .then(() => console.log("Successful tictactoe reaction message edit"))
-        .catch(console.error);
-      });
-
-      // Collector stop message
-      collector.on('end', collected => {
-        console.log("Successful tictactoe reaction listener termination");
-      });
-
+    // Listen to button presses from players (if it's their turn)
+    const filter = i => {
+      // Don't need to defer?
+      // i.deferUpdate();
+      return i.user.id === turn.id && i.message.interaction.id === interaction.id;
     }
-    else {
-      return Reply_Usage_Error(message, this.name, this.usage);
-    }
+    const button_collector = interaction.channel.createMessageComponentCollector({ filter, componentType: 'BUTTON', time: 120000 });
+    button_collector.on('collect', async button => { // TTT mechanics
+      // update button pressed and disable it
+      let comp = grid[Math.floor(button.customId/3)].components[button.customId%3];
+      comp.setLabel(symbol)
+        .setStyle(style)
+        .setDisabled(true);
+      
+      // check for win/lose/draw
+      game_status = checkGameStatus(grid, symbol);
+
+      const embed_instructions = new MessageEmbed()
+      if (game_status == 'ongoing') {
+        // change turns
+        turn = turn.id == player1.id ? player2 : player1;
+        symbol = symbol == 'X' ? 'O' : 'X';
+        style = style == 'SUCCESS' ? 'DANGER' : 'SUCCESS';
+
+        // update instructions
+        embed_instructions
+          .addField('Instructions', `${turn}'s' turn to choose a cell, your symbol is ${symbol}`)
+          .setColor(default_embed_color);
+      }
+      else if (game_status == 'draw') {
+        // update instructions to draw
+        embed_instructions
+          .addField('Results', `It's a draw. GG`)
+          .setColor(default_embed_color);
+      }
+      else {
+        // update instructions to winner
+        embed_instructions
+          .addField('Results', `${turn} won. GG`)
+          .setColor(default_embed_color);
+        // disable the grid because the game is over
+        disableGrid(grid);
+      }
+      await button.update({ embeds: [embed, embed_instructions], components: grid });
+    });
+      
+    button_collector.on('end', async collected => {
+      const embed = new MessageEmbed()
+        .setThumbnail('https://github.com/Tony120914/Beldum-Bot/blob/master/images/tictactoe.png?raw=true')
+        .addField('Tic-tac-toe', 'Tic-Tac-Toe instance timed out, please create a new Tic-Tac-Toe instance', true)
+        .setColor(default_embed_color);
+      disableGrid(grid);
+      await interaction.editReply({ embeds: [embed], components: grid });
+    });
 
   }
+}
+
+// Helper to check game status for any game overs
+function checkGameStatus(grid, symbol) {
+  // check rows
+  for (let row of grid) {
+    if (row.components.every(cell => cell.label == symbol)) return 'win'
+  }
+  // check columns
+  for (let i = 0; i < 3; i++) {
+    if (grid[0].components[i].label == symbol 
+      && grid[1].components[i].label == symbol
+      && grid[2].components[i].label == symbol) {
+        return 'win'
+    }
+  };
+  // check diagonals
+  if ((grid[0].components[0].label == symbol
+    && grid[1].components[1].label == symbol
+    && grid[2].components[2].label == symbol) ||
+    (grid[2].components[0].label == symbol
+    && grid[1].components[1].label == symbol
+    && grid[0].components[2].label == symbol)) {
+      return 'win'
+  }
+  // check draw or ongoing
+  for (let row of grid) {
+    for (let cell of row.components) {
+      if (cell.label == ' ') return 'ongoing';
+    }
+  }
+  grid.forEach(row => {
+    //if (row.components.some(cell => cell.label == '')) return 'ongoing'
+  });
+  // otherwise it's a draw
+  return 'draw'
+}
+
+// Helper to disable the grid
+function disableGrid(grid) {
+  grid.forEach(row => {
+    row.components.forEach(cell => {
+      cell.setDisabled(true);
+    });
+  });
 }

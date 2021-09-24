@@ -1,70 +1,78 @@
-const { MessageEmbed } = require("discord.js");
-const { prefix, default_embed_color } = require('../../config.json');
-const { Reply_Successful_Command, Reply_Usage_Error, Get_Random_Int } = require('../utilities.js');
+const { MessageEmbed, MessageButton, MessageActionRow, Message } = require("discord.js");
+const { default_embed_color } = require('../../config.json');
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const { getRandomInt } = require('../utilities');
 
 module.exports = {
-  name: 'rps',
-  aliases: ['roshambo'],
-  description: 'Play rock paper scissors with Beldum-Bot.\n\nr = rock\np = paper\ns = scissors',
-  args: true,
-  usage: '<r or p or s>',
-  examples: `${prefix}rps r\n${prefix}rps p\n${prefix}rps s`,
+  data: new SlashCommandBuilder()
+    .setName('rps')
+    .setDescription('Play rock paper scissors'),
 
-  execute(message, arguments) {
+  async execute(interaction) {
+    // Build RPS buttons
+    const rps = new MessageActionRow()
+      .addComponents(
+        new MessageButton()
+          .setCustomId('rock')
+          .setLabel('Rock')
+          .setStyle('PRIMARY')
+      ).addComponents(
+        new MessageButton()
+          .setCustomId('paper')
+          .setLabel('Paper')
+          .setStyle('SUCCESS')
+      ).addComponents(
+        new MessageButton()
+          .setCustomId('scissors')
+          .setLabel('Scissors')
+          .setStyle('DANGER')
+      );
+    await interaction.reply({ content: 'Choose one: (instance will timeout in 30 seconds)', components: [rps]});
 
-    // rock paper scissors object
-    const rps = [
-      {
-        names: ['r', 'rock'],
-        emoji: ":rock:",
-        strong_against: 2,
-        weak_against: 1,
-        tie_against: 0
-      },
-      {
-        names: ['p', 'paper'],
-        emoji: ":roll_of_paper:",
-        strong_against: 0,
-        weak_against: 2,
-        tie_against: 1
-      },
-      {
-        names: ['s', 'scissors'],
-        emoji: ":scissors:",
-        strong_against: 1,
-        weak_against: 0,
-        tie_against: 2
-      }
-    ];
+    // Listen to button presses from original user
+    const filter = i => {
+      // Don't need to defer?
+      // i.deferUpdate();
+      return i.user.id === interaction.user.id && i.message.interaction.id === interaction.id;
+    };
+    await interaction.channel.awaitMessageComponent({ filter, componentType: 'BUTTON', time: 30000 })
+      .then(button => { // RPS mechanics
+        user_choice = button.customId;
+        bot_choice = ['rock', 'paper', 'scissors'][getRandomInt(0,2)]
 
-    // win, lose, tie messages
-    const win = ':boom: _it\'s super effective!_';
-    const lose = ':skull: _it\'s not very effective..._';
-    const tie = ':zzz: _but nothing happened._';
+        // map key pair: what is strong against what
+        const strong_against = {
+          'rock': 'scissors',
+          'paper': 'rock',
+          'scissors': 'paper'
+        };
 
-    // User input validity check
-    const user_index = rps.findIndex(item => item.names.includes(arguments[0]));
-    if (rps[user_index]) {
-      const bot_index = Get_Random_Int(0, 2);
-      let result;
-      if (rps[user_index].strong_against == bot_index) result = win;
-      else if (rps[user_index].weak_against == bot_index) result = lose;
-      else if (rps[user_index].tie_against == bot_index) result = tie;
+        // win, lose, tie messages
+        const win = ':boom: _it\'s super effective!_';
+        const lose = ':skull: _it\'s not very effective..._';
+        const tie = ':zzz: _but nothing happened._';
 
-      const embed = new MessageEmbed()
-      .setAuthor(`Rock-Paper-Scissors`)
-      .addField('You used', rps[user_index].emoji, true)
-      .addField('Beldum used', rps[bot_index].emoji, true)
-      .addField('Result', result)
-      .setColor(default_embed_color);
+        // rps compare
+        let result;
+        if (strong_against[user_choice] == bot_choice) result = win
+        else if (strong_against[bot_choice] == user_choice) result = lose
+        else result = tie
 
-      Reply_Successful_Command(embed, message);
-      
-      return embed;
-    }
-    else {
-      return Reply_Usage_Error(message, this.name, this.usage);
-    }
+        const embed = new MessageEmbed()
+          .setAuthor(`Rock-Paper-Scissors`)
+          .addField('You used', user_choice, true)
+          .addField('Beldum used', bot_choice, true)
+          .addField('Result', result)
+          .setColor(default_embed_color);
 
+        return embed;
+      })
+      .then(embed => interaction.editReply({ embeds: [embed], content: ' ', components: [] })) // remove original message
+      .catch(timeout => { // timeout
+        rps.components.forEach(component => {
+          component.setDisabled(true);
+        });
+        interaction.editReply({ content: 'RPS instance timed out, please create another RPS instance', components: [rps]})
+    });
   }
 }

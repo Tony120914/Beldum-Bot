@@ -1,34 +1,24 @@
 const { MessageEmbed } = require("discord.js");
-const { prefix, default_embed_color } = require('../../config.json');
-const { Reply_Successful_Command, Reply_Usage_Error } = require('../utilities.js');
+const { default_embed_color } = require('../../config.json');
+const { SlashCommandBuilder } = require('@discordjs/builders');
 
 module.exports = {
-  name: 'avatar',
-  aliases: ['pfp'],
-  description: 'Get the avatar image of a tagged user in the highest possible resolution.',
-  args: true,
-  usage: '<@user>',
-  examples: `${prefix}avatar @bob`,
+  data: new SlashCommandBuilder()
+    .setName('avatar')
+    .setDescription('Get the profile picture of the tagged user in the highest possible resolution')
+    .addMentionableOption(option =>
+      option.setName('user')
+        .setDescription('a user')
+        .setRequired(true)),
 
-  execute(message, arguments) {
+  async execute(interaction) {
+    const arg1 = interaction.options.getMentionable('user');
 
-    const mentions = message.mentions.users.array();
-
-    // Only 1 mention
-    if (mentions.length == 1) {
-      
-      const embed = new MessageEmbed()
-      .setDescription(`${message.mentions.users.first()}'s avatar`)
-      .setImage(message.mentions.users.first().displayAvatarURL({ format: "png", dynamic: true, size: 4096 }))
+    const embed = new MessageEmbed()
+      .setDescription(`${arg1.user}'s avatar`)
+      .setImage(arg1.user.displayAvatarURL({ format: "png", dynamic: true, size: 4096 }))
       .setColor(default_embed_color);
 
-      Reply_Successful_Command(embed, message);
-
-      return embed;
-    }
-    else {
-      return Reply_Usage_Error(message, this.name, this.usage);
-    }
+    await interaction.reply({ embeds: [embed] });
   }
-
 }

@@ -1,31 +1,25 @@
 const { MessageEmbed } = require("discord.js");
-const { prefix, default_embed_color } = require('../../config.json');
-const { Reply_Successful_Command } = require('../utilities.js');
+const { default_embed_color } = require('../../config.json');
+const { SlashCommandBuilder } = require('@discordjs/builders');
 
 module.exports = {
-  name: 'ping',
-  aliases: ['pong'],
-  description: 'Check Beldum-Bot\'s ping to see how it\'s doing.',
-  args: false,
-  usage: '',
-  examples: `${prefix}ping`,
-
-  execute(message, arguments) {
-
-    const ping = message.client.ws.ping;
+  data: new SlashCommandBuilder()
+    .setName('ping')
+    .setDescription('Check Beldum-Bot\'s ping'),
+    
+  async execute(interaction) {
+    const ping = interaction.client.ws.ping;
     let status;
     
-    if (ping < 100) status = ":rocket: I've never been better!";
-    else if (ping < 200) status = ":person_shrugging: Feeling okay I guess.";
-    else status = ":snail: Okay, who used string shot on me...";
+    if (ping < 100) status = ":rocket:";
+    else if (ping < 200) status = ":person_shrugging:";
+    else status = ":snail:";
 
     const embed = new MessageEmbed()
-    .setAuthor(`${ping} ms`)
-    .setDescription(status)
-    .setColor(default_embed_color);
+      .setAuthor(`${ping} ms`)
+      .setDescription(status)
+      .setColor(default_embed_color);
 
-    Reply_Successful_Command(embed, message);
-      
-    return embed;
+    await interaction.reply({ embeds: [embed] });
   }
 }

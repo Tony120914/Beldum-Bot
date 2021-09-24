@@ -1,17 +1,18 @@
 const { MessageEmbed } = require("discord.js");
-const { prefix, default_embed_color } = require('../../config.json');
-const { Get_Random_Int, Reply_Successful_Command } = require("../utilities.js");
+const { default_embed_color } = require('../../config.json');
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const { getRandomInt } = require("../utilities.js");
 
 module.exports = {
-  name: '8ball',
-  aliases: ['8-ball', 'eightball', 'eight-ball'],
-  description: 'Ask the magic 8-ball a yes/no question.',
-  args: true,
-  usage: '<yes/no question>',
-  examples: `${prefix}8ball do you know the way?`,
+  data: new SlashCommandBuilder()
+    .setName('8ball')
+    .setDescription('Ask Beldum\'s eyeball a yes/no question')
+    .addStringOption(option =>
+      option.setName('question')
+        .setDescription('a yes/no question')
+        .setRequired(true)),
   
-  execute(message, arguments) {
-
+  async execute(interaction) {
     const answers = [
       // Yes - answers
       ':white_check_mark: Oh yeah, 100%.',
@@ -20,7 +21,7 @@ module.exports = {
       ':white_check_mark: Science says yes.',
 
       // Maybe - answers
-      ':grey_question: Maybe...',
+      ':grey_question: ¯\\_(ツ)_/¯',
       ':grey_question: My crystal ball is foggy...',
 
       // No - answers
@@ -30,15 +31,13 @@ module.exports = {
       ':no_entry_sign: Absolutely not.',
     ];
     
-    const random = Get_Random_Int(0, answers.length - 1);
+    const random = getRandomInt(0, answers.length - 1);
 
     const embed = new MessageEmbed()
-    .addField('The Magic :8ball:-ball', answers[random], false)
-    .setColor(default_embed_color);
-
-    Reply_Successful_Command(embed, message);
-
-    return embed;
+      .addField('The Magic :8ball:-ball', answers[random], false)
+      .setColor(default_embed_color);
+    
+    await interaction.reply({ embeds: [embed] });
   }
 
 }

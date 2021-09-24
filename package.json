@@ -1,11 +1,12 @@
 {
   "name": "Beldum-Bot",
   "version": "1.0.0",
-  "engines": { "node" : "12.18.4" },
   "description": "Discord Bot",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "deployslashdev": "node ./js/deploy_slash_dev.js",
+    "deployslashprod": "node ./js/deploy_slash_prod.js"
   },
   "repository": {
     "type": "git",
@@ -19,11 +20,15 @@
   },
   "homepage": "https://github.com/Tony120914/Beldum-Bot#readme",
   "dependencies": {
+    "@discordjs/builders": "^0.6.0",
+    "@discordjs/rest": "0.1.0-canary.0",
     "chrono-node": "^2.1.9",
     "dblapi.js": "^2.4.1",
-    "discord.js": "^12.4.1",
-    "dotenv": "^8.2.0",
-    "mongodb": "^3.6.2",
-    "node-fetch": "^2.6.1"
+    "discord-api-types": "^0.23.1",
+    "discord.js": "^13.1.0",
+    "dotenv": "^10.0.0",
+    "mongodb": "^4.1.2",
+    "node-fetch": "^2.6.5",
+    "npm": "^7.24.0"
   }
 }
