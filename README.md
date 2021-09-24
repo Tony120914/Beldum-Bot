@@ -23,21 +23,31 @@ You can invite Beldum Bot to your Discord server by clicking the widget here:
 ---
 
 ## Commands Documentation
-| <img width=475px> Commands <img width=475px> | Aliases | <img width=500px> Usage Examples <img width=500px> | Descriptions |
-| --- | --- | --- | --- |
-| `//8ball <yes/no question>` | 8-ball<br>eightball<br>eight-ball | //8ball do you know the way? | Ask the magic 8-ball a yes/no question. |
-| `//avatar <@user>` | pfp | //avatar @bob | Get the avatar image of a tagged user in the highest possible resolution. |
-| `//emoji <:emoji:>` | emote<br>emoticon | //emoji :pepehands: | Get the specified custom emoji's image in the highest possible resolution. |
-| `//flip ` | coin<br>toss | //flip | Toss a coin, heads or tails.<br>(Fun fact: there is a 1/6000 chance of a coin landing on its edge.) |
-| `//google <keywords>` | search | //google how to internet | Performs a Google search with the specified keywords. |
-| `//help <optional command name>` | command<br>commands | //help<br>//help 8ball | List all commands (detailed help presented if specific command name is provided as an argument). |
-| `//icon ` | servericon<br>serverpicture<br>serverpfp | //icon | Get the server icon image in the highest possible resolution. |
-| `//info ` | information<br>about | //info | Basic information about this bot |
-| `//ping ` | pong | //ping | Check Beldum-Bot's ping to see how it's doing. |
-| `//remindme <reminder>` | remind<br>reminder<br>stickynote | //remindme to go out tomorrow at 10am<br>//remindme in 30 minutes to make food<br>//remindme utc -5<br>//remindme show<br>//remindme remove 2<br>//remindme remove all | Reminds you of the specified reminder at the specified time (you can only have up to 10 reminders and each reminder must be at least 5 minutes).<br><br>**All //remindme commands:**<br>`//remindme <reminder>` sets a reminder.<br>`//remindme utc <offset>` sets the user's time zone.<br>`//remindme show` shows the user's current reminders.<br>`//remindme remove <reminder# or all>` removes the user's specified reminder # or all their reminders. |
-| `//report ` | bug<br>issue | //report | Found a bug? Get instructions on how to report a bug. |
-| `//rng <number> <number>` | random<br>roll | //rng 1 100 | A random number generator that generates a random number between two values inclusively. |
-| `//rps <r or p or s>` | roshambo | //rps r<br>//rps p<br>//rps s | Play rock paper scissors with Beldum-Bot.<br><br>r = rock<br>p = paper<br>s = scissors |
-| `//tictactoe <@player1> <@player2>` | ttt<br>tic-tac-toe | //tictactoe @john @bob | Play tictactoe with another user using reactions. (Please wait for the :ok: reaction before beginning.) |
-| `//ud <keywords>` | udsearch<br>urbandictionary | //ud tfti | Performs a Urban Dictionary search using the specified keywords (it will return the top definition). |
-| `//youtube <keywords>` | utube | //youtube cute cat videos | Performs a Youtube search using the specified keywords. |
+| <img width=475px> Commands <img width=475px> | <img width=500px> Usage Examples <img width=500px> | Descriptions |
+| --- | --- | --- |
+| `/8ball <yes/no question>` | `/8ball` do you know the way? | Ask Beldum's ~~eyeball~~ 8-ball a yes/no question. |
+| `/avatar <@user>` | `/avatar` @bob | Get the profile picture of a tagged user in the highest possible resolution. |
+| `/cointoss` | `/cointoss` | Toss a coin, heads or tails.<br>(Fun fact: there is a 1/6000 chance of a coin landing on its edge.) |
+| `/emoji <:emoji:>` | `/emoji` :pepehands: | Get the custom emoji's image in the current server in the highest possible resolution. |
+| `/google <keywords>` | `/google` how to internet | Performs a Google search with the specified keywords. |
+| `/help` | `/help` | List all of this bot's commands. |
+| `/info` | `/info` | Basic information and statistics about this bot. |
+| `/ping` | `/ping` | Check Beldum-Bot's ping to see how it's doing. |
+| `/remindme set <reminder>` | `/remindme set` to go out tomorrow at 10am <br><br> | Set a new reminder (you can only have up to 10 reminders and each reminder must be at least 5 minutes from the present) |
+| `/remindme show` | `/remindme show` | Show all active reminders. |
+| `/remindme remove <reminder number>` | `/remindme remove` 2 | Remove an active reminder |
+| `/remindme utc <offset>` | `/remindme utc` -4 | Set your time zone in order for reminders to function. |
+| `/reportbug ` | `/reportbug` | Found a bug? Get instructions on how to report a bug. |
+| `/rng <num1> <num2>` | `/rng` 1 100 | Random number generator that rolls a random number between two values inclusively. |
+| `/rps` | `/rps` | Play rock paper scissors with Beldum-Bot. |
+| `/servericon` | `/servericon` | Get the current server icon image in the highest possible resolution. |
+| `/tictactoe <@player2>` | `/tictactoe` @bob | Play tictactoe with another user or by yourself. (command user will always start first) |
+| `/urbandictionary <keywords>` | `/ud` tfti | Performs an Urban Dictionary search (it will return the top definition). |
+| `/youtube <keywords>` | `/youtube` cute cat videos | Performs a Youtube search. |
+
+---
+
+## Support/Buy me a coffee
+I have a [Ko-fi](https://ko-fi.com/toeknee).
+
+Please do *not* feel pressured to donate. I will keep the Discord bot up regardless.
