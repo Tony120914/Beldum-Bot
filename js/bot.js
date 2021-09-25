@@ -1,10 +1,19 @@
 require('dotenv').config()
-const { Client, Intents, Collection } = require('discord.js');
+const { Client, Intents, Collection, Options, LimitedCollection } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 const mongodb = require("./mongodb.js");
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const client = new Client({
+  intents: [Intents.FLAGS.GUILDS],
+  makeCache: manager => {
+    if (!['GuildManager', 'ChannelManager', 'GuildChannelManager', 'RoleManager', 'PermissionOverwriteManager'].includes(manager.name)) {
+      return new LimitedCollection({ maxSize: 100 })
+    } else {
+      return new Collection();
+    }
+  }
+});
 
 // Listen on any unhandled promise rejection
 process.on('unhandledRejection', error => {

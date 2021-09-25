@@ -1,6 +1,3 @@
-
-<link rel="stylesheet" href="https://cdn.rawgit.com/Tony120914/Beldum-Bot/master/css/discord_bot_list.css">
-
 # Beldum-Bot
 <img src="https://github.com/Tony120914/Beldum-Bot/blob/master/images/374Beldum-Shiny.png?raw=true" width=200px align="right">
 
@@ -47,7 +44,4 @@ You can invite Beldum Bot to your Discord server by clicking the widget here:
 
 ---
 
-## Support/Buy me a coffee
-I have a [Ko-fi](https://ko-fi.com/toeknee).
-
-Please do *not* feel pressured to donate. I will keep the Discord bot up regardless.
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/E1E06BU7C)

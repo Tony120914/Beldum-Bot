@@ -8,10 +8,10 @@ const message_limit = 500;
 const count_limit = 10;
 const min_minutes = 5;
 const modes = {
-    set: 'set',
-    show: 'show',
-    remove: 'remove',
-    utc: 'utc'
+  set: 'set',
+  show: 'show',
+  remove: 'remove',
+  utc: 'utc'
 };
 
 module.exports = {
