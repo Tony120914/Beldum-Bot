@@ -2,7 +2,8 @@ require('dotenv').config()
 const { Client, Intents, Collection, Options, LimitedCollection } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
-const mongodb = require("./mongodb.js");
+const mongodb = require('./mongodb.js');
+const log = require('./logger').getLogger();
 
 const client = new Client({
   intents: [Intents.FLAGS.GUILDS],
@@ -18,7 +19,7 @@ const client = new Client({
 
 // Listen on any unhandled promise rejection
 process.on('unhandledRejection', error => {
-	console.error('Unhandled promise rejection:', error);
+	log.error('Unhandled promise rejection:', error);
 });
 
 if (process.env.LIVE) {
@@ -27,10 +28,10 @@ if (process.env.LIVE) {
   const dbl = new DBL(process.env.TOKEN_TOPGG, client);
 
   dbl.on('posted', () => {
-    console.log(`Server count posted for shard ${client.shard.ids}.`);
+    log.info(`Server count posted for shard ${client.shard.ids}.`);
   })
   dbl.on('error', e => {
-    console.log(e);
+    log.error(e);
   })
 }
 
@@ -57,9 +58,9 @@ client.login(process.env.TOKEN)
 
 // Connect to MongoDB
 mongodb.connect()
-  .then(() => console.log(`Shard ${client.shard.ids} has connected to MongoDB`))
+  .then(() => log.info(`Shard ${client.shard.ids} has connected to MongoDB`))
   .then(() => mongodb.triggerOnReminderDate(client))
-  .catch(console.error);
+  .catch(err => log.error(err));
 
 
 

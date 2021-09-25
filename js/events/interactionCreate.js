@@ -1,3 +1,5 @@
+const log = require('../logger').getLogger();
+
 // Listen for interactions
 module.exports = {
 	name: 'interactionCreate',
@@ -8,10 +10,16 @@ module.exports = {
     if (!command) return;
   
     try {
+      try {
+        log.info(`/${interaction.commandName} ${interaction.options.getSubcommand()}`)
+      }
+      catch {
+        log.info(`/${interaction.commandName}`)
+      }
       await command.execute(interaction);
     }
     catch (error) {
-      console.error(error);
+      log.error(error);
       await interaction.reply({ content: 'Error', ephemeral: true })
     }
 	},

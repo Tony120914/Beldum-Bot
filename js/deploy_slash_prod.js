@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
+const log = require('./logger').getLogger();
 require('dotenv').config()
 
 const token = process.env.TOKEN;
@@ -25,8 +26,8 @@ const rest = new REST({ version: '9' }).setToken(token);
 			{ body: commands },
 		);
 
-		console.log(`Successfully registered slash commands globally in PROD`);
+		log.info(`Successfully registered slash commands globally in PROD`);
 	} catch (error) {
-		console.error(error);
+		log.error(error);
 	}
 })();

@@ -3,6 +3,7 @@ const { MongoClient } = require("mongodb");
 const { mongodb_collections } = require('../config.json');
 const { MessageEmbed } = require("discord.js");
 const { default_embed_color } = require('../config.json');
+const log = require('./logger').getLogger();
 
 const uri = process.env.MONGODBKEY;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -48,6 +49,7 @@ module.exports = {
               .addField('Datetime', `${reminder.date.toDateString()} ${reminder.date.toLocaleTimeString()}`)
               .setColor(default_embed_color);
             channel.send({ content: `<@${reminder.user_id}>`, embeds: [embed] });
+            log.info(`Reminder triggered to user ${reminder.user_id} in channel ${reminder.channel_id}`)
 
             // remove the copy reminder as well
             await reminders_clone.deleteOne(query)

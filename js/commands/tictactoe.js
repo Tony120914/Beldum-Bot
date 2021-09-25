@@ -1,6 +1,7 @@
 const { MessageEmbed, MessageButton, MessageActionRow, Message } = require("discord.js");
 const { default_embed_color } = require('../../config.json');
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const log = require('../logger').getLogger();
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -66,6 +67,7 @@ module.exports = {
       
       // check for win/lose/draw
       game_status = checkGameStatus(grid, symbol);
+      log.debug(gridToString(grid));
 
       const embed_instructions = new MessageEmbed()
       if (game_status == 'ongoing') {
@@ -151,4 +153,16 @@ function disableGrid(grid) {
       cell.setDisabled(true);
     });
   });
+}
+
+// Helper to visualize TTT grid
+function gridToString(grid) {
+  let string = '';
+  for (let row of grid) {
+    let cur = ''
+    for (let cell of row.components) {
+      cur = `${cur} ${cell.label}`;
+    } string = `${string}\n${cur}`;
+  }
+  return string;
 }
