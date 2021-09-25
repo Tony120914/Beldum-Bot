@@ -7,8 +7,9 @@ const mongodb = require("./mongodb.js");
 const client = new Client({
   intents: [Intents.FLAGS.GUILDS],
   makeCache: manager => {
-    if (!['GuildManager', 'ChannelManager', 'GuildChannelManager', 'RoleManager', 'PermissionOverwriteManager'].includes(manager.name)) {
-      return new LimitedCollection({ maxSize: 100 })
+    if (!['GuildManager', 'ChannelManager', 'GuildChannelManager', 'RoleManager', 'PermissionOverwriteManager', // do not touch these managers
+    'GuildEmojiManager', 'BaseGuildEmojiManager'].includes(manager.name)) { // do not touch emoji managers
+      return new LimitedCollection({ maxSize: 1 })
     } else {
       return new Collection();
     }

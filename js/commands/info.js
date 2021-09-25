@@ -17,7 +17,6 @@ module.exports = {
     
     const embed = new MessageEmbed()
       .setAuthor('Beldum-Bot', 'https://github.com/Tony120914/Beldum-Bot/blob/master/images/Bag_Ultra_Ball_Sprite.png?raw=true')
-      .setDescription(`Currently in ${server_count} servers, with ${member_count} total users!`)
       .addField('Prefix (Slash commands)', `\`/\``, true)
       .addField('List of commands', '\`/help\`', true)
       .addField('Are you enjoying Beldum-bot?', 'Click [here](https://discord.com/api/oauth2/authorize?client_id=454764425090433034&permissions=2147486720&scope=bot%20applications.commands) to invite Beldum-Bot to another server.' + '\n' +
@@ -26,6 +25,7 @@ module.exports = {
       .addField('Found a bug? Report it!', 'Create a [GitHub issue](https://github.com/Tony120914/Beldum-Bot/issues)', true)
       .addField('Websites', '[GitHub](https://github.com/Tony120914/Beldum-Bot) (source code)' + '\n' +
                             '[Top.gg](https://top.gg/bot/454764425090433034)', true)
+      .setFooter(`Currently in ${server_count} servers with ${member_count} users`)
       .setTimestamp()
       .setThumbnail(interaction.client.user.displayAvatarURL({ format: "png", dynamic: true, size: 4096 }))
       .setColor(default_embed_color);
