@@ -3,6 +3,7 @@ const { prefix, default_embed_color, mongodb_collections } = require('../../conf
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const mongodb = require("../mongodb.js");
 const chrono = require('chrono-node');
+const log = require("loglevel");
 
 const message_limit = 500;
 const count_limit = 10;
@@ -172,13 +173,14 @@ module.exports = {
 
       // parse the reminder 
       const now = new Date();
-      now.setHours(now.getHours() + user.utc);
+      // now.setHours(now.getHours() + user.utc);
       const nlp = custom_chrono.parse(reminder, now, { forwardDate: true })[0];
       if (!nlp || !nlp.start) {
           await interaction.reply({ content: `Sorry, I couldn't understand your reminder. Can you please be more concise with the date/time?`, ephemeral: true });
           return;
       }
       const date = nlp.start.date();
+      log.debug(`NLP parsed: ${date}`);
       // make sure the reminder is at least some minutes
       let diff = (date - new Date()) / 1000 / 60;
       if (diff < min_minutes - 1) {
