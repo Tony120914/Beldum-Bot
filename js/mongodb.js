@@ -46,7 +46,6 @@ module.exports = {
             const embed = new MessageEmbed()
               .setAuthor(`Reminder`)
               .setDescription(`${reminder.reminder}`)
-              .addField('Datetime', `${reminder.date.toDateString()} ${reminder.date.toLocaleTimeString()}`)
               .setColor(default_embed_color);
             channel.send({ content: `<@${reminder.user_id}>`, embeds: [embed] });
             log.info(`Reminder triggered to user ${reminder.user_id} in channel ${reminder.channel_id}`)

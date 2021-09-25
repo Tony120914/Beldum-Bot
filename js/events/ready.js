@@ -5,7 +5,7 @@ module.exports = {
 	name: 'ready',
 	once: true,
 	execute(client) {
-    client.user.setActivity("with /", { type: "PLAYING" })
+    client.user.setActivity("with /info /help", { type: "PLAYING" })
     log.info(`Logged in as ${client.user.tag}!`);
 	},
 };
