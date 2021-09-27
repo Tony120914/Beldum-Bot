@@ -7,14 +7,18 @@ const log = require('./logger').getLogger();
 
 const client = new Client({
   intents: [Intents.FLAGS.GUILDS],
-  makeCache: manager => {
-    if (!['GuildManager', 'ChannelManager', 'GuildChannelManager', 'RoleManager', 'PermissionOverwriteManager', // do not touch these managers
-    'GuildEmojiManager', 'BaseGuildEmojiManager'].includes(manager.name)) { // do not touch emoji managers
-      return new LimitedCollection({ maxSize: 1 })
-    } else {
-      return new Collection();
-    }
-  }
+	makeCache: Options.cacheWithLimits({
+    ...Options.defaultMakeCacheSettings,
+		MessageManager: 0,
+		PresenceManager: 0,
+    ThreadManager: 0,
+    GuildBanManager: 0,
+    VoiceStateManager: 0,
+    GuildInviteManager: 0,
+    ThreadMemberManager: 0,
+    GuildStickerManager: 0,
+    StageInstanceManager: 0
+	})
 });
 
 // Listen on any unhandled promise rejection

@@ -19,7 +19,7 @@ module.exports = {
       .setAuthor('Beldum-Bot', 'https://github.com/Tony120914/Beldum-Bot/blob/master/images/Bag_Ultra_Ball_Sprite.png?raw=true')
       .addField('Prefix (Slash commands)', `\`/\``, true)
       .addField('List of commands', '\`/help\`', true)
-      .addField('Are you enjoying Beldum-bot?', 'Click [here](https://discord.com/api/oauth2/authorize?client_id=454764425090433034&permissions=2147486720&scope=bot%20applications.commands) to invite Beldum-Bot to another server.' + '\n' +
+      .addField('Are you enjoying Beldum-bot?', 'Click [here](https://discord.com/api/oauth2/authorize?client_id=454764425090433034&permissions=19456&scope=bot%20applications.commands) to invite Beldum-Bot to another server.' + '\n' +
                                                 'Click [here](https://top.gg/bot/454764425090433034/vote) to vote for Beldum-Bot daily.', false)
       .addField('Want to support/buy me a coffee?', `I have a [Ko-fi](https://ko-fi.com/toeknee).`, false)
       .addField('Found a bug? Report it!', 'Create a [GitHub issue](https://github.com/Tony120914/Beldum-Bot/issues)', true)
