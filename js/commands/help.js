@@ -15,9 +15,9 @@ module.exports = {
 
     embed = new MessageEmbed()
       .setAuthor('Commands')
-      .setDescription(`Type out any specific command to see details and usage\n${command_usages}`)
-      .addField('Want to see the commands on a web interface?',
-        'Click [here](https://github.com/Tony120914/Beldum-Bot/blob/master/README.md)', true)
+      .setDescription(`${command_usages}`)
+      .addField('Want to see documentation of all the commands?',
+        '[Click here](https://tony120914.github.io/beldum-bot-site/#/commands)', true)
       .setThumbnail('https://github.com/Tony120914/Beldum-Bot/blob/master/images/479Rotom-Pok%C3%A9dex.png?raw=true')
       .setColor(default_embed_color);
 

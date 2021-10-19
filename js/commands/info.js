@@ -22,9 +22,10 @@ module.exports = {
       .addField('Are you enjoying Beldum-bot?', 'Click [here](https://discord.com/api/oauth2/authorize?client_id=454764425090433034&permissions=19456&scope=bot%20applications.commands) to invite Beldum-Bot to another server.' + '\n' +
                                                 'Click [here](https://top.gg/bot/454764425090433034/vote) to vote for Beldum-Bot daily.', false)
       .addField('Want to support/buy me a coffee?', `I have a [Ko-fi](https://ko-fi.com/toeknee).`, false)
-      .addField('Found a bug? Report it!', 'Create a [GitHub issue](https://github.com/Tony120914/Beldum-Bot/issues)', true)
-      .addField('Websites', '[GitHub](https://github.com/Tony120914/Beldum-Bot) (source code)' + '\n' +
+      .addField('Websites', '[Website](https://tony120914.github.io/beldum-bot-site)' + '\n' +
+                            '[Source code](https://github.com/Tony120914/Beldum-Bot)' + '\n' +
                             '[Top.gg](https://top.gg/bot/454764425090433034)', true)
+      .addField('Found a bug? Report it!', 'Create a [GitHub issue](https://github.com/Tony120914/Beldum-Bot/issues)', true)
       .setFooter(`Currently in ${server_count} servers with ${member_count} users`)
       .setTimestamp()
       .setThumbnail(interaction.client.user.displayAvatarURL({ format: "png", dynamic: true, size: 4096 }))
