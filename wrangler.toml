@@ -1,0 +1,4 @@
+# Top-level configuration
+name = "beldum-bot"
+main = "src/server.js"
+compatibility_date = "2024-02-01"
