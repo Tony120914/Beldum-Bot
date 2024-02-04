@@ -9,18 +9,7 @@ import {
     verifyKey,
 } from 'discord-interactions';
 import { Commands } from './commands.js';
-
-export class JsonResponse extends Response {
-    constructor(body, init) {
-        const jsonBody = JSON.stringify(body);
-        init = init || {
-            headers: {
-                'content-type': 'application/json;charset=UTF-8',
-            },
-        };
-        super(jsonBody, init);
-    }
-}
+import { JsonResponse } from './classes/JsonResponse.js';
 
 const router = Router();
 
@@ -56,7 +45,7 @@ router.post('/', async (request, env) => {
     if (interaction.type === InteractionType.APPLICATION_COMMAND) {
         let commandName = interaction.data.name.toLowerCase();
         if (Commands.has(commandName)) {
-            return Commands.get(commandName).execute(env);
+            return Commands.get(commandName).execute(interaction, env);
         } else {
             return new JsonResponse({ error: 'Unknown Type' }, { status: 400 });
         }

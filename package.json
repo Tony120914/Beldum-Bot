@@ -4,17 +4,17 @@
   "private": true,
   "main": "src/server.js",
   "scripts": {
-    "register": "node src/register.js arg1 arg2",
+    "register": "node src/register.js",
     "dev": "wrangler dev src/server.js",
     "tunnel": ".\\tunnel\\cloudflared tunnel --url http://localhost:8787"
   },
   "devDependencies": {
+    "dotenv": "^16.4.1",
     "eslint": "^8.56.0",
     "wrangler": "^3.26.0"
   },
   "dependencies": {
     "discord-interactions": "^3.4.0",
-    "dotenv": "^16.4.1",
     "itty-router": "^4.0.27"
   }
 }
