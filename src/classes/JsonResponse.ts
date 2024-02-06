@@ -1,6 +1,9 @@
 
+/**
+ * JSON-ified Response
+ */
 export class JsonResponse extends Response {
-    constructor(body, init) {
+    constructor(body: object, init?: object) {
         const jsonBody = JSON.stringify(body);
         init = init || {
             headers: {
