@@ -1,7 +1,7 @@
 
-const TITLE_LIMIT = 256;
-const DESCRIPTION_LIMIT = 4096;
-const FIELDS_LIMIT = 25;
+const EMBED_TITLE_LIMIT = 256;
+const EMBED_DESCRIPTION_LIMIT = 4096;
+const EMBED_FIELDS_LIMIT = 25;
 /**
  * Embed response structure.
  * Belongs to Interaction Response's data.
@@ -22,17 +22,17 @@ export class Embed {
     fields?: Field[] = [];
 
     setTitle(title: string) {
-        if (title.length >= TITLE_LIMIT) {
-            console.error(`Attempted to exceed limit of ${TITLE_LIMIT} characters in title.\n${JSON.stringify(title)}`);
+        if (title.length >= EMBED_TITLE_LIMIT) {
+            console.error(`Attempted to exceed limit of ${EMBED_TITLE_LIMIT} characters in title.\n${JSON.stringify(title)}`);
         }
-        this.title = title.slice(0, TITLE_LIMIT);
+        this.title = title.slice(0, EMBED_TITLE_LIMIT);
     }
     // setType(type) { this.type = type; } // Will probably be deprecated in the future
     setDescription(description: string) {
-        if (description.length >= DESCRIPTION_LIMIT) {
-            console.error(`Attempted to exceed limit of ${DESCRIPTION_LIMIT} characters in description.\n${JSON.stringify(description)}`);
+        if (description.length >= EMBED_DESCRIPTION_LIMIT) {
+            console.error(`Attempted to exceed limit of ${EMBED_DESCRIPTION_LIMIT} characters in description.\n${JSON.stringify(description)}`);
         }
-        this.description = description.slice(0, DESCRIPTION_LIMIT);
+        this.description = description.slice(0, EMBED_DESCRIPTION_LIMIT);
     }
     setUrl(url: string) { this.url = url; }
     setTimestampOn() { this.timestamp = new Date().toISOString(); }
@@ -40,8 +40,8 @@ export class Embed {
     addField(name: string, value: string, inline?: boolean) {
         if (!this.fields) { return; }
         const field = new Field(name, value, inline);
-        if (this.fields.length >= FIELDS_LIMIT) {
-            console.error(`Attempted to exceed limit of ${FIELDS_LIMIT} fields.\n${JSON.stringify(field)}`);
+        if (this.fields.length >= EMBED_FIELDS_LIMIT) {
+            console.error(`Attempted to exceed limit of ${EMBED_FIELDS_LIMIT} fields.\n${JSON.stringify(field)}`);
             return;
         }
         this.fields.push(field);
