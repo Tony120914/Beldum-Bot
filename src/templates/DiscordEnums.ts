@@ -85,3 +85,9 @@ export enum CHANNEL_TYPES {
     GUILD_FORUM = 15,
     GUILD_MEDIA = 16,
 }
+
+/** Text Input Styles */
+export enum TEXT_INPUT_STYLES {
+    SHORT = 1,
+    PARAGRAPH = 2,
+}

@@ -3,6 +3,7 @@ import {
     CHANNEL_TYPES,
     DEFAULT_VALUE_TYPES,
     MESSAGE_COMPONENT_TYPES,
+    TEXT_INPUT_STYLES,
 } from "./DiscordEnums";
 
 /**
@@ -43,8 +44,11 @@ export class ActionRow extends Component {
                 this.#buttonCount+=1;
                 break;
             }
-            //TODO: more expressions in this case
-            case MESSAGE_COMPONENT_TYPES.STRING_SELECT: {
+            case MESSAGE_COMPONENT_TYPES.STRING_SELECT:
+            case MESSAGE_COMPONENT_TYPES.USER_SELECT:
+            case MESSAGE_COMPONENT_TYPES.ROLE_SELECT:
+            case MESSAGE_COMPONENT_TYPES.MENTIONABLE_SELECT:
+            case MESSAGE_COMPONENT_TYPES.CHANNEL_SELECT: {
                 if (this.#selectMenuCount >= ACTION_ROW_SELECT_MENU_LIMIT) {
                     console.error(`Action Rows cannot contain more than ${ACTION_ROW_SELECT_MENU_LIMIT} select menu.\n${JSON.stringify(component)}`);
                     return;
@@ -276,10 +280,76 @@ export class MentionableSelect extends SelectMenu {
 export class ChannelSelect extends SelectMenu {
     type: MESSAGE_COMPONENT_TYPES = MESSAGE_COMPONENT_TYPES.CHANNEL_SELECT;
     channel_types?: CHANNEL_TYPES[] = [];
+
+    static TYPES = CHANNEL_TYPES;
     
     addChannelType(channelType: CHANNEL_TYPES) {
         if (!this.channel_types?.includes(channelType)) {
             this.channel_types?.push(channelType);
         }
+    }
+}
+
+const TEXT_INPUT_CUSTOM_ID_LIMIT = 100;
+const TEXT_INPUT_LABEL_LIMIT = 45;
+const TEXT_INPUT_MIN_LENGTH = 1; // 0 for max_length (subtract 1)
+const TEXT_INPUT_MAX_LENGTH = 4000;
+const TEXT_INPUT_VALUE_LIMIT = 4000;
+const TEXT_INPUT_PLACEHOLDER_LIMIT = 100;
+/**
+ * Interactive component that render in modals.
+ */
+export class TextInput extends Component {
+    type: MESSAGE_COMPONENT_TYPES = MESSAGE_COMPONENT_TYPES.TEXT_INPUT;
+    custom_id: string
+    style: TEXT_INPUT_STYLES
+    label: string
+    min_length?: number
+    max_length?: number
+    required?: boolean = true;
+    value?: string
+    placeholder?: string
+
+    static STYLES = TEXT_INPUT_STYLES;
+    
+    constructor(custom_id: string, style: TEXT_INPUT_STYLES, label: string) {
+        super();
+        if (custom_id.length >= TEXT_INPUT_CUSTOM_ID_LIMIT) {
+            console.error(`Attempted to exceed limit of ${TEXT_INPUT_CUSTOM_ID_LIMIT} characters in text input custom id.\n${JSON.stringify(custom_id)}`);
+        }
+        if (label.length >= TEXT_INPUT_LABEL_LIMIT) {
+            console.error(`Attempted to exceed limit of ${TEXT_INPUT_LABEL_LIMIT} characters in text input label.\n${JSON.stringify(label)}`);
+        }
+        this.custom_id = custom_id.slice(0, TEXT_INPUT_CUSTOM_ID_LIMIT);
+        this.style = style;
+        this.label = label.slice(0, TEXT_INPUT_LABEL_LIMIT);
+    }
+
+    setMinLength(minLength: number) {
+        if (!(TEXT_INPUT_MIN_LENGTH <= minLength && minLength <= TEXT_INPUT_MAX_LENGTH)) {
+            console.error(`The condition must be met: ${TEXT_INPUT_MIN_LENGTH} <= minLength <= ${TEXT_INPUT_MAX_LENGTH} in text input.\n${JSON.stringify(minLength)}`);
+            return;
+        }
+        this.min_length = minLength;
+    }
+    setMaxLength(maxLength: number) {
+        if (!(TEXT_INPUT_MIN_LENGTH-1 <= maxLength && maxLength <= TEXT_INPUT_MAX_LENGTH)) {
+            console.error(`The condition must be met: ${TEXT_INPUT_MIN_LENGTH-1} <= maxLength <= ${TEXT_INPUT_MAX_LENGTH} in text input.\n${JSON.stringify(maxLength)}`);
+            return;
+        }
+        this.max_length = maxLength;
+    }
+    setRequired(required: boolean) { this.required = required; }
+    setValue(value: string) {
+        if (value.length >= TEXT_INPUT_VALUE_LIMIT) {
+            console.error(`Attempted to exceed limit of ${TEXT_INPUT_VALUE_LIMIT} characters in text input value.\n${JSON.stringify(value)}`);
+        }
+        this.value = value.slice(0, TEXT_INPUT_VALUE_LIMIT);
+    }
+    setPlaceholder(placeholder: string) {
+        if (placeholder.length >= TEXT_INPUT_PLACEHOLDER_LIMIT) {
+            console.error(`Attempted to exceed limit of ${TEXT_INPUT_PLACEHOLDER_LIMIT} characters in text input placeholder.\n${JSON.stringify(placeholder)}`);
+        }
+        this.placeholder = placeholder.slice(0, TEXT_INPUT_PLACEHOLDER_LIMIT);
     }
 }
