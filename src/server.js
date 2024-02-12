@@ -45,7 +45,8 @@ router.post('/', async (request, env) => {
     if (interaction.type === InteractionType.APPLICATION_COMMAND) {
         let commandName = interaction.data.name.toLowerCase();
         if (Commands.has(commandName)) {
-            return Commands.get(commandName).execute(interaction, env);
+            const interactionResponse = await Commands.get(commandName).execute(interaction, env);
+            return new JsonResponse(interactionResponse);
         } else {
             return new JsonResponse({ error: 'Unknown Type' }, { status: 400 });
         }
