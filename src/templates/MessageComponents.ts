@@ -5,12 +5,13 @@ import {
     MESSAGE_COMPONENT_TYPES,
     TEXT_INPUT_STYLES,
 } from "./DiscordEnums";
+import { Emoji } from "./EmojiResources"
 
 /**
  * Parent structure for all 8 Message Components.
  * Belongs to Interaction Response's data.
  */
-export abstract class Component {
+export abstract class MessageComponent {
     type: MESSAGE_COMPONENT_TYPES
 }
 
@@ -19,14 +20,14 @@ const ACTION_ROW_SELECT_MENU_LIMIT = 1;
 /**
  * Non-interactive container component for other types of components.
  */
-export class ActionRow extends Component {
+export class ActionRow extends MessageComponent {
     type: MESSAGE_COMPONENT_TYPES = MESSAGE_COMPONENT_TYPES.ACTION_ROW;
-    components: Component[] = [];
+    components: MessageComponent[] = [];
 
     #buttonCount: number = 0;
     #selectMenuCount: number = 0;
 
-    addComponent(component: Component) {
+    addComponent(component: MessageComponent) {
         switch (component.type) {
             case MESSAGE_COMPONENT_TYPES.ACTION_ROW: {
                 console.error(`Action Rows cannot contain another Action Row.\n${JSON.stringify(component)}`);
@@ -74,16 +75,14 @@ const BUTTON_CUSTOM_ID_LIMIT = 100;
 /**
  * Parent structure for all 5 types of interactive button components.
  */
-abstract class Button extends Component {
+abstract class Button extends MessageComponent {
     type: MESSAGE_COMPONENT_TYPES = MESSAGE_COMPONENT_TYPES.BUTTON;
     style: BUTTON_STYLE_TYPES
     label?: string
-    // emoji?: Emoji  // TODO
+    emoji?: Emoji // Partial Emoji
     custom_id?: string
     url?: string
     disabled?: boolean = false;
-
-    static STYLES = BUTTON_STYLE_TYPES;
 
     setLabel(label: string) {
         if (label.length >= BUTTON_LABEL_LIMIT) {
@@ -91,8 +90,12 @@ abstract class Button extends Component {
         }
         this.label = label.slice(0, BUTTON_LABEL_LIMIT);
     }
-    // setEmoji(emoji) { ; } // TODO: emoji setter?
-    setDisabled(disabled: boolean) { this.disabled = disabled; }
+    setEmoji(id: string, name: string, animated: boolean) {
+        const emoji = new Emoji(id, name);
+        emoji.setAnimated(animated);
+        this.emoji = emoji;
+    }
+    setDisabled(isDisabled: boolean) { this.disabled = isDisabled; }
 }
 
 /**
@@ -137,7 +140,7 @@ const SELECT_MENU_MAX_VALUES_LIMIT = 25;
 /**
  * Parent structure for all 5 select menu components.
  */
-abstract class SelectMenu extends Component {
+abstract class SelectMenu extends MessageComponent {
     type: MESSAGE_COMPONENT_TYPES
     custom_id: string
     placeholder?: string
@@ -145,8 +148,6 @@ abstract class SelectMenu extends Component {
     min_values?: number = 1;
     max_values?: number = 1;
     disabled?: boolean = false;
-
-    static DEFAULT_VALUE_TYPES = DEFAULT_VALUE_TYPES
 
     constructor(custom_id: string) {
         super();
@@ -180,7 +181,7 @@ abstract class SelectMenu extends Component {
         }
         this.max_values = maxValues;
     }
-    setDisabled(disabled: boolean) { this.disabled = disabled; }
+    setDisabled(isDisabled: boolean) { this.disabled = isDisabled; }
 }
 
 /** 
@@ -204,12 +205,7 @@ export class StringSelect extends SelectMenu {
     type: MESSAGE_COMPONENT_TYPES = MESSAGE_COMPONENT_TYPES.STRING_SELECT;
     options?: StringSelectOption[] = [];
 
-    addOption(label: string, value: string, description?: string, /*emoji?: Emoji, */ selected?: boolean) {
-        const option = new StringSelectOption(label, value);
-        option.setDescription(description);
-        // option.setEmoji(emoji);
-        option.setDefault(selected);
-
+    addOption(option: StringSelectOption) {
         if (!this.options) { return; }
         if (this.options.length >= STRING_SELECT_OPTIONS_LIMIT) {
             console.error(`Attempted to exceed limit of ${STRING_SELECT_OPTIONS_LIMIT} options in string select.\n${JSON.stringify(option)}`);
@@ -224,11 +220,11 @@ const STRING_SELECT_OPTION_DESCRIPTION_LIMIT = 100;
 /**
  * String Select options.
  */
-class StringSelectOption {
+export class StringSelectOption {
     label: string
     value: string
     description?: string
-    // emoji?: partial Emoji //TODO
+    emoji?: Emoji // Partial Emoji
     default?: boolean
 
     constructor(label: string, value: string) {
@@ -249,8 +245,12 @@ class StringSelectOption {
         }
         this.description = description.slice(0, STRING_SELECT_OPTION_DESCRIPTION_LIMIT);
     }
-    // setEmoji() {  } //TODO
-    setDefault(selected?: boolean) { this.default = selected; }
+    setEmoji(id: string, name: string, animated: boolean) {
+        const emoji = new Emoji(id, name);
+        emoji.setAnimated(animated);
+        this.emoji = emoji;
+    }
+    setDefault(isDefault?: boolean) { this.default = isDefault; }
 }
 
 /**
@@ -280,8 +280,6 @@ export class MentionableSelect extends SelectMenu {
 export class ChannelSelect extends SelectMenu {
     type: MESSAGE_COMPONENT_TYPES = MESSAGE_COMPONENT_TYPES.CHANNEL_SELECT;
     channel_types?: CHANNEL_TYPES[] = [];
-
-    static TYPES = CHANNEL_TYPES;
     
     addChannelType(channelType: CHANNEL_TYPES) {
         if (!this.channel_types?.includes(channelType)) {
@@ -299,7 +297,7 @@ const TEXT_INPUT_PLACEHOLDER_LIMIT = 100;
 /**
  * Interactive component that render in modals.
  */
-export class TextInput extends Component {
+export class TextInput extends MessageComponent {
     type: MESSAGE_COMPONENT_TYPES = MESSAGE_COMPONENT_TYPES.TEXT_INPUT;
     custom_id: string
     style: TEXT_INPUT_STYLES
@@ -309,8 +307,6 @@ export class TextInput extends Component {
     required?: boolean = true;
     value?: string
     placeholder?: string
-
-    static STYLES = TEXT_INPUT_STYLES;
     
     constructor(custom_id: string, style: TEXT_INPUT_STYLES, label: string) {
         super();
@@ -339,7 +335,7 @@ export class TextInput extends Component {
         }
         this.max_length = maxLength;
     }
-    setRequired(required: boolean) { this.required = required; }
+    setRequired(isRequired: boolean) { this.required = isRequired; }
     setValue(value: string) {
         if (value.length >= TEXT_INPUT_VALUE_LIMIT) {
             console.error(`Attempted to exceed limit of ${TEXT_INPUT_VALUE_LIMIT} characters in text input value.\n${JSON.stringify(value)}`);

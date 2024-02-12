@@ -169,5 +169,5 @@ class Field {
 
     setName(name: string) { this.name = name; }
     setValue(value: string) { this.value = value; }
-    setInline(on: boolean) { this.inline = on; }
+    setInline(isInline: boolean) { this.inline = isInline; }
 }
