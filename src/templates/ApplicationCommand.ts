@@ -22,9 +22,8 @@ export class ApplicationCommand {
     // default_permissions?: boolean = true; // will be deprecated in the future
     type?: APPLICATION_COMMAND_TYPE = 1;
     nsfw?: boolean
-    execute: Function // Custom field to execute command
 
-    constructor(name: string, description: string, type: APPLICATION_COMMAND_TYPE, execute: Function) {
+    constructor(name: string, description: string, type: APPLICATION_COMMAND_TYPE) {
         if (!(APPLICATION_COMMAND_NAME_LIMIT_MIN <= name.length && name.length <= APPLICATION_COMMAND_NAME_LIMIT_MAX)) {
             console.error(`The condition must be met: ${APPLICATION_COMMAND_NAME_LIMIT_MIN} <= name <= ${APPLICATION_COMMAND_NAME_LIMIT_MAX} in application command.\n${JSON.stringify(name)}`);
             return;
@@ -36,7 +35,6 @@ export class ApplicationCommand {
         this.name = name;
         this.description = description;
         this.type = type;
-        this.execute = execute;
     }
 
     addOptions(option: ApplicationCommandOption) { this.options?.push(option); }

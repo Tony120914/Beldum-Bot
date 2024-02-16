@@ -1,4 +1,5 @@
 
+const EMBED_COLOR = 0xFFD700;
 const EMBED_TITLE_LIMIT = 256;
 const EMBED_DESCRIPTION_LIMIT = 4096;
 const EMBED_FIELDS_LIMIT = 25;
@@ -12,7 +13,7 @@ export class Embed {
     description?: string
     url?: string
     timestamp?: string // ISO8601 timestamp
-    color?: number = 0xFFD700;
+    color?: number = EMBED_COLOR;
     footer?: Footer = new Footer();
     image?: Image = new Image();
     thumbnail?: Thumbnail = new Thumbnail();

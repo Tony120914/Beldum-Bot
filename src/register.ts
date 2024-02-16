@@ -27,14 +27,14 @@ if (!applicationId) {
  * you're sure these are the commands you want.
  */
 const url = `https://discord.com/api/v10/applications/${applicationId}/commands`;
-
+const applicationCommands = Array.from(Commands.map.values()).map(command => command.applicationCommand);
 const response = await fetch(url, {
     headers: {
         'Content-Type': 'application/json',
         Authorization: `Bot ${token}`,
     },
     method: 'PUT',
-    body: JSON.stringify(Array.from(Commands.values())),
+    body: JSON.stringify(applicationCommands),
 });
 
 if (response.ok) {

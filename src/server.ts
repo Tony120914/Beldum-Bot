@@ -44,8 +44,8 @@ router.post('/', async (request, env) => {
 
     if (interaction.type === InteractionType.APPLICATION_COMMAND) {
         let commandName = interaction.data.name.toLowerCase();
-        if (Commands.has(commandName)) {
-            const interactionResponse = await Commands.get(commandName).execute(interaction, env);
+        if (Commands.map.has(commandName)) {
+            const interactionResponse = await Commands.map.get(commandName)?.execute(interaction, env);
             return new JsonResponse(interactionResponse);
         } else {
             return new JsonResponse({ error: 'Unknown Type' }, { status: 400 });
@@ -57,7 +57,7 @@ router.post('/', async (request, env) => {
 });
 router.all('*', () => new Response('Not Found.', { status: 404 }));
 
-async function verifyDiscordRequest(request, env) {
+async function verifyDiscordRequest(request: any, env: any) {
     const signature = request.headers.get('x-signature-ed25519');
     const timestamp = request.headers.get('x-signature-timestamp');
     const body = await request.text();
@@ -74,7 +74,7 @@ async function verifyDiscordRequest(request, env) {
 
 const server = {
     verifyDiscordRequest: verifyDiscordRequest,
-    fetch: async function (request, env) {
+    fetch: async function (request: any, env: any) {
         return router.handle(request, env);
     },
 };
