@@ -1,19 +1,20 @@
 import {
-    ALLOWED_MENTION_TYPES, ATTACHMENT_FLAGS,
-} from './DiscordEnums';
+    ALLOWED_MENTION_TYPE, ATTACHMENT_FLAGS,
+} from './Enums';
 
 const ALLOWED_MENTION_ROLES_LIMIT = 100;
 const ALLOWED_MENTION_USERS_LIMIT = 100;
 /**
  * Allowed Mentions structure
+ * https://discord.com/developers/docs/resources/channel#allowed-mentions-object
  */
 export class AllowedMentions {
-    parse: ALLOWED_MENTION_TYPES[] = [];
+    parse: ALLOWED_MENTION_TYPE[] = [];
     roles: string[] = [];
     users: string[] = [];
     replied_user: boolean = false;
 
-    addParse(type: ALLOWED_MENTION_TYPES) {
+    addParse(type: ALLOWED_MENTION_TYPE) {
         if (!this.parse.includes(type)) {
             this.parse.push(type);
         }
@@ -36,7 +37,10 @@ export class AllowedMentions {
 }
 
 const ATTACHMENT_DESCRIPTION_LIMIT = 1024;
-/** Attachment structure */
+/**
+ * Attachment Structure
+ * https://discord.com/developers/docs/resources/channel#attachment-object
+ */
 export class Attachment {
     id: string
     filename: string

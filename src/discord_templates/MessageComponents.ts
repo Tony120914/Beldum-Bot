@@ -1,27 +1,29 @@
 import {
-    BUTTON_STYLE_TYPES,
-    CHANNEL_TYPES,
-    DEFAULT_VALUE_TYPES,
-    MESSAGE_COMPONENT_TYPES,
-    TEXT_INPUT_STYLES,
-} from "./DiscordEnums";
+    BUTTON_STYLE,
+    CHANNEL_TYPE,
+    DEFAULT_VALUE_TYPE,
+    MESSAGE_COMPONENT_TYPE,
+    TEXT_INPUT_STYLE,
+} from "./Enums";
 import { Emoji } from "./EmojiResources"
 
 /**
  * Parent structure for all 8 Message Components.
  * Belongs to Interaction Response's data.
+ * https://discord.com/developers/docs/interactions/message-components
  */
 export abstract class MessageComponent {
-    type: MESSAGE_COMPONENT_TYPES
+    type: MESSAGE_COMPONENT_TYPE
 }
 
 const ACTION_ROW_BUTTON_LIMIT = 5;
 const ACTION_ROW_SELECT_MENU_LIMIT = 1;
 /**
  * Non-interactive container component for other types of components.
+ * https://discord.com/developers/docs/interactions/message-components#action-rows
  */
 export class ActionRow extends MessageComponent {
-    type: MESSAGE_COMPONENT_TYPES = MESSAGE_COMPONENT_TYPES.ACTION_ROW;
+    type: MESSAGE_COMPONENT_TYPE = MESSAGE_COMPONENT_TYPE.ACTION_ROW;
     components: MessageComponent[] = [];
 
     #buttonCount: number = 0;
@@ -29,11 +31,11 @@ export class ActionRow extends MessageComponent {
 
     addComponent(component: MessageComponent) {
         switch (component.type) {
-            case MESSAGE_COMPONENT_TYPES.ACTION_ROW: {
+            case MESSAGE_COMPONENT_TYPE.ACTION_ROW: {
                 console.error(`Action Rows cannot contain another Action Row.\n${JSON.stringify(component)}`);
                 return;
             }
-            case MESSAGE_COMPONENT_TYPES.BUTTON: {
+            case MESSAGE_COMPONENT_TYPE.BUTTON: {
                 if (this.#buttonCount >= ACTION_ROW_BUTTON_LIMIT) {
                     console.error(`Action Rows cannot contain more than ${ACTION_ROW_BUTTON_LIMIT} buttons.\n${JSON.stringify(component)}`);
                     return;
@@ -45,11 +47,11 @@ export class ActionRow extends MessageComponent {
                 this.#buttonCount+=1;
                 break;
             }
-            case MESSAGE_COMPONENT_TYPES.STRING_SELECT:
-            case MESSAGE_COMPONENT_TYPES.USER_SELECT:
-            case MESSAGE_COMPONENT_TYPES.ROLE_SELECT:
-            case MESSAGE_COMPONENT_TYPES.MENTIONABLE_SELECT:
-            case MESSAGE_COMPONENT_TYPES.CHANNEL_SELECT: {
+            case MESSAGE_COMPONENT_TYPE.STRING_SELECT:
+            case MESSAGE_COMPONENT_TYPE.USER_SELECT:
+            case MESSAGE_COMPONENT_TYPE.ROLE_SELECT:
+            case MESSAGE_COMPONENT_TYPE.MENTIONABLE_SELECT:
+            case MESSAGE_COMPONENT_TYPE.CHANNEL_SELECT: {
                 if (this.#selectMenuCount >= ACTION_ROW_SELECT_MENU_LIMIT) {
                     console.error(`Action Rows cannot contain more than ${ACTION_ROW_SELECT_MENU_LIMIT} select menu.\n${JSON.stringify(component)}`);
                     return;
@@ -74,10 +76,11 @@ const BUTTON_LABEL_LIMIT = 80;
 const BUTTON_CUSTOM_ID_LIMIT = 100;
 /**
  * Parent structure for all 5 types of interactive button components.
+ * https://discord.com/developers/docs/interactions/message-components#buttons
  */
 abstract class Button extends MessageComponent {
-    type: MESSAGE_COMPONENT_TYPES = MESSAGE_COMPONENT_TYPES.BUTTON;
-    style: BUTTON_STYLE_TYPES
+    type: MESSAGE_COMPONENT_TYPE = MESSAGE_COMPONENT_TYPE.BUTTON;
+    style: BUTTON_STYLE
     label?: string
     emoji?: Emoji // Partial Emoji
     custom_id?: string
@@ -100,6 +103,7 @@ abstract class Button extends MessageComponent {
 
 /**
  * Interactive non-link button component.
+ * https://discord.com/developers/docs/interactions/message-components#buttons
  */
 export class ButtonNonLink extends Button {
     constructor(custom_id: string) {
@@ -111,8 +115,8 @@ export class ButtonNonLink extends Button {
         this.url = undefined;
     }
 
-    setStyle(style: BUTTON_STYLE_TYPES) {
-        if (style == BUTTON_STYLE_TYPES.LINK) {
+    setStyle(style: BUTTON_STYLE) {
+        if (style == BUTTON_STYLE.LINK) {
             console.error(`ButtonNonLink cannot be a Link Button. Use ButtonLink instead.\n${JSON.stringify(style)}`);
             return;
         }
@@ -122,9 +126,10 @@ export class ButtonNonLink extends Button {
 
 /**
  * Interactive link button component.
+ * https://discord.com/developers/docs/interactions/message-components#buttons
  */
 export class ButtonLink extends Button {
-    style: BUTTON_STYLE_TYPES = BUTTON_STYLE_TYPES.LINK;
+    style: BUTTON_STYLE = BUTTON_STYLE.LINK;
 
     constructor(url: string) {
         super();
@@ -139,9 +144,10 @@ const SELECT_MENU_MIN_VALUES_LIMIT = 0;
 const SELECT_MENU_MAX_VALUES_LIMIT = 25;
 /**
  * Parent structure for all 5 select menu components.
+ * https://discord.com/developers/docs/interactions/message-components#select-menus
  */
 abstract class SelectMenu extends MessageComponent {
-    type: MESSAGE_COMPONENT_TYPES
+    type: MESSAGE_COMPONENT_TYPE
     custom_id: string
     placeholder?: string
     default_values?: DefaultValue[] = []
@@ -163,7 +169,7 @@ abstract class SelectMenu extends MessageComponent {
         }
         this.placeholder = placeholder.slice(0, SELECT_MENU_PLACEHOLDER_LIMIT);
     }
-    addDefaultValue(id: string, type: DEFAULT_VALUE_TYPES) {
+    addDefaultValue(id: string, type: DEFAULT_VALUE_TYPE) {
         const defaultValue = new DefaultValue(id, type);
         this.default_values?.push(defaultValue);
     }
@@ -186,12 +192,13 @@ abstract class SelectMenu extends MessageComponent {
 
 /** 
  * Auto-populated select menu components.
+ * https://discord.com/developers/docs/interactions/message-components#select-menu-object-select-default-value-structure
  */
 class DefaultValue {
     id: string
-    type: DEFAULT_VALUE_TYPES
+    type: DEFAULT_VALUE_TYPE
 
-    constructor(id: string, type: DEFAULT_VALUE_TYPES) {
+    constructor(id: string, type: DEFAULT_VALUE_TYPE) {
         this.id = id;
         this.type = type;
     }
@@ -200,9 +207,10 @@ class DefaultValue {
 const STRING_SELECT_OPTIONS_LIMIT = 25;
 /**
  * Select menu for strings.
+ * https://discord.com/developers/docs/interactions/message-components#select-menu-object
  */
 export class StringSelect extends SelectMenu {
-    type: MESSAGE_COMPONENT_TYPES = MESSAGE_COMPONENT_TYPES.STRING_SELECT;
+    type: MESSAGE_COMPONENT_TYPE = MESSAGE_COMPONENT_TYPE.STRING_SELECT;
     options?: StringSelectOption[] = [];
 
     addOption(option: StringSelectOption) {
@@ -219,6 +227,7 @@ const STRING_SELECT_OPTION_VALUE_LIMIT = 100;
 const STRING_SELECT_OPTION_DESCRIPTION_LIMIT = 100;
 /**
  * String Select options.
+ * https://discord.com/developers/docs/interactions/message-components#select-menu-object-select-option-structure
  */
 export class StringSelectOption {
     label: string
@@ -255,33 +264,37 @@ export class StringSelectOption {
 
 /**
  * Select menu for users.
+ * https://discord.com/developers/docs/interactions/message-components#select-menu-object
  */
 export class UserSelect extends SelectMenu {
-    type: MESSAGE_COMPONENT_TYPES = MESSAGE_COMPONENT_TYPES.USER_SELECT;
+    type: MESSAGE_COMPONENT_TYPE = MESSAGE_COMPONENT_TYPE.USER_SELECT;
 }
 
 /**
  * Select menu for roles.
+ * https://discord.com/developers/docs/interactions/message-components#select-menu-object
  */
 export class RoleSelect extends SelectMenu {
-    type: MESSAGE_COMPONENT_TYPES = MESSAGE_COMPONENT_TYPES.ROLE_SELECT;
+    type: MESSAGE_COMPONENT_TYPE = MESSAGE_COMPONENT_TYPE.ROLE_SELECT;
 }
 
 /**
  * Select menu for mentionables (users AND roles).
+ * https://discord.com/developers/docs/interactions/message-components#select-menu-object
  */
 export class MentionableSelect extends SelectMenu {
-    type: MESSAGE_COMPONENT_TYPES = MESSAGE_COMPONENT_TYPES.MENTIONABLE_SELECT;
+    type: MESSAGE_COMPONENT_TYPE = MESSAGE_COMPONENT_TYPE.MENTIONABLE_SELECT;
 }
 
 /**
  * Select menu for channels.
+ * https://discord.com/developers/docs/interactions/message-components#select-menu-object
  */
 export class ChannelSelect extends SelectMenu {
-    type: MESSAGE_COMPONENT_TYPES = MESSAGE_COMPONENT_TYPES.CHANNEL_SELECT;
-    channel_types?: CHANNEL_TYPES[] = [];
+    type: MESSAGE_COMPONENT_TYPE = MESSAGE_COMPONENT_TYPE.CHANNEL_SELECT;
+    channel_types?: CHANNEL_TYPE[] = [];
     
-    addChannelType(channelType: CHANNEL_TYPES) {
+    addChannelType(channelType: CHANNEL_TYPE) {
         if (!this.channel_types?.includes(channelType)) {
             this.channel_types?.push(channelType);
         }
@@ -296,11 +309,12 @@ const TEXT_INPUT_VALUE_LIMIT = 4000;
 const TEXT_INPUT_PLACEHOLDER_LIMIT = 100;
 /**
  * Interactive component that render in modals.
+ * https://discord.com/developers/docs/interactions/message-components#text-inputs
  */
 export class TextInput extends MessageComponent {
-    type: MESSAGE_COMPONENT_TYPES = MESSAGE_COMPONENT_TYPES.TEXT_INPUT;
+    type: MESSAGE_COMPONENT_TYPE = MESSAGE_COMPONENT_TYPE.TEXT_INPUT;
     custom_id: string
-    style: TEXT_INPUT_STYLES
+    style: TEXT_INPUT_STYLE
     label: string
     min_length?: number
     max_length?: number
@@ -308,7 +322,7 @@ export class TextInput extends MessageComponent {
     value?: string
     placeholder?: string
     
-    constructor(custom_id: string, style: TEXT_INPUT_STYLES, label: string) {
+    constructor(custom_id: string, style: TEXT_INPUT_STYLE, label: string) {
         super();
         if (custom_id.length >= TEXT_INPUT_CUSTOM_ID_LIMIT) {
             console.error(`Attempted to exceed limit of ${TEXT_INPUT_CUSTOM_ID_LIMIT} characters in text input custom id.\n${JSON.stringify(custom_id)}`);

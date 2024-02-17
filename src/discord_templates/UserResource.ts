@@ -1,6 +1,9 @@
-import { USER_FLAGS, USER_PREMIUM_TYPES } from "./DiscordEnums"
+import { USER_FLAGS, USER_PREMIUM_TYPE } from "./Enums"
 
-/** User Structure */
+/** 
+ * User Structure 
+ * https://discord.com/developers/docs/resources/user#user-object
+ */
 export class User {
     id: string
     username: string
@@ -16,7 +19,7 @@ export class User {
     verified?: boolean
     email?: string
     flags?: USER_FLAGS
-    premium_type?: USER_PREMIUM_TYPES
+    premium_type?: USER_PREMIUM_TYPE
     public_flags?: USER_FLAGS
     avatar_decoration?: string
 
@@ -37,7 +40,7 @@ export class User {
     setVerified(isVerified: boolean) {this.verified = isVerified; }
     setEmail(email: string) { this.email = email; }
     setFlags(flags: USER_FLAGS) { this.flags = flags; }
-    setPremiumType(premium_type: USER_PREMIUM_TYPES) { this.premium_type = premium_type; }
+    setPremiumType(premium_type: USER_PREMIUM_TYPE) { this.premium_type = premium_type; }
     setPublicFlags(publicFlags: USER_FLAGS) { this.public_flags = publicFlags; }
     setAvatarDecoration(avatarDecoration: string) { this.avatar_decoration = avatarDecoration; }
 }

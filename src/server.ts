@@ -9,7 +9,7 @@ import {
     verifyKey,
 } from 'discord-interactions';
 import { Commands } from './commands.js';
-import { JsonResponse } from './templates/JsonResponse.js';
+import { JsonResponse } from './app_templates/JsonResponse.js';
 
 const router = Router();
 

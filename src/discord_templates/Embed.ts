@@ -6,6 +6,7 @@ const EMBED_FIELDS_LIMIT = 25;
 /**
  * Embed response structure.
  * Belongs to Interaction Response's data.
+ * https://discord.com/developers/docs/resources/channel#embed-object
  */
 export class Embed {
     title?: string
@@ -53,6 +54,7 @@ export class Embed {
 const FOOTER_TEXT_LIMIT = 2048;
 /**
  * Embed response's Footer structure.
+ * https://discord.com/developers/docs/resources/channel#embed-object-embed-footer-structure
  */
 class Footer {
     text: string
@@ -71,6 +73,7 @@ class Footer {
 
 /**
  * Embed response's Image structure.
+ * https://discord.com/developers/docs/resources/channel#embed-object-embed-image-structure
  */
 class Image {
     url: string
@@ -86,6 +89,7 @@ class Image {
 
 /**
  * Embed response's Thumbnail structure.
+ * https://discord.com/developers/docs/resources/channel#embed-object-embed-thumbnail-structure
  */
 class Thumbnail {
     url: string
@@ -101,6 +105,7 @@ class Thumbnail {
 
 /**
  * Embed response's Video structure.
+ * https://discord.com/developers/docs/resources/channel#embed-object-embed-video-structure
  */
 class Video {
     url?: string
@@ -116,6 +121,7 @@ class Video {
 
 /**
  * Embed response's Provider structure.
+ * https://discord.com/developers/docs/resources/channel#embed-object-embed-provider-structure
  */
 class Provider {
     name?: string
@@ -128,6 +134,7 @@ class Provider {
 const AUTHOR_NAME_LIMIT = 256;
 /**
  * Embed response's Author structure.
+ * https://discord.com/developers/docs/resources/channel#embed-object-embed-author-structure
  */
 class Author {
     name: string
@@ -150,6 +157,7 @@ const FIELD_NAME_LIMIT = 256;
 const FIELD_VALUE_LIMIT = 1024;
 /**
  * Embed response's Field structure.
+ * https://discord.com/developers/docs/resources/channel#embed-object-embed-field-structure
  */
 class Field {
     name: string

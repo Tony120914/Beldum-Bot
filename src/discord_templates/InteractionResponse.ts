@@ -1,14 +1,15 @@
 import {
     INTERACTION_RESPONSE_FLAGS,
     INTERACTION_RESPONSE_TYPE,
-    MESSAGE_COMPONENT_TYPES,
-} from './DiscordEnums';
+    MESSAGE_COMPONENT_TYPE,
+} from './Enums';
 import { Embed } from './Embed';
 import { AllowedMentions, Attachment } from './ChannelResources';
 import { MessageComponent } from './MessageComponents';
 
 /**
  * Response to an interaction
+ * https://discord.com/developers/docs/interactions/receiving-and-responding#responding-to-an-interaction
  */
 export class InteractionResponse {
     type: INTERACTION_RESPONSE_TYPE;
@@ -23,6 +24,7 @@ const DATA_EMBEDS_LIMIT = 10;
 const DATA_ACTION_ROW_LIMIT = 5;
 /**
  * Interaction response's data structure
+ * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-data-structure
  */
 class Data {
     tts?: boolean
@@ -46,7 +48,7 @@ class Data {
     setFlags(flags: INTERACTION_RESPONSE_FLAGS) { this.flags = flags; }
     addComponent(component: MessageComponent) {
         if (!this.components) { return; }
-        if (component.type != MESSAGE_COMPONENT_TYPES.ACTION_ROW) {
+        if (component.type != MESSAGE_COMPONENT_TYPE.ACTION_ROW) {
             console.error(`Top-level components field must be action rows.\n${JSON.stringify(component)}`);
             return;
         }

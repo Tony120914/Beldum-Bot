@@ -1,8 +1,8 @@
-import { ApplicationCommand, ApplicationCommandOption } from '../templates/ApplicationCommand.js'
-import { Command } from '../templates/CommandHandler.js';
-import { APPLICATION_COMMAND_OPTION_TYPE, APPLICATION_COMMAND_TYPE, INTERACTION_RESPONSE_TYPE } from '../templates/DiscordEnums.js';
-import { Embed } from '../templates/Embed.js';
-import { InteractionResponse } from '../templates/InteractionResponse.js'
+import { ApplicationCommand, ApplicationCommandOption } from '../discord_templates/ApplicationCommand.js'
+import { Command } from '../app_templates/CommandHandler.js';
+import { APPLICATION_COMMAND_OPTION_TYPE, APPLICATION_COMMAND_TYPE, INTERACTION_RESPONSE_TYPE } from '../discord_templates/Enums.js';
+import { Embed } from '../discord_templates/Embed.js';
+import { InteractionResponse } from '../discord_templates/InteractionResponse.js'
 import { getRandomInt } from '../utils.js';
 
 const applicationCommand = new ApplicationCommand(
@@ -10,10 +10,16 @@ const applicationCommand = new ApplicationCommand(
     'Ask a yes/no question.',
     APPLICATION_COMMAND_TYPE.CHAT_INPUT
 );
-const option = new ApplicationCommandOption('question', 'a yes/no question', APPLICATION_COMMAND_OPTION_TYPE.STRING);
+const option = new ApplicationCommandOption(
+    'question',
+    'a yes/no question.',
+    APPLICATION_COMMAND_OPTION_TYPE.STRING
+);
+option.setRequired(true);
 applicationCommand.addOptions(option);
 
-const execute = async function(interaction: object, env: any) {
+const execute = async function(interaction: any, env: any) {
+    const question = interaction.data.options[0].value;
     const answers = [
         // Yes - answers
         ':white_check_mark: Oh yeah, 100%.',
@@ -44,8 +50,8 @@ const execute = async function(interaction: object, env: any) {
     const randomInt = getRandomInt(0, answers.length - 1);
 
     const embed = new Embed();
-    embed.setTitle(':8ball:-ball');
-    embed.setDescription(answers[randomInt]);
+    embed.setTitle('8ball');
+    embed.addField(`Question: ${question}`,answers[randomInt]);
     
     const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
     interactionResponse.data?.addEmbed(embed);

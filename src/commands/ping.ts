@@ -1,8 +1,8 @@
-import { ApplicationCommand } from '../templates/ApplicationCommand.js'
-import { Command } from '../templates/CommandHandler.js';
-import { APPLICATION_COMMAND_TYPE, INTERACTION_RESPONSE_TYPE } from '../templates/DiscordEnums.js';
-import { Embed } from '../templates/Embed.js';
-import { InteractionResponse } from '../templates/InteractionResponse.js'
+import { ApplicationCommand } from '../discord_templates/ApplicationCommand.js'
+import { Command } from '../app_templates/CommandHandler.js';
+import { APPLICATION_COMMAND_TYPE, INTERACTION_RESPONSE_TYPE } from '../discord_templates/Enums.js';
+import { Embed } from '../discord_templates/Embed.js';
+import { InteractionResponse } from '../discord_templates/InteractionResponse.js'
 
 const applicationCommand = new ApplicationCommand(
     'ping',

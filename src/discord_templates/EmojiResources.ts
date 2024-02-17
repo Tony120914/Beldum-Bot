@@ -1,6 +1,9 @@
 import { User } from "./UserResource";
 
-/** Emoji Structure */
+/**
+ * Emoji Structure 
+ * https://discord.com/developers/docs/resources/emoji#emoji-object
+ */
 export class Emoji {
     id?: string
     name?: string // can only be null in reaction emoji objects

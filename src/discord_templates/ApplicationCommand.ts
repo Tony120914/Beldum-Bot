@@ -1,8 +1,8 @@
 import {
     APPLICATION_COMMAND_OPTION_TYPE,
     APPLICATION_COMMAND_TYPE,
-    CHANNEL_TYPES
-} from "./DiscordEnums";
+    CHANNEL_TYPE
+} from "./Enums";
 
 const APPLICATION_COMMAND_NAME_LIMIT_MIN = 1;
 const APPLICATION_COMMAND_NAME_LIMIT_MAX = 32;
@@ -10,6 +10,7 @@ const APPLICATION_COMMAND_DESCRIPTION_LIMIT_MIN = 1;
 const APPLICATION_COMMAND_DESCRIPTION_LIMIT_MAX = 100;
 /**
  * Application Command structure
+ * https://discord.com/developers/docs/interactions/application-commands#application-command-object
  */
 export class ApplicationCommand {
     name: string
@@ -51,6 +52,7 @@ const APPLICATION_COMMAND_OPTION_MIN_LENGTH = 0; // Max Length is min 1 (add 1)
 const APPLICATION_COMMAND_OPTION_MAX_LENGTH = 6000;
 /**
  * Application Command Option structure
+ * https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure
  */
 export class ApplicationCommandOption {
     type: APPLICATION_COMMAND_OPTION_TYPE
@@ -61,7 +63,7 @@ export class ApplicationCommandOption {
     required?: boolean = false;
     choices?: ApplicationCommandOptionChoice[] = [];
     options?: ApplicationCommandOption[] = [];
-    channel_types?: CHANNEL_TYPES[] = [];
+    channel_types?: CHANNEL_TYPE[] = [];
     min_value?: number
     max_value?: number
     min_length?: number
@@ -88,7 +90,7 @@ export class ApplicationCommandOption {
         this.choices?.push(choice);
     }
     addOption(options: ApplicationCommandOption) { this.options?.push(options); }
-    addChannelType(channelType: CHANNEL_TYPES) { this.channel_types?.push(channelType); }
+    addChannelType(channelType: CHANNEL_TYPE) { this.channel_types?.push(channelType); }
     setMinValue(minValue: number) { this.min_value = minValue; }
     setMaxValue(maxValue: number) { this.max_value = maxValue; }
     setMinLength(minLength: number) {
@@ -113,6 +115,7 @@ const APPLICATION_COMMAND_OPTION_CHOICE_NAME_LIMIT_MAX = 100;
 const APPLICATION_COMMAND_OPTION_CHOICE_DESCRIPTION_LIMIT = 100;
 /**
  * Application Command Option Choice structure
+ * https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-choice-structure
  */
 class ApplicationCommandOptionChoice {
     name: string
