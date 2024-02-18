@@ -1,6 +1,8 @@
+import { baseUrl, apiVersion } from '../config.json';
 import { Commands } from './commands.js';
 import dotenv from 'dotenv';
 import process from 'node:process';
+import { getFetchErrorText } from './handlers/ErrorHandler.js';
 
 /**
  * This file is meant to be run from the command line, and is not used by the
@@ -26,7 +28,7 @@ if (!applicationId) {
  * Register all commands globally. This can take o(minutes), so wait until
  * you're sure these are the commands you want.
  */
-const url = `https://discord.com/api/v10/applications/${applicationId}/commands`;
+const url = `${baseUrl}${apiVersion}/applications/${applicationId}/commands`;
 const applicationCommands = Array.from(Commands.map.values()).map(command => command.applicationCommand);
 const response = await fetch(url, {
     headers: {
@@ -43,14 +45,6 @@ if (response.ok) {
     console.log(JSON.stringify(data, null, 2));
 } else {
     console.error('Error registering commands');
-    let errorText = `Error registering commands \n ${response.url}: ${response.status} ${response.statusText}`;
-    try {
-        const error = await response.text();
-        if (error) {
-            errorText = `${errorText} \n\n ${error}`;
-        }
-    } catch (err) {
-        console.error('Error reading body from request:', err);
-    }
+    const errorText = getFetchErrorText(response);
     console.error(errorText);
 }

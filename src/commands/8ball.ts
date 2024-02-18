@@ -1,22 +1,23 @@
-import { ApplicationCommand, ApplicationCommandOption } from '../discord_templates/ApplicationCommand.js'
-import { Command } from '../app_templates/CommandHandler.js';
-import { APPLICATION_COMMAND_OPTION_TYPE, APPLICATION_COMMAND_TYPE, INTERACTION_RESPONSE_TYPE } from '../discord_templates/Enums.js';
-import { Embed } from '../discord_templates/Embed.js';
-import { InteractionResponse } from '../discord_templates/InteractionResponse.js'
-import { getRandomInt } from '../utils.js';
+import { ApplicationCommand, ApplicationCommandOption } from '../templates/discord/ApplicationCommand.js'
+import { Command } from '../templates/app/Command.js';
+import { APPLICATION_COMMAND_OPTION_TYPE, APPLICATION_COMMAND_TYPE, INTERACTION_RESPONSE_TYPE } from '../templates/discord/Enums.js';
+import { Embed } from '../templates/discord/Embed.js';
+import { InteractionResponse } from '../templates/discord/InteractionResponse.js'
+import { getRandomInt } from '../handlers/Utils.js';
 
 const applicationCommand = new ApplicationCommand(
     '8ball',
     'Ask a yes/no question.',
     APPLICATION_COMMAND_TYPE.CHAT_INPUT
 );
-const option = new ApplicationCommandOption(
+
+const questionInputOption = new ApplicationCommandOption(
     'question',
-    'a yes/no question.',
+    'A yes/no question.',
     APPLICATION_COMMAND_OPTION_TYPE.STRING
 );
-option.setRequired(true);
-applicationCommand.addOptions(option);
+questionInputOption.setRequired(true);
+applicationCommand.addOptions(questionInputOption);
 
 const execute = async function(interaction: any, env: any) {
     const question = interaction.data.options[0].value;

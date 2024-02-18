@@ -1,4 +1,4 @@
-import { ApplicationCommand } from "../discord_templates/ApplicationCommand";
+import { ApplicationCommand } from "../discord/ApplicationCommand";
 
 /**
  * Command structure to store application command and its execution function.
