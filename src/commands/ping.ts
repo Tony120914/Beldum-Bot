@@ -22,7 +22,8 @@ const execute = async function(interaction: object, env: any) {
     let emoji: string;
     if (ping < 100) { emoji = ':rocket:'; }
     else if (ping < 200) { emoji = ':red_car:'; }
-    else { emoji = ':snail:'; }
+    else if (ping < 300) { emoji = ':snail:'; }
+    else { emoji = ':skull:'; }
 
     const embed = new Embed();
     embed.setTitle('Ping');

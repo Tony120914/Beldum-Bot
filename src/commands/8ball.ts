@@ -52,7 +52,8 @@ const execute = async function(interaction: any, env: any) {
 
     const embed = new Embed();
     embed.setTitle('8ball');
-    embed.addField(`Question: ${question}`,answers[randomInt]);
+    embed.addField('question', question, true);
+    embed.addField('answer', answers[randomInt], true);
     
     const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
     interactionResponse.data?.addEmbed(embed);

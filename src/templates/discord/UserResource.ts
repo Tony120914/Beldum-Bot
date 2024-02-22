@@ -29,6 +29,10 @@ export class User {
         this.discriminator = discriminator;
     }
 
+    assignObject(object: object) {
+        Object.assign(this, object);
+    }
+
     setGlobalName(globalName: string) { this.global_name = globalName; }
     setAvatar(avatar: string) { this.avatar = avatar; }
     setBot(isBot: boolean) { this.bot = isBot; }

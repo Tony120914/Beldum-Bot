@@ -1,8 +1,8 @@
-import { baseUrl, apiVersion } from '../config.json';
 import { Commands } from './commands.js';
 import dotenv from 'dotenv';
 import process from 'node:process';
 import { getFetchErrorText } from './handlers/ErrorHandler.js';
+import { buildDiscordAPIUrl } from './handlers/MessageHandler.js';
 
 /**
  * This file is meant to be run from the command line, and is not used by the
@@ -28,7 +28,7 @@ if (!applicationId) {
  * Register all commands globally. This can take o(minutes), so wait until
  * you're sure these are the commands you want.
  */
-const url = `${baseUrl}${apiVersion}/applications/${applicationId}/commands`;
+const url = buildDiscordAPIUrl(['applications', applicationId, 'commands'], []);
 const applicationCommands = Array.from(Commands.map.values()).map(command => command.applicationCommand);
 const response = await fetch(url, {
     headers: {

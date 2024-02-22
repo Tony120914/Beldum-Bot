@@ -212,3 +212,136 @@ export enum IMAGE_SIZE {
     XX_LARGE = 2 << 10,
     XXX_LARGE = 2 << 11,
 }
+
+/**
+ * Role Flags
+ * https://discord.com/developers/docs/topics/permissions#role-object-role-flags
+ */
+export enum ROLE_FLAGS {
+    IN_PROMPT = 1 << 0,
+}
+
+/**
+ * Guild Verfication Levels
+ * https://discord.com/developers/docs/resources/guild#guild-object-verification-level
+ */
+export enum VERIFICATION_LEVEL {
+    NONE = 0,
+    LOW = 1,
+    MEDIUM = 2,
+    HIGH = 3,
+    VERY_HIGH = 4,
+}
+
+/**
+ * Guild Default Message Notification Levels
+ * https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level
+ */
+export enum DEFAULT_MESSAGE_NOTIFICATION_LEVEL {
+    ALL_MESSAGES = 0,
+    ONLY_MENTIONS = 1,
+}
+
+/**
+ * Explicit Content Filter Levels
+ * https://discord.com/developers/docs/resources/guild#guild-object-explicit-content-filter-level
+ */
+export enum EXPLICIT_CONTENT_FILTER_LEVEL {
+    DISABLED = 0,
+    MEMBERS_WITHOUT_ROLES = 1,
+    ALL_MEMBERS = 2,
+}
+
+/**
+ * Guild Features
+ * https://discord.com/developers/docs/resources/guild#guild-object-guild-features
+ */
+export enum GUILD_FEATURE {
+    ANIMATED_BANNER = 'ANIMATED_BANNER',
+    ANIMATED_ICON = 'ANIMATED_ICON',
+    APPLICATION_COMMAND_PERMISSIONS_V2 = 'APPLICATION_COMMAND_PERMISSIONS_V2',
+    AUTO_MODERATION = 'AUTO_MODERATION',
+    BANNER = 'BANNER',
+    COMMUNITY = 'COMMUNITY', // Mutable Guild Feature
+    CREATOR_MONETIZABLE_PROVISIONAL = 'CREATOR_MONETIZABLE_PROVISIONAL',
+    CREATOR_STORE_PAGE = 'CREATOR_STORE_PAGE',
+    DEVELOPER_SUPPORT_SERVER = 'DEVELOPER_SUPPORT_SERVER',
+    DISCOVERABLE = 'DISCOVERABLE', // Mutable Guild Feature
+    FEATURABLE = 'FEATURABLE',
+    INVITES_DISABLED = 'INVITES_DISABLED', // Mutable Guild Feature
+    INVITE_SPLASH = 'INVITE_SPLASH',
+    MEMBER_VERIFICATION_GATE_ENABLED = 'MEMBER_VERIFICATION_GATE_ENABLED',
+    MORE_STICKERS = 'MORE_STICKERS',
+    NEWS = 'NEWS',
+    PARTNERED = 'PARTNERED',
+    PREVIEW_ENABLED = 'PREVIEW_ENABLED',
+    RAID_ALERTS_DISABLED = 'RAID_ALERTS_DISABLED', // Mutable Guild Feature
+    ROLE_ICONS = 'ROLE_ICONS',
+    ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE = 'ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE',
+    ROLE_SUBSCRIPTIONS_ENABLED = 'ROLE_SUBSCRIPTIONS_ENABLED',
+    TICKETED_EVENTS_ENABLED = 'TICKETED_EVENTS_ENABLED',
+    VANITY_URL = 'VANITY_URL',
+    VERIFIED = 'VERIFIED',
+    VIP_REGIONS = 'VIP_REGIONS',
+    WELCOME_SCREEN_ENABLED = 'WELCOME_SCREEN_ENABLED',
+}
+
+/**
+ * Guild MFA Level
+ */
+export enum MFA_LEVEL {
+    NONE = 0,
+    ELEVATED = 1,
+}
+
+/**
+ * Guild System Channel Flags
+ */
+export enum SYSTEM_CHANNEL_FLAGS {
+    SUPPRESS_JOIN_NOTIFICATIONS = 1 << 0,
+    SUPPRESS_PREMIUM_SUBSCRIPTIONS = 1 << 1,
+    SUPPRESS_GUILD_REMINDER_NOTIFICATIONS = 1 << 2,
+    SUPPRESS_JOIN_NOTIFICATION_REPLIES = 1 << 3,
+    SUPPRESS_ROLE_SUBSCRIPTION_PURCHASE_NOTIFICATIONS = 1 << 4,
+    SUPPRESS_ROLE_SUBSCRIPTION_PURCHASE_NOTIFICATION_REPLIES = 1 << 5,
+}
+
+/**
+ * Guild Premium Tiers
+ */
+export enum PREMIUM_TIER {
+    NONE = 0,
+    TIER_1 = 1,
+    TIER_2 = 2,
+    TIER_3 = 3,
+}
+
+/**
+ * Guild NSFW Levels
+ */
+export enum NSFW_LEVEL {
+    DEFAULT = 0,
+    EXPLICIT = 1,
+    SAFE = 2,
+    AGE_RESTRICTED = 3,
+}
+
+/**
+ * Channel Flags
+ */
+export enum CHANNEL_FLAGS {
+    PINNED = 1 << 1,
+    REQUIRE_TAG = 1 << 4,
+    HIDE_MEDIA_DOWNLOAD_OPTIONS = 1 << 15,
+}
+
+/**
+ * Guild Member Flags
+ */
+export enum GUILD_MEMBER_FLAGS {
+    DEFAULT = 0,
+    DID_REJOIN = 1 << 0,
+    COMPLETED_ONBOARDING = 1 << 1,
+    BYPASSES_VERIFICATION = 1 << 2,
+    STARTED_ONBOARDING = 1 << 3,
+}

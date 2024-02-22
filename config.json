@@ -1,4 +1,5 @@
 {
-    "baseUrl": "https://discord.com/api/v",
-    "apiVersion": "10"
+    "apiBaseUrl": "https://discord.com/api/v",
+    "apiVersion": "10",
+    "imageBaseUrl": "https://cdn.discordapp.com"
 }

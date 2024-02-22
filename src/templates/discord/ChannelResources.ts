@@ -1,6 +1,92 @@
 import {
-    ALLOWED_MENTION_TYPE, ATTACHMENT_FLAGS,
+    ALLOWED_MENTION_TYPE, ATTACHMENT_FLAGS, CHANNEL_FLAGS, CHANNEL_TYPE,
 } from './Enums';
+import { User } from './UserResource';
+
+/**
+ * Channel structure
+ */
+export class Channel {
+    id: string
+    type: CHANNEL_TYPE
+    guild_id?: string
+    position?: number
+    permission_overwrites?: Overwrite[] = [];
+    name?: string
+    topic?: string
+    nsfw?: boolean
+    last_message_id?: string
+    bitrate?: number
+    user_limit?: number
+    rate_limit_per_user?: number
+    recipients?: User[] = [];
+    icon?: string
+    owner_id?: string
+    application_id?: string
+    managed?: boolean
+    parent_id?: string
+    last_pin_timestamp?: string //ISO8601 timestamp
+    rtc_region?: string
+    video_quality_mode?: number
+    message_count?: number
+    member_count?: number
+    thread_metadata?: ThreadMetadata
+    member?: ThreadMember
+    default_auto_archive_duration?: number
+    permissions?: string
+    flags?: CHANNEL_FLAGS
+    total_message_sent?: number
+    available_tags?: ForumTag[]
+    applied_tags?: string[]
+    default_reaction_emoji?: DefaultReaction
+    default_thread_rate_limit_per_user?: number
+    default_sort_order?: number
+    default_forum_layout?: number
+
+    constructor(id: string, type: CHANNEL_TYPE) {
+        this.id = id;
+        this.type = type;
+    }
+
+    assignObject(object: object) {
+        Object.assign(this, object);
+    }
+}
+
+/**
+ * Overwrite structure
+ */
+export class Overwrite {
+    // TODO
+}
+
+/**
+ * Thread Metadata structure
+ */
+export class ThreadMetadata {
+    // TODO
+}
+
+/**
+ * Thread Member structure
+ */
+export class ThreadMember {
+    // TODO
+}
+
+/**
+ * Forum Tag structure
+ */
+export class ForumTag {
+    // TODO
+}
+
+/**
+ * Default Reaction structure
+ */
+export class DefaultReaction {
+    // TODO
+}
 
 const ALLOWED_MENTION_ROLES_LIMIT = 100;
 const ALLOWED_MENTION_USERS_LIMIT = 100;
