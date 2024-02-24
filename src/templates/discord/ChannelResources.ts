@@ -1,12 +1,13 @@
 import {
     ALLOWED_MENTION_TYPE, ATTACHMENT_FLAGS, CHANNEL_FLAGS, CHANNEL_TYPE,
 } from './Enums';
+import { Resource } from './Resource';
 import { User } from './UserResource';
 
 /**
  * Channel structure
  */
-export class Channel {
+export class Channel extends Resource {
     id: string
     type: CHANNEL_TYPE
     guild_id?: string
@@ -44,12 +45,9 @@ export class Channel {
     default_forum_layout?: number
 
     constructor(id: string, type: CHANNEL_TYPE) {
+        super();
         this.id = id;
         this.type = type;
-    }
-
-    assignObject(object: object) {
-        Object.assign(this, object);
     }
 }
 

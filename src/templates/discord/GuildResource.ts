@@ -1,6 +1,7 @@
 import { Emoji } from "./EmojiResources"
 import { DEFAULT_MESSAGE_NOTIFICATION_LEVEL, EXPLICIT_CONTENT_FILTER_LEVEL, GUILD_FEATURE, GUILD_MEMBER_FLAGS, MFA_LEVEL, NSFW_LEVEL, PREMIUM_TIER, SYSTEM_CHANNEL_FLAGS, VERIFICATION_LEVEL } from "./Enums"
 import { Role } from "./PermissionsResource"
+import { Resource } from "./Resource"
 import { Sticker } from "./StickerResource"
 import { User } from "./UserResource"
 
@@ -8,7 +9,7 @@ import { User } from "./UserResource"
  * Guild/Server structure
  * https://discord.com/developers/docs/resources/guild#guild-object
  */
-export class Guild {
+export class Guild extends Resource {
     id: string
     name: string
     icon?: string
@@ -53,12 +54,9 @@ export class Guild {
     safety_alerts_channel_id?: string
 
     constructor(id: string, name: string) {
+        super();
         this.id = id;
         this.name = name;
-    }
-
-    assignObject(object: object) {
-        Object.assign(this, object);
     }
 
     setIcon(icon: string) { this.icon = icon; }
@@ -99,7 +97,7 @@ class WelcomeScreenChannel {
  * Guild Member structure
  * https://discord.com/developers/docs/resources/guild#guild-member-object
  */
-export class GuildMember {
+export class GuildMember extends Resource {
     user?: User
     nick?: string
     avatar?: string
@@ -114,11 +112,7 @@ export class GuildMember {
     communication_disabled_until?: string // ISO8601 timestamp
 
     constructor() {
-
-    }
-    
-    assignObject(object: object) {
-        Object.assign(this, object);
+        super();
     }
     
 }

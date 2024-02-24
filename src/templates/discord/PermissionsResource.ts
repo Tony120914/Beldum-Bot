@@ -1,10 +1,11 @@
 import { ROLE_FLAGS } from "./Enums"
+import { Resource } from "./Resource"
 
 /**
  * Role Structure
  * https://discord.com/developers/docs/topics/permissions#role-object
  */
-export class Role {
+export class Role extends Resource {
     id: string
     name: string
     color: number
@@ -19,12 +20,9 @@ export class Role {
     flags: ROLE_FLAGS
 
     constructor(id: string, name: string) {
+        super();
         this.id = id;
         this.name = name;
-    }
-
-    assignObject(object: object) {
-        Object.assign(this, object);
     }
 
     setColor(color: number) { this.color = color; }

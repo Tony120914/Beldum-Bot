@@ -1,10 +1,11 @@
 import { USER_FLAGS, USER_PREMIUM_TYPE } from "./Enums"
+import { Resource } from "./Resource"
 
 /** 
  * User Structure 
  * https://discord.com/developers/docs/resources/user#user-object
  */
-export class User {
+export class User extends Resource {
     id: string
     username: string
     discriminator: string
@@ -24,13 +25,10 @@ export class User {
     avatar_decoration?: string
 
     constructor(id: string, username: string, discriminator: string) {
+        super();
         this.id = id;
         this.username = username;
         this.discriminator = discriminator;
-    }
-
-    assignObject(object: object) {
-        Object.assign(this, object);
     }
 
     setGlobalName(globalName: string) { this.global_name = globalName; }

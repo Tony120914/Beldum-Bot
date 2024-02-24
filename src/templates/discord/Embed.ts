@@ -30,7 +30,8 @@ export class Embed {
         this.title = title.slice(0, EMBED_TITLE_LIMIT);
     }
     // setType(type) { this.type = type; } // Will probably be deprecated in the future
-    setDescription(description: string) {
+    setDescription(description?: string) {
+        if (!description) { return; }
         if (description.length >= EMBED_DESCRIPTION_LIMIT) {
             console.error(`Attempted to exceed limit of ${EMBED_DESCRIPTION_LIMIT} characters in description.\n${JSON.stringify(description)}`);
         }
@@ -39,9 +40,18 @@ export class Embed {
     setUrl(url: string) { this.url = url; }
     setTimestampOn() { this.timestamp = new Date().toISOString(); }
     setColor(color: number) { this.color = color; }
-    addField(name: string, value: string, inline?: boolean) {
-        if (!this.fields) { return; }
+    addField(name?: string, value?: string, inline?: boolean) {
+        if (!this.fields || !name || !value) { return; }
         const field = new Field(name, value, inline);
+        if (this.fields.length >= EMBED_FIELDS_LIMIT) {
+            console.error(`Attempted to exceed limit of ${EMBED_FIELDS_LIMIT} fields.\n${JSON.stringify(field)}`);
+            return;
+        }
+        this.fields.push(field);
+    }
+    addBlankField() {
+        if (!this.fields) { return; }
+        const field = new Field('', '', false);
         if (this.fields.length >= EMBED_FIELDS_LIMIT) {
             console.error(`Attempted to exceed limit of ${EMBED_FIELDS_LIMIT} fields.\n${JSON.stringify(field)}`);
             return;

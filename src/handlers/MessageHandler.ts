@@ -47,7 +47,7 @@ export function parseEmoji(format: string): any {
 }
 
 /**
- * Build User format
+ * Build Emoji format
  * https://discord.com/developers/docs/reference#message-formatting
  */
 export function buildEmoji(emojiName?: string, emojiId?: string, isAnimated?: boolean) {
@@ -59,7 +59,8 @@ export function buildEmoji(emojiName?: string, emojiId?: string, isAnimated?: bo
  * Build Role format
  * https://discord.com/developers/docs/reference#message-formatting
  */
-export function buildRole(roleId: string) {
+export function buildRole(roleId?: string) {
+    if (!roleId) { return; }
     return `<@&${roleId}>`;
 }
 
@@ -67,6 +68,7 @@ export function buildRole(roleId: string) {
  * Build User format
  * https://discord.com/developers/docs/reference#message-formatting
  */
-export function buildUser(userId: string) {
+export function buildUser(userId?: string) {
+    if (!userId) { return; }
     return `<@${userId}>`;
 }

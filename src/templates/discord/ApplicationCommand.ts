@@ -33,6 +33,10 @@ export class ApplicationCommand {
             console.error(`The condition must be met: ${APPLICATION_COMMAND_DESCRIPTION_LIMIT_MIN} <= description <= ${APPLICATION_COMMAND_DESCRIPTION_LIMIT_MAX} in application command.\n${JSON.stringify(description)}`);
             return;
         }
+        if (!/^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$/u.test(name)) {
+            console.error(`Application command name must match regex:/^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$/u\n${JSON.stringify(name)}`);
+            return;
+        }
         this.name = name;
         this.description = description;
         this.type = type;
@@ -77,6 +81,10 @@ export class ApplicationCommandOption {
         }
         if (!(APPLICATION_COMMAND_OPTION_DESCRIPTION_LIMIT_MIN <= description.length && description.length <= APPLICATION_COMMAND_OPTION_DESCRIPTION_LIMIT_MAX)) {
             console.error(`The condition must be met: ${APPLICATION_COMMAND_OPTION_DESCRIPTION_LIMIT_MIN} <= description <= ${APPLICATION_COMMAND_OPTION_DESCRIPTION_LIMIT_MAX} in application command.\n${JSON.stringify(description)}`);
+            return;
+        }
+        if (!/^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$/u.test(name)) {
+            console.error(`Application command name must match regex:/^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$/u\n${JSON.stringify(name)}`);
             return;
         }
         this.name = name;
