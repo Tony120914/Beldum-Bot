@@ -1,9 +1,9 @@
 import { Emoji } from "./EmojiResources"
 import { DEFAULT_MESSAGE_NOTIFICATION_LEVEL, EXPLICIT_CONTENT_FILTER_LEVEL, GUILD_FEATURE, GUILD_MEMBER_FLAGS, MFA_LEVEL, NSFW_LEVEL, PREMIUM_TIER, SYSTEM_CHANNEL_FLAGS, VERIFICATION_LEVEL } from "./Enums"
-import { Role } from "./PermissionsResource"
+import { Role } from "./PermissionsResources"
 import { Resource } from "./Resource"
-import { Sticker } from "./StickerResource"
-import { User } from "./UserResource"
+import { Sticker } from "./StickerResources"
+import { User } from "./UserResources"
 
 /**
  * Guild/Server structure

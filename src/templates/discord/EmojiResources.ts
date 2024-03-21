@@ -1,4 +1,4 @@
-import { User } from "./UserResource";
+import { User } from "./UserResources";
 
 /**
  * Emoji Structure 

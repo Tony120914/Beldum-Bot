@@ -288,6 +288,7 @@ export enum GUILD_FEATURE {
 
 /**
  * Guild MFA Level
+ * https://discord.com/developers/docs/resources/guild#guild-object-mfa-level
  */
 export enum MFA_LEVEL {
     NONE = 0,
@@ -296,6 +297,7 @@ export enum MFA_LEVEL {
 
 /**
  * Guild System Channel Flags
+ * https://discord.com/developers/docs/resources/guild#guild-object-system-channel-flags
  */
 export enum SYSTEM_CHANNEL_FLAGS {
     SUPPRESS_JOIN_NOTIFICATIONS = 1 << 0,
@@ -308,6 +310,7 @@ export enum SYSTEM_CHANNEL_FLAGS {
 
 /**
  * Guild Premium Tiers
+ * https://discord.com/developers/docs/resources/guild#guild-object-premium-tier
  */
 export enum PREMIUM_TIER {
     NONE = 0,
@@ -318,6 +321,7 @@ export enum PREMIUM_TIER {
 
 /**
  * Guild NSFW Levels
+ * https://discord.com/developers/docs/resources/guild#guild-object-guild-nsfw-level
  */
 export enum NSFW_LEVEL {
     DEFAULT = 0,
@@ -328,6 +332,7 @@ export enum NSFW_LEVEL {
 
 /**
  * Channel Flags
+ * https://discord.com/developers/docs/resources/channel#channel-object-channel-flags
  */
 export enum CHANNEL_FLAGS {
     PINNED = 1 << 1,
@@ -337,6 +342,7 @@ export enum CHANNEL_FLAGS {
 
 /**
  * Guild Member Flags
+ * https://discord.com/developers/docs/resources/guild#guild-member-object-guild-member-flags
  */
 export enum GUILD_MEMBER_FLAGS {
     DEFAULT = 0,
@@ -344,4 +350,21 @@ export enum GUILD_MEMBER_FLAGS {
     COMPLETED_ONBOARDING = 1 << 1,
     BYPASSES_VERIFICATION = 1 << 2,
     STARTED_ONBOARDING = 1 << 3,
+}
+
+/**
+ * Application Flags
+ * https://discord.com/developers/docs/resources/application#application-object-application-flags
+ */
+export enum APPLICATION_FLAGS {
+    APPLICATION_AUTO_MODERATION_RULE_CREATE_BADGE = 1 << 6,
+    GATEWAY_PRESENCE = 1 << 12,
+    GATEWAY_PRESENCE_LIMITED = 1 << 13,
+    GATEWAY_GUILD_MEMBERS = 1 << 14,
+    GATEWAY_GUILD_MEMBERS_LIMITED = 1 << 15,
+    VERIFICATION_PENDING_GUILD_LIMIT = 1 << 16,
+    EMBEDDED = 1 << 17,
+    GATEWAY_MESSAGE_CONTENT = 1 << 18,
+    GATEWAY_MESSAGE_CONTENT_LIMITED = 1 << 19,
+    APPLICATION_COMMAND_BADGE = 1 << 23,
 }

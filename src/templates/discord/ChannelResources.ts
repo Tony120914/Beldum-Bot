@@ -2,10 +2,11 @@ import {
     ALLOWED_MENTION_TYPE, ATTACHMENT_FLAGS, CHANNEL_FLAGS, CHANNEL_TYPE,
 } from './Enums';
 import { Resource } from './Resource';
-import { User } from './UserResource';
+import { User } from './UserResources';
 
 /**
  * Channel structure
+ * https://discord.com/developers/docs/resources/channel#channel-object
  */
 export class Channel extends Resource {
     id: string
