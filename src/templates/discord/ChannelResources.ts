@@ -54,37 +54,37 @@ export class Channel extends Resource {
 
 /**
  * Overwrite structure
+ * https://discord.com/developers/docs/resources/channel#overwrite-object
  */
 export class Overwrite {
-    // TODO
 }
 
 /**
  * Thread Metadata structure
+ * https://discord.com/developers/docs/resources/channel#thread-metadata-object
  */
 export class ThreadMetadata {
-    // TODO
 }
 
 /**
  * Thread Member structure
+ * https://discord.com/developers/docs/resources/channel#thread-member-object
  */
 export class ThreadMember {
-    // TODO
 }
 
 /**
  * Forum Tag structure
+ * https://discord.com/developers/docs/resources/channel#forum-tag-object
  */
 export class ForumTag {
-    // TODO
 }
 
 /**
  * Default Reaction structure
+ * https://discord.com/developers/docs/resources/channel#default-reaction-object
  */
 export class DefaultReaction {
-    // TODO
 }
 
 const ALLOWED_MENTION_ROLES_LIMIT = 100;
