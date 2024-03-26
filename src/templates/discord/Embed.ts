@@ -25,7 +25,9 @@ export class Embed {
 
     setTitle(title: string) {
         if (title.length >= EMBED_TITLE_LIMIT) {
-            console.error(`Attempted to exceed limit of ${EMBED_TITLE_LIMIT} characters in title.\n${JSON.stringify(title)}`);
+            console.error(
+                `Attempted to exceed limit of ${EMBED_TITLE_LIMIT} characters in title.\n` +
+                `${JSON.stringify(title)}`);
         }
         this.title = title.slice(0, EMBED_TITLE_LIMIT);
     }
@@ -33,7 +35,9 @@ export class Embed {
     setDescription(description?: string) {
         if (!description) { return; }
         if (description.length >= EMBED_DESCRIPTION_LIMIT) {
-            console.error(`Attempted to exceed limit of ${EMBED_DESCRIPTION_LIMIT} characters in description.\n${JSON.stringify(description)}`);
+            console.error(
+                `Attempted to exceed limit of ${EMBED_DESCRIPTION_LIMIT} characters in description.\n` +
+                `${JSON.stringify(description)}`);
         }
         this.description = description.slice(0, EMBED_DESCRIPTION_LIMIT);
     }
@@ -44,7 +48,9 @@ export class Embed {
         if (!this.fields || !name || !value) { return; }
         const field = new Field(name, value, inline);
         if (this.fields.length >= EMBED_FIELDS_LIMIT) {
-            console.error(`Attempted to exceed limit of ${EMBED_FIELDS_LIMIT} fields.\n${JSON.stringify(field)}`);
+            console.error(
+                `Attempted to exceed limit of ${EMBED_FIELDS_LIMIT} fields.\n` +
+                `${JSON.stringify(field)}`);
             return;
         }
         this.fields.push(field);
@@ -53,7 +59,9 @@ export class Embed {
         if (!this.fields) { return; }
         const field = new Field('', '', false);
         if (this.fields.length >= EMBED_FIELDS_LIMIT) {
-            console.error(`Attempted to exceed limit of ${EMBED_FIELDS_LIMIT} fields.\n${JSON.stringify(field)}`);
+            console.error(
+                `Attempted to exceed limit of ${EMBED_FIELDS_LIMIT} fields.\n` +
+                `${JSON.stringify(field)}`);
             return;
         }
         this.fields.push(field);
@@ -73,7 +81,9 @@ class Footer {
 
     setText(text: string) {
         if (text.length >= FOOTER_TEXT_LIMIT) {
-            console.error(`Attempted to exceed limit of ${FOOTER_TEXT_LIMIT} characters in footer text.\n${JSON.stringify(text)}`);
+            console.error(
+                `Attempted to exceed limit of ${FOOTER_TEXT_LIMIT} characters in footer text.\n` +
+                `${JSON.stringify(text)}`);
         }
         this.text = text.slice(0, FOOTER_TEXT_LIMIT);
     }
@@ -154,7 +164,9 @@ class Author {
 
     setName(name: string) {
         if (name.length >= AUTHOR_NAME_LIMIT) {
-            console.error(`Attempted to exceed limit of ${AUTHOR_NAME_LIMIT} characters in author name.\n${JSON.stringify(name)}`);
+            console.error(
+                `Attempted to exceed limit of ${AUTHOR_NAME_LIMIT} characters in author name.\n` +
+                `${JSON.stringify(name)}`);
         }
         this.name = name.slice(0, AUTHOR_NAME_LIMIT);
     }
@@ -176,10 +188,14 @@ class Field {
 
     constructor(name: string, value: string, inline?: boolean) {
         if (name.length >= FIELD_NAME_LIMIT) {
-            console.error(`Attempted to exceed limit of ${FIELD_NAME_LIMIT} characters in field name.\n${JSON.stringify(name)}`);
+            console.error(
+                `Attempted to exceed limit of ${FIELD_NAME_LIMIT} characters in field name.\n` +
+                `${JSON.stringify(name)}`);
         }
         if (value.length >= FIELD_VALUE_LIMIT) {
-            console.error(`Attempted to exceed limit of ${FIELD_VALUE_LIMIT} characters in field value.\n${JSON.stringify(value)}`);
+            console.error(
+                `Attempted to exceed limit of ${FIELD_VALUE_LIMIT} characters in field value.\n` +
+                `${JSON.stringify(value)}`);
         }
         this.name = name.slice(0, FIELD_NAME_LIMIT);
         this.value = value.slice(0, FIELD_VALUE_LIMIT);

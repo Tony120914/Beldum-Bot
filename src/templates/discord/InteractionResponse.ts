@@ -40,7 +40,9 @@ class Data {
     addEmbed(embed: Embed) {
         if (!this.embeds) { return; }
         if (this.embeds.length >= DATA_EMBEDS_LIMIT) {
-            console.error(`Attempted to exceed limit of ${DATA_EMBEDS_LIMIT} embeds.\n${JSON.stringify(embed)}`);
+            console.error(
+                `Attempted to exceed limit of ${DATA_EMBEDS_LIMIT} embeds.\n` +
+                `${JSON.stringify(embed)}`);
             return;
         }
         this.embeds.push(embed);
@@ -49,11 +51,15 @@ class Data {
     addComponent(component: MessageComponent) {
         if (!this.components) { return; }
         if (component.type != MESSAGE_COMPONENT_TYPE.ACTION_ROW) {
-            console.error(`Top-level components field must be action rows.\n${JSON.stringify(component)}`);
+            console.error(
+                `Top-level components field must be action rows.\n` +
+                `${JSON.stringify(component)}`);
             return;
         }
         if (this.components.length >= DATA_ACTION_ROW_LIMIT) {
-            console.error(`Attempted to exceed limit of ${DATA_ACTION_ROW_LIMIT} action rows per message.\n${JSON.stringify(component)}`);
+            console.error(
+                `Attempted to exceed limit of ${DATA_ACTION_ROW_LIMIT} action rows per message.\n` +
+                `${JSON.stringify(component)}`);
             return;
         }
         this.components.push(component);

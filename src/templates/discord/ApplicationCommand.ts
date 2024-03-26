@@ -26,15 +26,21 @@ export class ApplicationCommand {
 
     constructor(name: string, description: string, type: APPLICATION_COMMAND_TYPE) {
         if (!(APPLICATION_COMMAND_NAME_LIMIT_MIN <= name.length && name.length <= APPLICATION_COMMAND_NAME_LIMIT_MAX)) {
-            console.error(`The condition must be met: ${APPLICATION_COMMAND_NAME_LIMIT_MIN} <= name <= ${APPLICATION_COMMAND_NAME_LIMIT_MAX} in application command.\n${JSON.stringify(name)}`);
+            console.error(
+                `The condition must be met: ${APPLICATION_COMMAND_NAME_LIMIT_MIN} <= name <= ${APPLICATION_COMMAND_NAME_LIMIT_MAX} in application command.\n` +
+                `${JSON.stringify(name)}`);
             return;
         }
         if (!(APPLICATION_COMMAND_DESCRIPTION_LIMIT_MIN <= description.length && description.length <= APPLICATION_COMMAND_DESCRIPTION_LIMIT_MAX)) {
-            console.error(`The condition must be met: ${APPLICATION_COMMAND_DESCRIPTION_LIMIT_MIN} <= description <= ${APPLICATION_COMMAND_DESCRIPTION_LIMIT_MAX} in application command.\n${JSON.stringify(description)}`);
+            console.error(
+                `The condition must be met: ${APPLICATION_COMMAND_DESCRIPTION_LIMIT_MIN} <= description <= ${APPLICATION_COMMAND_DESCRIPTION_LIMIT_MAX} in application command.\n` +
+                `${JSON.stringify(description)}`);
             return;
         }
         if (!/^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$/u.test(name)) {
-            console.error(`Application command name must match regex:/^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$/u\n${JSON.stringify(name)}`);
+            console.error(
+                `Application command name must match regex:/^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$/u\n` +
+                `${JSON.stringify(name)}`);
             return;
         }
         this.name = name;
@@ -76,15 +82,21 @@ export class ApplicationCommandOption {
 
     constructor(name: string, description: string, type: APPLICATION_COMMAND_OPTION_TYPE, ) {
         if (!(APPLICATION_COMMAND_OPTION_NAME_LIMIT_MIN <= name.length && name.length <= APPLICATION_COMMAND_OPTION_NAME_LIMIT_MAX)) {
-            console.error(`The condition must be met: ${APPLICATION_COMMAND_OPTION_NAME_LIMIT_MIN} <= name <= ${APPLICATION_COMMAND_OPTION_NAME_LIMIT_MAX} in application command.\n${JSON.stringify(name)}`);
+            console.error(
+                `The condition must be met: ${APPLICATION_COMMAND_OPTION_NAME_LIMIT_MIN} <= name <= ${APPLICATION_COMMAND_OPTION_NAME_LIMIT_MAX} in application command.\n` +
+                `${JSON.stringify(name)}`);
             return;
         }
         if (!(APPLICATION_COMMAND_OPTION_DESCRIPTION_LIMIT_MIN <= description.length && description.length <= APPLICATION_COMMAND_OPTION_DESCRIPTION_LIMIT_MAX)) {
-            console.error(`The condition must be met: ${APPLICATION_COMMAND_OPTION_DESCRIPTION_LIMIT_MIN} <= description <= ${APPLICATION_COMMAND_OPTION_DESCRIPTION_LIMIT_MAX} in application command.\n${JSON.stringify(description)}`);
+            console.error(
+                `The condition must be met: ${APPLICATION_COMMAND_OPTION_DESCRIPTION_LIMIT_MIN} <= description <= ${APPLICATION_COMMAND_OPTION_DESCRIPTION_LIMIT_MAX} in application command.\n` +
+                `${JSON.stringify(description)}`);
             return;
         }
         if (!/^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$/u.test(name)) {
-            console.error(`Application command name must match regex:/^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$/u\n${JSON.stringify(name)}`);
+            console.error(
+                `Application command name must match regex:/^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$/u\n` +
+                `${JSON.stringify(name)}`);
             return;
         }
         this.name = name;
@@ -103,14 +115,18 @@ export class ApplicationCommandOption {
     setMaxValue(maxValue: number) { this.max_value = maxValue; }
     setMinLength(minLength: number) {
         if (!(APPLICATION_COMMAND_OPTION_MIN_LENGTH <= minLength && minLength <= APPLICATION_COMMAND_OPTION_MAX_LENGTH)) {
-            console.error(`The condition must be met: ${APPLICATION_COMMAND_OPTION_MIN_LENGTH} <= minLength <= ${APPLICATION_COMMAND_OPTION_MAX_LENGTH} in application command option.\n${JSON.stringify(minLength)}`);
+            console.error(
+                `The condition must be met: ${APPLICATION_COMMAND_OPTION_MIN_LENGTH} <= minLength <= ${APPLICATION_COMMAND_OPTION_MAX_LENGTH} in application command option.\n` +
+                `${JSON.stringify(minLength)}`);
             return;
         }
         this.min_length = minLength;
     }
     setMaxLength(maxLength: number) {
         if (!(APPLICATION_COMMAND_OPTION_MIN_LENGTH <= maxLength && maxLength <= APPLICATION_COMMAND_OPTION_MAX_LENGTH)) {
-            console.error(`The condition must be met: ${APPLICATION_COMMAND_OPTION_MIN_LENGTH} <= maxLength <= ${APPLICATION_COMMAND_OPTION_MAX_LENGTH} in application command option.\n${JSON.stringify(maxLength)}`);
+            console.error(
+                `The condition must be met: ${APPLICATION_COMMAND_OPTION_MIN_LENGTH} <= maxLength <= ${APPLICATION_COMMAND_OPTION_MAX_LENGTH} in application command option.\n` +
+                `${JSON.stringify(maxLength)}`);
             return;
         }
         this.max_length = maxLength;
@@ -132,12 +148,16 @@ class ApplicationCommandOptionChoice {
 
     constructor(name: string, value: string|number) {
         if (!(APPLICATION_COMMAND_OPTION_CHOICE_NAME_LIMIT_MIN <= name.length && name.length <= APPLICATION_COMMAND_OPTION_CHOICE_NAME_LIMIT_MAX)) {
-            console.error(`The condition must be met: ${APPLICATION_COMMAND_OPTION_CHOICE_NAME_LIMIT_MIN} <= name <= ${APPLICATION_COMMAND_OPTION_CHOICE_NAME_LIMIT_MAX} in application command.\n${JSON.stringify(name)}`);
+            console.error(
+                `The condition must be met: ${APPLICATION_COMMAND_OPTION_CHOICE_NAME_LIMIT_MIN} <= name <= ${APPLICATION_COMMAND_OPTION_CHOICE_NAME_LIMIT_MAX} in application command.\n` +
+                `${JSON.stringify(name)}`);
             return;
         }
         if (typeof(value) == 'string') {
             if (value.length >= APPLICATION_COMMAND_OPTION_CHOICE_DESCRIPTION_LIMIT) {
-                console.error(`Attempted to exceed limit of ${APPLICATION_COMMAND_OPTION_CHOICE_DESCRIPTION_LIMIT} characters in application command option choice value.\n${JSON.stringify(value)}`);
+                console.error(
+                    `Attempted to exceed limit of ${APPLICATION_COMMAND_OPTION_CHOICE_DESCRIPTION_LIMIT} characters in application command option choice value.\n` +
+                    `${JSON.stringify(value)}`);
             }
             this.value = value.slice(0, APPLICATION_COMMAND_OPTION_CHOICE_DESCRIPTION_LIMIT);
         }

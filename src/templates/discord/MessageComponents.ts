@@ -32,16 +32,22 @@ export class ActionRow extends MessageComponent {
     addComponent(component: MessageComponent) {
         switch (component.type) {
             case MESSAGE_COMPONENT_TYPE.ACTION_ROW: {
-                console.error(`Action Rows cannot contain another Action Row.\n${JSON.stringify(component)}`);
+                console.error(
+                    `Action Rows cannot contain another Action Row.\n` +
+                    `${JSON.stringify(component)}`);
                 return;
             }
             case MESSAGE_COMPONENT_TYPE.BUTTON: {
                 if (this.#buttonCount >= ACTION_ROW_BUTTON_LIMIT) {
-                    console.error(`Action Rows cannot contain more than ${ACTION_ROW_BUTTON_LIMIT} buttons.\n${JSON.stringify(component)}`);
+                    console.error(
+                        `Action Rows cannot contain more than ${ACTION_ROW_BUTTON_LIMIT} buttons.\n` +
+                        `${JSON.stringify(component)}`);
                     return;
                 }
                 if (this.#selectMenuCount >= 0) {
-                    console.error(`Action Rows cannot contain both buttons and select menu components.\n${JSON.stringify(component)}`);                
+                    console.error(
+                        `Action Rows cannot contain both buttons and select menu components.\n` +
+                        `${JSON.stringify(component)}`);                
                     return;
                 }
                 this.#buttonCount+=1;
@@ -53,18 +59,24 @@ export class ActionRow extends MessageComponent {
             case MESSAGE_COMPONENT_TYPE.MENTIONABLE_SELECT:
             case MESSAGE_COMPONENT_TYPE.CHANNEL_SELECT: {
                 if (this.#selectMenuCount >= ACTION_ROW_SELECT_MENU_LIMIT) {
-                    console.error(`Action Rows cannot contain more than ${ACTION_ROW_SELECT_MENU_LIMIT} select menu.\n${JSON.stringify(component)}`);
+                    console.error(
+                        `Action Rows cannot contain more than ${ACTION_ROW_SELECT_MENU_LIMIT} select menu.\n` +
+                        `${JSON.stringify(component)}`);
                     return;
                 }
                 if (this.#buttonCount >= 0) {
-                    console.error(`Action Rows cannot contain both buttons and select menu components.\n${JSON.stringify(component)}`);                
+                    console.error(
+                        `Action Rows cannot contain both buttons and select menu components.\n` +
+                        `${JSON.stringify(component)}`);
                     return;
                 }
                 this.#selectMenuCount+=1;
                 break;
             }
             default: {
-                console.error(`Invalid Component type.\n${JSON.stringify(component)}`);
+                console.error(
+                    `Invalid Component type.\n` +
+                    `${JSON.stringify(component)}`);
                 return;
             }
         }
@@ -89,7 +101,9 @@ abstract class Button extends MessageComponent {
 
     setLabel(label: string) {
         if (label.length >= BUTTON_LABEL_LIMIT) {
-            console.error(`Attempted to exceed limit of ${BUTTON_LABEL_LIMIT} characters in button label.\n${JSON.stringify(label)}`);
+            console.error(
+                `Attempted to exceed limit of ${BUTTON_LABEL_LIMIT} characters in button label.\n` +
+                `${JSON.stringify(label)}`);
         }
         this.label = label.slice(0, BUTTON_LABEL_LIMIT);
     }
@@ -109,7 +123,9 @@ export class ButtonNonLink extends Button {
     constructor(custom_id: string) {
         super();
         if (custom_id.length >= BUTTON_CUSTOM_ID_LIMIT) {
-            console.error(`Attempted to exceed limit of ${BUTTON_CUSTOM_ID_LIMIT} characters in button custom id.\n${JSON.stringify(custom_id)}`);
+            console.error(
+                `Attempted to exceed limit of ${BUTTON_CUSTOM_ID_LIMIT} characters in button custom id.\n` +
+                `${JSON.stringify(custom_id)}`);
         }
         this.custom_id = custom_id.slice(0, BUTTON_CUSTOM_ID_LIMIT);
         this.url = undefined;
@@ -117,7 +133,9 @@ export class ButtonNonLink extends Button {
 
     setStyle(style: BUTTON_STYLE) {
         if (style == BUTTON_STYLE.LINK) {
-            console.error(`ButtonNonLink cannot be a Link Button. Use ButtonLink instead.\n${JSON.stringify(style)}`);
+            console.error(
+                `ButtonNonLink cannot be a Link Button. Use ButtonLink instead.\n` +
+                `${JSON.stringify(style)}`);
             return;
         }
         this.style = style;
@@ -158,14 +176,18 @@ abstract class SelectMenu extends MessageComponent {
     constructor(custom_id: string) {
         super();
         if (custom_id.length >= SELECT_MENU_CUSTOM_ID_LIMIT) {
-            console.error(`Attempted to exceed limit of ${SELECT_MENU_CUSTOM_ID_LIMIT} characters in select menu custom id.\n${JSON.stringify(custom_id)}`);
+            console.error(
+                `Attempted to exceed limit of ${SELECT_MENU_CUSTOM_ID_LIMIT} characters in select menu custom id.\n` +
+                `${JSON.stringify(custom_id)}`);
         }
         this.custom_id = custom_id.slice(0, SELECT_MENU_CUSTOM_ID_LIMIT);
     }
 
     setPlaceholder(placeholder: string) {
         if (placeholder.length >= SELECT_MENU_PLACEHOLDER_LIMIT) {
-            console.error(`Attempted to exceed limit of ${SELECT_MENU_PLACEHOLDER_LIMIT} characters in select menu placeholder.\n${JSON.stringify(placeholder)}`);
+            console.error(
+                `Attempted to exceed limit of ${SELECT_MENU_PLACEHOLDER_LIMIT} characters in select menu placeholder.\n` +
+                `${JSON.stringify(placeholder)}`);
         }
         this.placeholder = placeholder.slice(0, SELECT_MENU_PLACEHOLDER_LIMIT);
     }
@@ -175,14 +197,18 @@ abstract class SelectMenu extends MessageComponent {
     }
     setMinValues(minValues: number) {
         if (!(SELECT_MENU_MIN_VALUES_LIMIT <= minValues && minValues <= SELECT_MENU_MAX_VALUES_LIMIT)) {
-            console.error(`The condition must be met: ${SELECT_MENU_MIN_VALUES_LIMIT} <= min_values <= ${SELECT_MENU_MAX_VALUES_LIMIT} in select menu.\n${JSON.stringify(minValues)}`);
+            console.error(
+                `The condition must be met: ${SELECT_MENU_MIN_VALUES_LIMIT} <= min_values <= ${SELECT_MENU_MAX_VALUES_LIMIT} in select menu.\n` +
+                `${JSON.stringify(minValues)}`);
             return;
         }
         this.min_values = minValues;
     }
     setMaxValues(maxValues: number) {
         if (!(SELECT_MENU_MIN_VALUES_LIMIT <= maxValues && maxValues <= SELECT_MENU_MAX_VALUES_LIMIT)) {
-            console.error(`The condition must be met: ${SELECT_MENU_MIN_VALUES_LIMIT} <= max_values <= ${SELECT_MENU_MAX_VALUES_LIMIT} in select menu.\n${JSON.stringify(maxValues)}`);
+            console.error(
+                `The condition must be met: ${SELECT_MENU_MIN_VALUES_LIMIT} <= max_values <= ${SELECT_MENU_MAX_VALUES_LIMIT} in select menu.\n` +
+                `${JSON.stringify(maxValues)}`);
             return;
         }
         this.max_values = maxValues;
@@ -216,7 +242,9 @@ export class StringSelect extends SelectMenu {
     addOption(option: StringSelectOption) {
         if (!this.options) { return; }
         if (this.options.length >= STRING_SELECT_OPTIONS_LIMIT) {
-            console.error(`Attempted to exceed limit of ${STRING_SELECT_OPTIONS_LIMIT} options in string select.\n${JSON.stringify(option)}`);
+            console.error(
+                `Attempted to exceed limit of ${STRING_SELECT_OPTIONS_LIMIT} options in string select.\n` +
+                `${JSON.stringify(option)}`);
         }
         this.options.push(option);
     }
@@ -238,10 +266,14 @@ export class StringSelectOption {
 
     constructor(label: string, value: string) {
         if (label.length >= STRING_SELECT_OPTION_LABEL_LIMIT) {
-            console.error(`Attempted to exceed limit of ${STRING_SELECT_OPTION_LABEL_LIMIT} characters in string select option label.\n${JSON.stringify(label)}`);
+            console.error(
+                `Attempted to exceed limit of ${STRING_SELECT_OPTION_LABEL_LIMIT} characters in string select option label.\n` +
+                `${JSON.stringify(label)}`);
         }
         if (value.length >= STRING_SELECT_OPTION_VALUE_LIMIT) {
-            console.error(`Attempted to exceed limit of ${STRING_SELECT_OPTION_VALUE_LIMIT} characters in string select option value.\n${JSON.stringify(value)}`);
+            console.error(
+                `Attempted to exceed limit of ${STRING_SELECT_OPTION_VALUE_LIMIT} characters in string select option value.\n` +
+                `${JSON.stringify(value)}`);
         }
         this.label = label.slice(0, STRING_SELECT_OPTION_LABEL_LIMIT);
         this.value = value.slice(0, STRING_SELECT_OPTION_VALUE_LIMIT);
@@ -250,7 +282,9 @@ export class StringSelectOption {
     setDescription(description?: string) {
         if (!description) { return; }
         if (description.length >= STRING_SELECT_OPTION_DESCRIPTION_LIMIT) {
-            console.error(`Attempted to exceed limit of ${STRING_SELECT_OPTION_DESCRIPTION_LIMIT} characters in string select option description.\n${JSON.stringify(description)}`);
+            console.error(
+                `Attempted to exceed limit of ${STRING_SELECT_OPTION_DESCRIPTION_LIMIT} characters in string select option description.\n` +
+                `${JSON.stringify(description)}`);
         }
         this.description = description.slice(0, STRING_SELECT_OPTION_DESCRIPTION_LIMIT);
     }
@@ -325,10 +359,14 @@ export class TextInput extends MessageComponent {
     constructor(custom_id: string, style: TEXT_INPUT_STYLE, label: string) {
         super();
         if (custom_id.length >= TEXT_INPUT_CUSTOM_ID_LIMIT) {
-            console.error(`Attempted to exceed limit of ${TEXT_INPUT_CUSTOM_ID_LIMIT} characters in text input custom id.\n${JSON.stringify(custom_id)}`);
+            console.error(
+                `Attempted to exceed limit of ${TEXT_INPUT_CUSTOM_ID_LIMIT} characters in text input custom id.\n` +
+                `${JSON.stringify(custom_id)}`);
         }
         if (label.length >= TEXT_INPUT_LABEL_LIMIT) {
-            console.error(`Attempted to exceed limit of ${TEXT_INPUT_LABEL_LIMIT} characters in text input label.\n${JSON.stringify(label)}`);
+            console.error(
+                `Attempted to exceed limit of ${TEXT_INPUT_LABEL_LIMIT} characters in text input label.\n` +
+                `${JSON.stringify(label)}`);
         }
         this.custom_id = custom_id.slice(0, TEXT_INPUT_CUSTOM_ID_LIMIT);
         this.style = style;
@@ -337,14 +375,18 @@ export class TextInput extends MessageComponent {
 
     setMinLength(minLength: number) {
         if (!(TEXT_INPUT_MIN_LENGTH <= minLength && minLength <= TEXT_INPUT_MAX_LENGTH)) {
-            console.error(`The condition must be met: ${TEXT_INPUT_MIN_LENGTH} <= minLength <= ${TEXT_INPUT_MAX_LENGTH} in text input.\n${JSON.stringify(minLength)}`);
+            console.error(
+                `The condition must be met: ${TEXT_INPUT_MIN_LENGTH} <= minLength <= ${TEXT_INPUT_MAX_LENGTH} in text input.\n` +
+                `${JSON.stringify(minLength)}`);
             return;
         }
         this.min_length = minLength;
     }
     setMaxLength(maxLength: number) {
         if (!(TEXT_INPUT_MIN_LENGTH-1 <= maxLength && maxLength <= TEXT_INPUT_MAX_LENGTH)) {
-            console.error(`The condition must be met: ${TEXT_INPUT_MIN_LENGTH-1} <= maxLength <= ${TEXT_INPUT_MAX_LENGTH} in text input.\n${JSON.stringify(maxLength)}`);
+            console.error(
+                `The condition must be met: ${TEXT_INPUT_MIN_LENGTH-1} <= maxLength <= ${TEXT_INPUT_MAX_LENGTH} in text input.\n` +
+                `${JSON.stringify(maxLength)}`);
             return;
         }
         this.max_length = maxLength;
@@ -352,13 +394,17 @@ export class TextInput extends MessageComponent {
     setRequired(isRequired: boolean) { this.required = isRequired; }
     setValue(value: string) {
         if (value.length >= TEXT_INPUT_VALUE_LIMIT) {
-            console.error(`Attempted to exceed limit of ${TEXT_INPUT_VALUE_LIMIT} characters in text input value.\n${JSON.stringify(value)}`);
+            console.error(
+                `Attempted to exceed limit of ${TEXT_INPUT_VALUE_LIMIT} characters in text input value.\n` +
+                `${JSON.stringify(value)}`);
         }
         this.value = value.slice(0, TEXT_INPUT_VALUE_LIMIT);
     }
     setPlaceholder(placeholder: string) {
         if (placeholder.length >= TEXT_INPUT_PLACEHOLDER_LIMIT) {
-            console.error(`Attempted to exceed limit of ${TEXT_INPUT_PLACEHOLDER_LIMIT} characters in text input placeholder.\n${JSON.stringify(placeholder)}`);
+            console.error(
+                `Attempted to exceed limit of ${TEXT_INPUT_PLACEHOLDER_LIMIT} characters in text input placeholder.\n` +
+                `${JSON.stringify(placeholder)}`);
         }
         this.placeholder = placeholder.slice(0, TEXT_INPUT_PLACEHOLDER_LIMIT);
     }

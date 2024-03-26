@@ -106,14 +106,18 @@ export class AllowedMentions {
     }
     addRoles(role: string) {
         if (this.roles.length >= ALLOWED_MENTION_ROLES_LIMIT) {
-            console.error(`Attempted to exceed limit of ${ALLOWED_MENTION_ROLES_LIMIT} allowed mentions roles.\n${JSON.stringify(role)}`);
+            console.error(
+                `Attempted to exceed limit of ${ALLOWED_MENTION_ROLES_LIMIT} allowed mentions roles.\n` +
+                `${JSON.stringify(role)}`);
             return;
         }
         this.roles.push(role);
     }
     addUsers(user: string) {
         if (this.users.length >= ALLOWED_MENTION_USERS_LIMIT) {
-            console.error(`Attempted to exceed limit of ${ALLOWED_MENTION_USERS_LIMIT} allowed mentions users.\n${JSON.stringify(user)}`);
+            console.error(
+                `Attempted to exceed limit of ${ALLOWED_MENTION_USERS_LIMIT} allowed mentions users.\n` +
+                `${JSON.stringify(user)}`);
             return;
         }
         this.users.push(user);
@@ -153,7 +157,9 @@ export class Attachment {
 
     setDescription(description: string) {
         if (description.length >= ATTACHMENT_DESCRIPTION_LIMIT) {
-            console.error(`Attempted to exceed limit of ${ATTACHMENT_DESCRIPTION_LIMIT} characters in attachment description.\n${JSON.stringify(description)}`);
+            console.error(
+                `Attempted to exceed limit of ${ATTACHMENT_DESCRIPTION_LIMIT} characters in attachment description.\n` +
+                `${JSON.stringify(description)}`);
         }
         this.description = description.slice(0, ATTACHMENT_DESCRIPTION_LIMIT);
     }
