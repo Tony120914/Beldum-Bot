@@ -137,18 +137,18 @@ const execute = async function(interaction: any, env: any) {
             const embed = new Embed();
             embed.setTitle(application.name);
             embed.setDescription(application.description);
-            embed.addField('prefix (slash commands)', '`/`', true);
-            embed.addField('list of commands', '`/help`', true);
-            embed.addField('enjoying this bot?',
+            embed.addField('Prefix (slash commands)', '`/`', true);
+            embed.addField('List of commands', '`/help`', true);
+            embed.addField('Enjoying this bot?',
                 '[Invite Beldum-bot](https://discord.com/api/oauth2/authorize?client_id=454764425090433034&permissions=19456&scope=bot%20applications.commands) to another server.' + '\n' +
                 'Support me on [Ko-fi](https://ko-fi.com/toeknee).');
-            embed.addField('resources',
+            embed.addField('Resources',
                 '[Website](https://tony120914.github.io/beldum-bot-site)' + '\n' +
                 '[Source code](https://github.com/Tony120914/Beldum-Bot)', true);
-            embed.addField('creator', buildUser(application.owner?.id), true);
+            embed.addField('Creator', buildUser(application.owner?.id), true);
             const snowflake = new Snowflake(application.id);
             const joinedDiscord = new Date(snowflake.timestamp);
-            embed.addField('created', joinedDiscord.toString());
+            embed.addField('Created', joinedDiscord.toString());
             if (application.icon) {
                 const url = buildDiscordImageUrl(['app-icons', application.id, application.icon], IMAGE_FORMAT.PNG, IMAGE_SIZE.XXX_LARGE);
                 embed.thumbnail?.setUrl(url);
@@ -175,11 +175,11 @@ const execute = async function(interaction: any, env: any) {
             embed.setTitle('Channel Info');
             const url = `https://discord.com/channels/${guildId}/${channelId}`;
             embed.setUrl(url);
-            embed.addField('name', channel.name, true);
-            embed.addField('topic', channel.topic, true);
+            embed.addField('Name', channel.name, true);
+            embed.addField('Topic', channel.topic, true);
             const snowflake = new Snowflake(channel.id);
             const created = new Date(snowflake.timestamp);
-            embed.addField('created', created.toString());
+            embed.addField('Created', created.toString());
             interactionResponse.data?.addEmbed(embed);
             break;
         }
@@ -197,10 +197,10 @@ const execute = async function(interaction: any, env: any) {
             const url = buildDiscordImageUrl(['emojis', emoji.id], format, IMAGE_SIZE.XXX_LARGE);
             embed.setUrl(url);
             embed.setDescription(emojiString);
-            embed.addField('name', emoji.name, true);
+            embed.addField('Name', emoji.name, true);
             const snowflake = new Snowflake(emoji.id);
             const created = new Date(snowflake.timestamp);
-            embed.addField('created', created.toString(), true);
+            embed.addField('Created', created.toString(), true);
             embed.image?.setUrl(url);
             interactionResponse.data?.addEmbed(embed);
             break;
@@ -218,10 +218,10 @@ const execute = async function(interaction: any, env: any) {
             const embed = new Embed();
             embed.setTitle('Role Info');
             embed.setDescription(`${role.unicode_emoji || ''} ${buildRole(roleId)}`);
-            embed.addField('name', role.name, true);
+            embed.addField('Name', role.name, true);
             const snowflake = new Snowflake(role.id);
             const created = new Date(snowflake.timestamp);
-            embed.addField('created', created.toString(), true);
+            embed.addField('Created', created.toString(), true);
             if (role.icon) {
                 const url = buildDiscordImageUrl(['role-icons', role.id, role.icon], IMAGE_FORMAT.PNG, IMAGE_SIZE.XXX_LARGE);
                 embed.setUrl(url);
@@ -259,32 +259,32 @@ const execute = async function(interaction: any, env: any) {
             embed.setTitle('Server Info');
             const sameUrl = `https://discord.com/channels/${guildId}/${channelId}`; // Embeds having the same URL allows an embed to have multiple images for whatever reason...
             embed.setUrl(sameUrl);
-            embed.addField('name', guild.name, true);
-            embed.addField('owner', buildUser(guild.owner_id), true);
-            embed.addField('users online / users total (approx)', `${guild.approximate_presence_count} / ${guild.approximate_member_count}`, true);
+            embed.addField('Name', guild.name, true);
+            embed.addField('Owner', buildUser(guild.owner_id), true);
+            embed.addField('Users online / users total (approx)', `${guild.approximate_presence_count} / ${guild.approximate_member_count}`, true);
             embed.addBlankField();
-            embed.addField('description', guild.description, true);
+            embed.addField('Description', guild.description, true);
             embed.addBlankField();
-            embed.addField('server boost level', guild.premium_tier.toString(), true);
-            embed.addField('number of boosts', guild.premium_subscription_count?.toString(), true);
+            embed.addField('Server boost level', guild.premium_tier.toString(), true);
+            embed.addField('Number of boosts', guild.premium_subscription_count?.toString(), true);
             let roles = '';
             guild.roles.forEach(role => {
                 roles += `${buildRole(role.id)} `;
             });
-            embed.addField('roles', roles);
+            embed.addField('Roles', roles);
             let emojis = '';
             guild.emojis.forEach(emoji => {
                 emojis += `${buildEmoji(emoji.name, emoji.id, emoji.animated)} `;
             });
-            embed.addField('emojis', emojis, true);
+            embed.addField('Emojis', emojis, true);
             let stickers = '';
             guild.stickers?.forEach(sticker => {
                 stickers += `[${sticker.name}](${buildDiscordImageUrl(['stickers', sticker.id], Sticker.formatTypeToString(sticker.format_type), IMAGE_SIZE.XXX_LARGE)}), `;
             });
-            embed.addField('stickers', stickers, true);
+            embed.addField('Stickers', stickers, true);
             const snowflake = new Snowflake(guild.id);
             const created = new Date(snowflake.timestamp);
-            embed.addField('created', created.toString());
+            embed.addField('Created', created.toString());
             interactionResponse.data?.addEmbed(embed);
             if (guild.icon) {
                 const format = guild.icon.startsWith('a_') ? IMAGE_FORMAT.GIF : IMAGE_FORMAT.PNG;
@@ -333,26 +333,26 @@ const execute = async function(interaction: any, env: any) {
             embed.setTitle('Thread Info');
             const url = `https://discord.com/channels/${guildId}/${channelId}`;
             embed.setUrl(url);
-            embed.addField('name', channel.name, true);
-            embed.addField('creator', buildUser(channel.owner_id), true);
+            embed.addField('Name', channel.name, true);
+            embed.addField('Creator', buildUser(channel.owner_id), true);
             embed.addBlankField();
             if (channel.message_count && channel.total_message_sent) {
                 const deletedMessagesCount = Math.abs(channel.total_message_sent - channel.message_count);
-                embed.addField('deleted messages', deletedMessagesCount.toString(), true);
-                embed.addField('total messages', channel.message_count.toString(), true);
+                embed.addField('Deleted messages', deletedMessagesCount.toString(), true);
+                embed.addField('Total messages', channel.message_count.toString(), true);
             }
             const snowflake = new Snowflake(channel.id);
             const created = new Date(snowflake.timestamp);
-            embed.addField('created', created.toString());
+            embed.addField('Created', created.toString());
             interactionResponse.data?.addEmbed(embed);
             break;
         }
         case 'user': {
             const userId = interaction.data.options[0].options[0].value;
-            const resolvedMember = interaction.data.resolved.members[userId];
-            const guildMember = new GuildMember();
             const guildId = interaction.guild_id;
             const channelId = interaction.channel_id;
+            const resolvedMember = guildId ? interaction.data.resolved.members[userId] : null;
+            const guildMember = new GuildMember();
             guildMember.assignObject(resolvedMember);
             if (!userId) {
                 interactionResponse.data?.setContent('Error: Must be a valid user.');
@@ -381,9 +381,9 @@ const execute = async function(interaction: any, env: any) {
             const sameUrl = `https://discord.com/channels/${guildId}/${channelId}`; // Embeds having the same URL allows an embed to have multiple images for whatever reason...
             embed.setUrl(sameUrl);
             embed.setDescription(`${buildUser(user.id)} ${user.premium_type == USER_PREMIUM_TYPE.NONE ? '' : ':whale:'}`);
-            embed.addField('server name', guildMember.nick, true);
-            embed.addField('display name', user.global_name, true);
-            embed.addField('username', user.username, true);
+            embed.addField('Server name', guildMember.nick, true);
+            embed.addField('Display name', user.global_name, true);
+            embed.addField('Username', user.username, true);
             if (user.discriminator != '0') {
                 embed.addField('#', user.discriminator, true);
             }
@@ -391,20 +391,22 @@ const execute = async function(interaction: any, env: any) {
             guildMember.roles.forEach(roleId => {
                 roles += `${buildRole(roleId)} `;
             });
-            embed.addField('roles', roles);
-            const joinedServer = new Date(guildMember.joined_at);
-            embed.addField('joined server', joinedServer.toString(), true);
+            embed.addField('Roles', roles);
+            if (guildMember.joined_at) {
+                const joinedServer = new Date(guildMember.joined_at);
+                embed.addField('Joined server', joinedServer.toString(), true);
+            }
             if (guildMember.premium_since) {
                 const boosterSince = new Date(guildMember.premium_since);
-                embed.addField('booster since', boosterSince.toString(), true);
+                embed.addField('Booster since', boosterSince.toString(), true);
             }
             embed.addBlankField()
             const snowflake = new Snowflake(user.id);
             const joinedDiscord = new Date(snowflake.timestamp);
-            embed.addField('joined Discord', joinedDiscord.toString(), true);
+            embed.addField('Joined Discord', joinedDiscord.toString(), true);
             if (guildMember.communication_disabled_until) {
                 const timeoutExpires = new Date(guildMember.communication_disabled_until);
-                embed.addField('timeout expires', timeoutExpires.toString(), true);
+                embed.addField('Timeout expires', timeoutExpires.toString(), true);
             }
             interactionResponse.data?.addEmbed(embed);
             if (guildMember.avatar) {
