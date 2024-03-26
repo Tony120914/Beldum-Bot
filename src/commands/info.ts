@@ -1,15 +1,17 @@
 import { ApplicationCommand, ApplicationCommandOption } from '../templates/discord/ApplicationCommand.js'
 import { Command } from '../templates/app/Command.js';
-import { APPLICATION_COMMAND_OPTION_TYPE, APPLICATION_COMMAND_TYPE, CHANNEL_TYPE, IMAGE_FORMAT, IMAGE_SIZE, INTERACTION_RESPONSE_FLAGS, INTERACTION_RESPONSE_TYPE } from '../templates/discord/Enums.js';
+import { APPLICATION_COMMAND_OPTION_TYPE, APPLICATION_COMMAND_TYPE, CHANNEL_TYPE, IMAGE_FORMAT, IMAGE_SIZE, INTERACTION_RESPONSE_FLAGS, INTERACTION_RESPONSE_TYPE, USER_PREMIUM_TYPE } from '../templates/discord/Enums.js';
 import { Embed } from '../templates/discord/Embed.js';
 import { InteractionResponse } from '../templates/discord/InteractionResponse.js'
 import { buildDiscordAPIUrl, buildDiscordImageUrl, buildEmoji, buildRole, buildUser, parseEmoji } from '../handlers/MessageHandler.js';
 import { getFetchErrorText } from '../handlers/ErrorHandler.js';
-import { Role } from '../templates/discord/PermissionsResource.js';
-import { Guild, GuildMember } from '../templates/discord/GuildResource.js';
+import { Role } from '../templates/discord/PermissionsResources.js';
+import { Guild, GuildMember } from '../templates/discord/GuildResources.js';
 import { Snowflake } from '../templates/discord/Snowflake.js';
 import { Channel } from '../templates/discord/ChannelResources.js';
-import { User } from '../templates/discord/UserResource.js';
+import { User } from '../templates/discord/UserResources.js';
+import { Application } from '../templates/discord/ApplicationResources.js';
+import { Sticker } from '../templates/discord/StickerResources.js';
 
 const applicationCommand = new ApplicationCommand(
     'info',
@@ -22,7 +24,7 @@ const applicationCommand = new ApplicationCommand(
  */
 const botOption = new ApplicationCommandOption(
     'bot',
-    'Get Beldum Bot\'s information and images.',
+    'Get Beldum Bot\'s information.',
     APPLICATION_COMMAND_OPTION_TYPE.SUB_COMMAND
 );
 applicationCommand.addOptions(botOption);
@@ -113,7 +115,49 @@ const execute = async function(interaction: any, env: any) {
     const subcommand = interaction.data.options[0].name;
     switch (subcommand) {
         case 'bot': {
-            // TODO
+            const guildId = interaction.guild_id;
+            const channelId = interaction.channel_id;
+            const url = buildDiscordAPIUrl(['applications', '@me'], []);
+            const response = await fetch(url, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bot ${env.DISCORD_TOKEN}`,
+                },
+            });
+            if (!response.ok) {
+                const error = await getFetchErrorText(response);
+                console.error(error);
+                interactionResponse.data?.setContent('Error: Something went wrong. Please try again later.');
+                interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
+                return interactionResponse;
+            }
+            const data = await response.json();
+            const application = new Application(data.id, data.name);
+            application.assignObject(data);
+            const embed = new Embed();
+            embed.setTitle(application.name);
+            embed.setDescription(application.description);
+            embed.addField('prefix (slash commands)', '`/`', true);
+            embed.addField('list of commands', '`/help`', true);
+            embed.addField('enjoying this bot?',
+                '[Invite Beldum-bot](https://discord.com/api/oauth2/authorize?client_id=454764425090433034&permissions=19456&scope=bot%20applications.commands) to another server.' + '\n' +
+                'Support me on [Ko-fi](https://ko-fi.com/toeknee).');
+            embed.addField('resources',
+                '[Website](https://tony120914.github.io/beldum-bot-site)' + '\n' +
+                '[Source code](https://github.com/Tony120914/Beldum-Bot)', true);
+            embed.addField('creator', buildUser(application.owner?.id), true);
+            const snowflake = new Snowflake(application.id);
+            const joinedDiscord = new Date(snowflake.timestamp);
+            embed.addField('created', joinedDiscord.toString());
+            if (application.icon) {
+                const url = buildDiscordImageUrl(['app-icons', application.id, application.icon], IMAGE_FORMAT.PNG, IMAGE_SIZE.XXX_LARGE);
+                embed.thumbnail?.setUrl(url);
+            }
+            if (application.approximate_guild_count) {
+                embed.footer?.setText(`Approximately in ${application.approximate_guild_count} servers.`);
+                embed.setTimestampOn();
+            }
+            interactionResponse.data?.addEmbed(embed);
             break;
         }
         case 'channel': {
@@ -232,7 +276,12 @@ const execute = async function(interaction: any, env: any) {
             guild.emojis.forEach(emoji => {
                 emojis += `${buildEmoji(emoji.name, emoji.id, emoji.animated)} `;
             });
-            embed.addField('emojis', emojis);
+            embed.addField('emojis', emojis, true);
+            let stickers = '';
+            guild.stickers?.forEach(sticker => {
+                stickers += `[${sticker.name}](${buildDiscordImageUrl(['stickers', sticker.id], Sticker.formatTypeToString(sticker.format_type), IMAGE_SIZE.XXX_LARGE)}), `;
+            });
+            embed.addField('stickers', stickers, true);
             const snowflake = new Snowflake(guild.id);
             const created = new Date(snowflake.timestamp);
             embed.addField('created', created.toString());
@@ -328,13 +377,16 @@ const execute = async function(interaction: any, env: any) {
             const user = new User(data.id, data.string, data.discriminator);
             user.assignObject(data);
             const embed = new Embed();
-            embed.setTitle('User');
+            embed.setTitle('User Info');
             const sameUrl = `https://discord.com/channels/${guildId}/${channelId}`; // Embeds having the same URL allows an embed to have multiple images for whatever reason...
             embed.setUrl(sameUrl);
+            embed.setDescription(`${buildUser(user.id)} ${user.premium_type == USER_PREMIUM_TYPE.NONE ? '' : ':whale:'}`);
             embed.addField('server name', guildMember.nick, true);
             embed.addField('display name', user.global_name, true);
             embed.addField('username', user.username, true);
-            if (user.discriminator != '0') { embed.addField('#', user.discriminator, true); }
+            if (user.discriminator != '0') {
+                embed.addField('#', user.discriminator, true);
+            }
             let roles = '';
             guildMember.roles.forEach(roleId => {
                 roles += `${buildRole(roleId)} `;

@@ -192,6 +192,7 @@ export enum ATTACHMENT_FLAGS {
 export enum IMAGE_FORMAT {
     JPEG = '.jpg',
     PNG = '.png',
+    APNG = '.apng', // for stickers
     WEBP = '.webp',
     GIF = '.gif',
     LOTTIE = '.json',
@@ -367,4 +368,24 @@ export enum APPLICATION_FLAGS {
     GATEWAY_MESSAGE_CONTENT = 1 << 18,
     GATEWAY_MESSAGE_CONTENT_LIMITED = 1 << 19,
     APPLICATION_COMMAND_BADGE = 1 << 23,
+}
+
+/**
+ * Sticker Types
+ * https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-types
+ */
+export enum STICKER_TYPE {
+    STANDARD = 1,
+    GUILD = 2,
+}
+
+/**
+ * Sticker Format Types
+ * https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-format-types
+ */
+export enum STICKER_FORMAT_TYPE {
+    PNG = 1,
+    APNG = 2,
+    LOTTIE = 3,
+    GIF = 4,
 }
