@@ -113,16 +113,16 @@ applicationCommand.addOptions(userOption);
 const execute = async function(interaction: any, env: any) {
     const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
     const subcommand = interaction.data.options[0].name;
+    let headers = {
+        'Content-Type': 'application/json',
+        'User-Agent': env.USER_AGENT,
+        'Authorization': `Bot ${env.DISCORD_TOKEN}`,
+    }
     switch (subcommand) {
         case 'bot': {
-            const guildId = interaction.guild_id;
-            const channelId = interaction.channel_id;
             const url = buildDiscordAPIUrl(['applications', '@me'], []);
             const response = await fetch(url, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bot ${env.DISCORD_TOKEN}`,
-                },
+                headers: headers
             });
             if (!response.ok) {
                 const error = await getFetchErrorText(response);
@@ -240,10 +240,7 @@ const execute = async function(interaction: any, env: any) {
             }
             const url = buildDiscordAPIUrl(['guilds', guildId], ['with_counts=true']);
             const response = await fetch(url, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bot ${env.DISCORD_TOKEN}`,
-                },
+                headers: headers
             });
             if (!response.ok) {
                 const error = await getFetchErrorText(response);
@@ -361,10 +358,7 @@ const execute = async function(interaction: any, env: any) {
             }
             const url = buildDiscordAPIUrl(['users', userId], []);
             const response = await fetch(url, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bot ${env.DISCORD_TOKEN}`,
-                },
+                headers: headers
             });
             if (!response.ok) {
                 const error = await getFetchErrorText(response);

@@ -14,7 +14,7 @@ const execute = async function(interaction: object, env: any) {
     const start = Date.now();
     await fetch(env.INTERACTIONS_ENDPOINT, {
         headers: {
-            'User-Agent': 'Beldum-Bot/1.0.0 (Discord Bot)'
+            'User-Agent': env.USER_AGENT
         }
     });
     const end = Date.now();
