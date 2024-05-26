@@ -2,6 +2,7 @@ import { EightBall } from "./commands/8ball.js";
 import { CoinToss } from "./commands/cointoss.js";
 import { Info } from "./commands/info.js";
 import { Ping } from "./commands/ping.js";
+import { Rng } from "./commands/rng.js";
 import { CommandsMap } from "./templates/app/Command.js";
 
 /**
@@ -12,3 +13,4 @@ Commands.addCommand(EightBall);
 Commands.addCommand(CoinToss);
 Commands.addCommand(Info);
 Commands.addCommand(Ping);
+Commands.addCommand(Rng);
