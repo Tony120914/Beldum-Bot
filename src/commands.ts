@@ -1,4 +1,5 @@
 import { EightBall } from "./commands/8ball.js";
+import { CoinToss } from "./commands/cointoss.js";
 import { Info } from "./commands/info.js";
 import { Ping } from "./commands/ping.js";
 import { CommandsMap } from "./templates/app/Command.js";
@@ -8,5 +9,6 @@ import { CommandsMap } from "./templates/app/Command.js";
  */
 export const Commands = new CommandsMap();
 Commands.addCommand(EightBall);
+Commands.addCommand(CoinToss);
 Commands.addCommand(Info);
 Commands.addCommand(Ping);
