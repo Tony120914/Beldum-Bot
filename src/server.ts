@@ -10,6 +10,7 @@ import {
 } from 'discord-interactions';
 import { Commands } from './commands.js';
 import { JsonResponse } from './templates/app/JsonResponse.js';
+import { parseArgs } from './handlers/ArgumentHandler.js';
 
 const router = Router();
 
@@ -42,14 +43,18 @@ router.post('/', async (request, env) => {
         });
     }
 
-    if (interaction.type === InteractionType.APPLICATION_COMMAND) {
-        let commandName = interaction.data.name.toLowerCase();
-        if (Commands.map.has(commandName)) {
-            const interactionResponse = await Commands.map.get(commandName)?.execute(interaction, env);
-            return new JsonResponse(interactionResponse);
-        } else {
+    if (interaction.type === InteractionType.APPLICATION_COMMAND ||
+        interaction.type === InteractionType.MESSAGE_COMPONENT)
+    {
+        const args = parseArgs(interaction);
+        const commandName = args[0];
+
+        if (!Commands.map.has(commandName)) {
             return new JsonResponse({ error: 'Unknown Type' }, { status: 400 });
         }
+        const interactionResponse = await Commands.map.get(commandName)?.execute(interaction, env, args);
+        return new JsonResponse(interactionResponse);
+
     }
 
     console.error('Unknown Type');

@@ -10,7 +10,7 @@ const applicationCommand = new ApplicationCommand(
     APPLICATION_COMMAND_TYPE.CHAT_INPUT
 );
 
-const execute = async function(interaction: object, env: any) {
+const execute = async function(interaction: object, env: any, args: string[]) {
     const start = Date.now();
     await fetch(env.INTERACTIONS_ENDPOINT, {
         headers: {

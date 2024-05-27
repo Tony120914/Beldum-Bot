@@ -18,6 +18,8 @@ export class InteractionResponse {
     constructor(type: INTERACTION_RESPONSE_TYPE) {
         this.type = type;
     }
+
+    setType(type: INTERACTION_RESPONSE_TYPE) { this.type = type; }
 }
 
 const DATA_EMBEDS_LIMIT = 10;
@@ -32,7 +34,7 @@ class Data {
     embeds?: Embed[] = [];
     allowed_mentions?: AllowedMentions = new AllowedMentions();
     flags?: INTERACTION_RESPONSE_FLAGS
-    components?: MessageComponent[]
+    components?: MessageComponent[] = [];
     attachments?: Attachment[] // Array of partial Attachment
 
     setTts(isEnabled: boolean) { this.tts = isEnabled; }

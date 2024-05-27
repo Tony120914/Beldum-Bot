@@ -27,9 +27,9 @@ const SecondNumberInputOption = new ApplicationCommandOption(
 SecondNumberInputOption.setRequired(true);
 applicationCommand.addOptions(SecondNumberInputOption);
 
-const execute = async function(interaction: any, env: any) {
-    const int1 = interaction.data.options[0].value;
-    const int2 = interaction.data.options[1].value;
+const execute = async function(interaction: any, env: any, args: string[]) {
+    const int1 = interaction.data.options[0].value; // using raw value instead of args to avoid converting
+    const int2 = interaction.data.options[1].value; // using raw value instead of args to avoid converting
     const randomInt = getRandomInt(Math.min(int1, int2), Math.max(int1, int2));
 
     const embed = new Embed();

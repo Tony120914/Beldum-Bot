@@ -44,7 +44,7 @@ export class ActionRow extends MessageComponent {
                         `${JSON.stringify(component)}`);
                     return;
                 }
-                if (this.#selectMenuCount >= 0) {
+                if (this.#selectMenuCount > 0) {
                     console.error(
                         `Action Rows cannot contain both buttons and select menu components.\n` +
                         `${JSON.stringify(component)}`);                
@@ -64,13 +64,16 @@ export class ActionRow extends MessageComponent {
                         `${JSON.stringify(component)}`);
                     return;
                 }
-                if (this.#buttonCount >= 0) {
+                if (this.#buttonCount > 0) {
                     console.error(
                         `Action Rows cannot contain both buttons and select menu components.\n` +
                         `${JSON.stringify(component)}`);
                     return;
                 }
                 this.#selectMenuCount+=1;
+                break;
+            }
+            case MESSAGE_COMPONENT_TYPE.TEXT_INPUT: {
                 break;
             }
             default: {
@@ -350,8 +353,8 @@ export class TextInput extends MessageComponent {
     custom_id: string
     style: TEXT_INPUT_STYLE
     label: string
-    min_length?: number
-    max_length?: number
+    min_length?: number = TEXT_INPUT_MIN_LENGTH;
+    max_length?: number = TEXT_INPUT_MAX_LENGTH;
     required?: boolean = true;
     value?: string
     placeholder?: string

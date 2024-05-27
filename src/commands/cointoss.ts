@@ -11,7 +11,7 @@ const applicationCommand = new ApplicationCommand(
     APPLICATION_COMMAND_TYPE.CHAT_INPUT
 );
 
-const execute = async function(interaction: any, env: any) {
+const execute = async function(interaction: any, env: any, args: string[]) {
     const avgEdgeAttempts = 6000;
     const randomInt = getRandomInt(0, avgEdgeAttempts * 2 - 1);
     enum COIN_RESULT {

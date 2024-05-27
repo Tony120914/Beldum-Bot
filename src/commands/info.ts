@@ -12,6 +12,8 @@ import { Channel } from '../templates/discord/ChannelResources.js';
 import { User } from '../templates/discord/UserResources.js';
 import { Application } from '../templates/discord/ApplicationResources.js';
 import { Sticker } from '../templates/discord/StickerResources.js';
+import { ActionRow, ChannelSelect } from '../templates/discord/MessageComponents.js';
+import { InteractionType } from 'discord-interactions';
 
 const applicationCommand = new ApplicationCommand(
     'info',
@@ -110,14 +112,14 @@ userInputOption.setRequired(true);
 userOption.addOption(userInputOption);
 applicationCommand.addOptions(userOption);
 
-const execute = async function(interaction: any, env: any) {
-    const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
-    const subcommand = interaction.data.options[0].name;
+const execute = async function(interaction: any, env: any, args: string[]) {
     let headers = {
         'Content-Type': 'application/json',
         'User-Agent': env.USER_AGENT,
         'Authorization': `Bot ${env.DISCORD_TOKEN}`,
     }
+    const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
+    const subcommand = args[1];
     switch (subcommand) {
         case 'bot': {
             const url = buildDiscordAPIUrl(['applications', '@me'], []);
@@ -161,26 +163,30 @@ const execute = async function(interaction: any, env: any) {
             break;
         }
         case 'channel': {
-            const channelId = interaction.channel_id;
-            const channelType = interaction.channel.type;
-            const guildId = interaction.guild_id;
-            if (!channelId || channelType == null || channelType == CHANNEL_TYPE.PUBLIC_THREAD || channelType == CHANNEL_TYPE.PRIVATE_THREAD) {
-                interactionResponse.data?.setContent('Error: Must be used in channels.');
-                interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
-                return interactionResponse;
+            const channelSelect = new ChannelSelect('channel_select');
+            channelSelect.setPlaceholder('Select a channel');
+            const actionRow = new ActionRow();
+            actionRow.addComponent(channelSelect);
+            interactionResponse.data?.addComponent(actionRow);
+            if (interaction.type == InteractionType.MESSAGE_COMPONENT) {
+                const guildId = interaction.guild_id;
+                const channelId = interaction.data.values[0];
+                const temp = interaction.data.resolved.channels[channelId];
+                const channelType = temp.type;
+                const channel = new Channel(channelId, channelType);
+                channel.assignObject(temp);
+                const embed = new Embed();
+                embed.setTitle('Channel Info');
+                const url = `https://discord.com/channels/${guildId}/${channelId}`;
+                embed.setUrl(url);
+                embed.addField('Name', channel.name, true);
+                embed.addField('Topic', channel.topic, true);
+                const snowflake = new Snowflake(channel.id);
+                const created = new Date(snowflake.timestamp);
+                embed.addField('Created', created.toString());
+                interactionResponse.data?.addEmbed(embed);
+                interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
             }
-            const channel = new Channel(channelId, channelType);
-            channel.assignObject(interaction.channel);
-            const embed = new Embed();
-            embed.setTitle('Channel Info');
-            const url = `https://discord.com/channels/${guildId}/${channelId}`;
-            embed.setUrl(url);
-            embed.addField('Name', channel.name, true);
-            embed.addField('Topic', channel.topic, true);
-            const snowflake = new Snowflake(channel.id);
-            const created = new Date(snowflake.timestamp);
-            embed.addField('Created', created.toString());
-            interactionResponse.data?.addEmbed(embed);
             break;
         }
         case 'emoji': {

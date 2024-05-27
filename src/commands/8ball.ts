@@ -19,8 +19,8 @@ const questionInputOption = new ApplicationCommandOption(
 questionInputOption.setRequired(true);
 applicationCommand.addOptions(questionInputOption);
 
-const execute = async function(interaction: any, env: any) {
-    const question = interaction.data.options[0].value;
+const execute = async function(interaction: any, env: any, args: string[]) {
+    const question = args[1];
     const answers = [
         // Yes - answers
         ':white_check_mark: Oh yeah, 100%.',
