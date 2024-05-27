@@ -3,6 +3,7 @@ import { CoinToss } from "./commands/cointoss.js";
 import { Info } from "./commands/info.js";
 import { Ping } from "./commands/ping.js";
 import { Rng } from "./commands/rng.js";
+import { Rps } from "./commands/rps.js";
 import { CommandsMap } from "./templates/app/Command.js";
 
 /**
@@ -14,3 +15,4 @@ Commands.addCommand(CoinToss);
 Commands.addCommand(Info);
 Commands.addCommand(Ping);
 Commands.addCommand(Rng);
+Commands.addCommand(Rps);
