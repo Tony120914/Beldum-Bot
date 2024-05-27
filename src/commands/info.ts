@@ -1,6 +1,6 @@
 import { ApplicationCommand, ApplicationCommandOption } from '../templates/discord/ApplicationCommand.js'
 import { Command } from '../templates/app/Command.js';
-import { APPLICATION_COMMAND_OPTION_TYPE, APPLICATION_COMMAND_TYPE, CHANNEL_TYPE, IMAGE_FORMAT, IMAGE_SIZE, INTERACTION_RESPONSE_FLAGS, INTERACTION_RESPONSE_TYPE, USER_PREMIUM_TYPE } from '../templates/discord/Enums.js';
+import { APPLICATION_COMMAND_OPTION_TYPE, APPLICATION_COMMAND_TYPE, CHANNEL_TYPE, IMAGE_FORMAT, IMAGE_SIZE, INTERACTION_RESPONSE_FLAGS, INTERACTION_RESPONSE_TYPE, INTERACTION_TYPE, USER_PREMIUM_TYPE } from '../templates/discord/Enums.js';
 import { Embed } from '../templates/discord/Embed.js';
 import { InteractionResponse } from '../templates/discord/InteractionResponse.js'
 import { buildDiscordAPIUrl, buildDiscordImageUrl, buildEmoji, buildRole, buildUser, parseEmoji } from '../handlers/MessageHandler.js';
@@ -13,7 +13,6 @@ import { User } from '../templates/discord/UserResources.js';
 import { Application } from '../templates/discord/ApplicationResources.js';
 import { Sticker } from '../templates/discord/StickerResources.js';
 import { ActionRow, ChannelSelect } from '../templates/discord/MessageComponents.js';
-import { InteractionType } from 'discord-interactions';
 
 const applicationCommand = new ApplicationCommand(
     'info',
@@ -168,7 +167,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             const actionRow = new ActionRow();
             actionRow.addComponent(channelSelect);
             interactionResponse.data?.addComponent(actionRow);
-            if (interaction.type == InteractionType.MESSAGE_COMPONENT) {
+            if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
                 const guildId = interaction.guild_id;
                 const channelId = interaction.data.values[0];
                 const temp = interaction.data.resolved.channels[channelId];

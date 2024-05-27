@@ -3,14 +3,11 @@
  */
 
 import { Router } from 'itty-router';
-import {
-    InteractionResponseType,
-    InteractionType,
-    verifyKey,
-} from 'discord-interactions';
+import { verifyKey } from 'discord-interactions';
 import { Commands } from './commands.js';
 import { JsonResponse } from './templates/app/JsonResponse.js';
 import { parseArgs } from './handlers/ArgumentHandler.js';
+import { INTERACTION_RESPONSE_TYPE, INTERACTION_TYPE } from './templates/discord/Enums.js';
 
 const router = Router();
 
@@ -35,16 +32,16 @@ router.post('/', async (request, env) => {
         return new Response('Bad request signature.', { status: 401 });
     }
 
-    if (interaction.type === InteractionType.PING) {
+    if (interaction.type === INTERACTION_TYPE.PING) {
         // The `PING` message is used during the initial webhook handshake, and is
         // required to configure the webhook in the developer portal.
         return new JsonResponse({
-            type: InteractionResponseType.PONG,
+            type: INTERACTION_RESPONSE_TYPE.PONG,
         });
     }
 
-    if (interaction.type === InteractionType.APPLICATION_COMMAND ||
-        interaction.type === InteractionType.MESSAGE_COMPONENT)
+    if (interaction.type === INTERACTION_TYPE.APPLICATION_COMMAND ||
+        interaction.type === INTERACTION_TYPE.MESSAGE_COMPONENT)
     {
         const args = parseArgs(interaction);
         const commandName = args[0];

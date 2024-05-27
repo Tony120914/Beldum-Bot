@@ -1,12 +1,11 @@
-import { InteractionType } from "discord-interactions";
-import { APPLICATION_COMMAND_OPTION_TYPE } from "../templates/discord/Enums";
+import { APPLICATION_COMMAND_OPTION_TYPE, INTERACTION_TYPE } from "../templates/discord/Enums";
 
 /**
  * Parse interaction arguments
  */
 export function parseArgs(interaction: any) {
     let args: string[] = [];
-    if (interaction.type === InteractionType.APPLICATION_COMMAND) {
+    if (interaction.type === INTERACTION_TYPE.APPLICATION_COMMAND) {
         const commandName = interaction.data.name.toLowerCase();
         args.push(commandName);
         interaction.data.options?.forEach(option => {
@@ -20,7 +19,7 @@ export function parseArgs(interaction: any) {
             }
         });
     }
-    else if (interaction.type === InteractionType.MESSAGE_COMPONENT){
+    else if (interaction.type === INTERACTION_TYPE.MESSAGE_COMPONENT){
         const commandName = interaction.message.interaction_metadata.name.toLowerCase();
         args = commandName.split(' ');
     }

@@ -1,9 +1,10 @@
 import { ApplicationCommand } from '../templates/discord/ApplicationCommand.js'
 import { Command } from '../templates/app/Command.js';
-import { APPLICATION_COMMAND_TYPE, INTERACTION_RESPONSE_TYPE } from '../templates/discord/Enums.js';
+import { APPLICATION_COMMAND_TYPE, BUTTON_STYLE, INTERACTION_RESPONSE_TYPE, INTERACTION_TYPE } from '../templates/discord/Enums.js';
 import { Embed } from '../templates/discord/Embed.js';
 import { InteractionResponse } from '../templates/discord/InteractionResponse.js'
 import { getRandomInt } from '../handlers/Utils.js';
+import { ActionRow, ButtonNonLink } from '../templates/discord/MessageComponents.js';
 
 const applicationCommand = new ApplicationCommand(
     'cointoss',
@@ -41,9 +42,19 @@ const execute = async function(interaction: any, env: any, args: string[]) {
     embed.setTitle('Coin Toss');
     embed.setDescription(result);
     embed.image?.setUrl(imgUrl);
-    
+
     const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
     interactionResponse.data?.addEmbed(embed);
+
+    const button = new ButtonNonLink('toss_again_button');
+    button.setStyle(BUTTON_STYLE.PRIMARY);
+    button.setLabel('Toss again');
+    const actionRow = new ActionRow();
+    actionRow.addComponent(button);
+    interactionResponse.data?.addComponent(actionRow);
+    if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
+        interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
+    }
 
     return interactionResponse;
 }

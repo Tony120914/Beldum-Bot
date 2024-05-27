@@ -35,6 +35,18 @@ export enum APPLICATION_COMMAND_OPTION_TYPE {
 }
 
 /**
+ * Interaction Types
+ * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-type
+ */
+export enum INTERACTION_TYPE {
+    PING = 1,
+    APPLICATION_COMMAND = 2,
+    MESSAGE_COMPONENT = 3,
+    APPLICATION_COMMAND_AUTOCOMPLETE = 4,
+    MODAL_SUBMIT = 5
+}
+
+/**
  * Interaction Response Types
  * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
  */
