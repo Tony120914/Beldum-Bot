@@ -12,7 +12,7 @@ import { Channel } from '../templates/discord/ChannelResources.js';
 import { User } from '../templates/discord/UserResources.js';
 import { Application } from '../templates/discord/ApplicationResources.js';
 import { Sticker } from '../templates/discord/StickerResources.js';
-import { ActionRow, ChannelSelect } from '../templates/discord/MessageComponents.js';
+import { ActionRow, ChannelSelect, RoleSelect } from '../templates/discord/MessageComponents.js';
 
 const applicationCommand = new ApplicationCommand(
     'info',
@@ -170,10 +170,10 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
                 const guildId = interaction.guild_id;
                 const channelId = interaction.data.values[0];
-                const temp = interaction.data.resolved.channels[channelId];
-                const channelType = temp.type;
+                const data = interaction.data.resolved.channels[channelId];
+                const channelType = data.type;
                 const channel = new Channel(channelId, channelType);
-                channel.assignObject(temp);
+                channel.assignObject(data);
                 const embed = new Embed();
                 embed.setTitle('Channel Info');
                 const url = `https://discord.com/channels/${guildId}/${channelId}`;
@@ -211,28 +211,32 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             break;
         }
         case 'role': {
-            const roleId = interaction.data.options[0].options[0].value;
-            const roleData = interaction.data.resolved.roles[roleId];
-            if (!roleId || !roleData) {
-                interactionResponse.data?.setContent('Error: Must be a valid role.');
-                interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
-                return interactionResponse;
+            const roleSelect = new RoleSelect('role_select');
+            roleSelect.setPlaceholder('Select a role');
+            const actionRow = new ActionRow();
+            actionRow.addComponent(roleSelect);
+            interactionResponse.data?.addComponent(actionRow);
+            if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
+                const roleId = interaction.data.values[0];
+                const data = interaction.data.resolved.roles[roleId];
+                const roleName = data.name;
+                const role = new Role(roleId, roleName);
+                role.assignObject(data);
+                const embed = new Embed();
+                embed.setTitle('Role Info');
+                embed.setDescription(`${role.unicode_emoji || ''} ${buildRole(roleId)}`);
+                embed.addField('Name', role.name, true);
+                const snowflake = new Snowflake(role.id);
+                const created = new Date(snowflake.timestamp);
+                embed.addField('Created', created.toString(), true);
+                if (role.icon) {
+                    const url = buildDiscordImageUrl(['role-icons', role.id, role.icon], IMAGE_FORMAT.PNG, IMAGE_SIZE.XXX_LARGE);
+                    embed.setUrl(url);
+                    embed.image?.setUrl(url);
+                }
+                interactionResponse.data?.addEmbed(embed);
+                interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
             }
-            const role = new Role(roleData.id, roleData.name);
-            role.assignObject(roleData);
-            const embed = new Embed();
-            embed.setTitle('Role Info');
-            embed.setDescription(`${role.unicode_emoji || ''} ${buildRole(roleId)}`);
-            embed.addField('Name', role.name, true);
-            const snowflake = new Snowflake(role.id);
-            const created = new Date(snowflake.timestamp);
-            embed.addField('Created', created.toString(), true);
-            if (role.icon) {
-                const url = buildDiscordImageUrl(['role-icons', role.id, role.icon], IMAGE_FORMAT.PNG, IMAGE_SIZE.XXX_LARGE);
-                embed.setUrl(url);
-                embed.image?.setUrl(url);
-            }
-            interactionResponse.data?.addEmbed(embed);
             break;
         }
         case 'server': {
