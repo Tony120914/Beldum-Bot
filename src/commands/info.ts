@@ -60,19 +60,12 @@ applicationCommand.addOptions(customEmojiOption);
 /**
  * Role options
  */
-const roleIconOption = new ApplicationCommandOption(
+const roleOption = new ApplicationCommandOption(
     'role',
     'Get a role\'s information and image.',
     APPLICATION_COMMAND_OPTION_TYPE.SUB_COMMAND
 );
-const roleInputOption = new ApplicationCommandOption(
-    'role',
-    'The desired role',
-    APPLICATION_COMMAND_OPTION_TYPE.ROLE
-);
-roleInputOption.setRequired(true);
-roleIconOption.addOption(roleInputOption);
-applicationCommand.addOptions(roleIconOption);
+applicationCommand.addOptions(roleOption);
 
 /**
  * Guild options

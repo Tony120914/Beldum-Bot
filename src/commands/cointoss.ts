@@ -45,7 +45,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
     embed.footer?.setText(`History: ${history}`)
     interactionResponse.data?.addEmbed(embed);
 
-    const button = new ButtonNonLink(history);
+    const button = new ButtonNonLink(history); // Passing data through custom_id
     button.setStyle(BUTTON_STYLE.PRIMARY);
     button.setLabel('Toss again');
     const actionRow = new ActionRow();
