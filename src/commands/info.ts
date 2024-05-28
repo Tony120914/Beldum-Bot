@@ -12,7 +12,7 @@ import { Channel } from '../templates/discord/ChannelResources.js';
 import { User } from '../templates/discord/UserResources.js';
 import { Application } from '../templates/discord/ApplicationResources.js';
 import { Sticker } from '../templates/discord/StickerResources.js';
-import { ActionRow, ChannelSelect, RoleSelect } from '../templates/discord/MessageComponents.js';
+import { ActionRow, ButtonLink, ChannelSelect, RoleSelect } from '../templates/discord/MessageComponents.js';
 
 const applicationCommand = new ApplicationCommand(
     'info',
@@ -133,12 +133,6 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             embed.setDescription(application.description);
             embed.addField('Prefix (slash commands)', '`/`', true);
             embed.addField('List of commands', '`/help`', true);
-            embed.addField('Enjoying this bot?',
-                '[Invite Beldum-bot](https://discord.com/api/oauth2/authorize?client_id=454764425090433034&permissions=19456&scope=bot%20applications.commands) to another server.\n' +
-                'Support me on [Ko-fi](https://ko-fi.com/toeknee).');
-            embed.addField('Resources',
-                '[Website](https://tony120914.github.io/beldum-bot-site)\n' +
-                '[Source code](https://github.com/Tony120914/Beldum-Bot)', true);
             embed.addField('Creator', buildUser(application.owner?.id), true);
             const snowflake = new Snowflake(application.id);
             const joinedDiscord = new Date(snowflake.timestamp);
@@ -152,6 +146,21 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 embed.setTimestampOn();
             }
             interactionResponse.data?.addEmbed(embed);
+
+            const actionRow = new ActionRow();
+            const buttonInvite = new ButtonLink('https://discord.com/api/oauth2/authorize?client_id=454764425090433034&permissions=19456&scope=bot%20applications.commands');
+            const buttonDonate = new ButtonLink('https://ko-fi.com/toeknee');
+            const buttonWebsite = new ButtonLink('https://tony120914.github.io/beldum-bot-site');
+            const buttonSourceCode = new ButtonLink('https://github.com/Tony120914/Beldum-Bot');
+            buttonInvite.setLabel('Invite');
+            buttonDonate.setLabel('Donate');
+            buttonWebsite.setLabel('Website');
+            buttonSourceCode.setLabel('Source Code');
+            actionRow.addComponent(buttonInvite);
+            actionRow.addComponent(buttonDonate);
+            actionRow.addComponent(buttonWebsite);
+            actionRow.addComponent(buttonSourceCode);
+            interactionResponse.data?.addComponent(actionRow);
             break;
         }
         case 'channel': {
