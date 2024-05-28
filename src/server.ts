@@ -44,6 +44,7 @@ router.post('/', async (request, env) => {
         interaction.type === INTERACTION_TYPE.MESSAGE_COMPONENT)
     {
         const args = parseArgs(interaction);
+        console.log(args);
         const commandName = args[0];
 
         if (!Commands.map.has(commandName)) {
