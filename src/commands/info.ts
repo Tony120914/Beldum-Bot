@@ -12,7 +12,7 @@ import { Channel } from '../templates/discord/ChannelResources.js';
 import { User } from '../templates/discord/UserResources.js';
 import { Application } from '../templates/discord/ApplicationResources.js';
 import { Sticker } from '../templates/discord/StickerResources.js';
-import { ActionRow, ButtonLink, ChannelSelect, RoleSelect } from '../templates/discord/MessageComponents.js';
+import { ActionRow, ButtonLink, ChannelSelect, RoleSelect, UserSelect } from '../templates/discord/MessageComponents.js';
 
 const applicationCommand = new ApplicationCommand(
     'info',
@@ -153,6 +153,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             actionRow.addComponent(channelSelect);
             interactionResponse.data?.addComponent(actionRow);
             if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
+                interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
                 const guildId = interaction.guild_id;
                 const channelId = interaction.data.values[0];
                 const data = interaction.data.resolved.channels[channelId];
@@ -176,7 +177,6 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 const created = new Date(snowflake.timestamp);
                 embed.addField('Created', created.toString());
                 interactionResponse.data?.addEmbed(embed);
-                interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
             }
             break;
         }
@@ -209,6 +209,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             actionRow.addComponent(roleSelect);
             interactionResponse.data?.addComponent(actionRow);
             if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
+                interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
                 const roleId = interaction.data.values[0];
                 const data = interaction.data.resolved.roles[roleId];
                 const roleName = data.name;
@@ -227,7 +228,6 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                     embed.image?.setUrl(url);
                 }
                 interactionResponse.data?.addEmbed(embed);
-                interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
             }
             break;
         }
@@ -317,94 +317,87 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             break;
         }
         case 'user': {
-            const userId = interaction.data.options[0].options[0].value;
-            const guildId = interaction.guild_id;
-            const channelId = interaction.channel_id;
-            const resolvedMember = guildId ? interaction.data.resolved.members[userId] : null;
-            const guildMember = new GuildMember();
-            guildMember.assignObject(resolvedMember);
-            if (!userId) {
-                interactionResponse.data?.setContent('Error: Must be a valid user.');
-                interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
-                return interactionResponse;
-            }
-            const url = buildDiscordAPIUrl(['users', userId], []);
-            const response = await fetch(url, {
-                headers: headers
-            });
-            if (!response.ok) {
-                const error = await getFetchErrorText(response);
-                console.error(error);
-                interactionResponse.data?.setContent('Error: Something went wrong. Please try again later.');
-                interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
-                return interactionResponse;
-            }
-            const data = await response.json();
-            const user = new User(data.id, data.string, data.discriminator);
-            user.assignObject(data);
-            const embed = new Embed();
-            embed.setTitle('User Info');
-            const sameUrl = `https://discord.com/channels/${guildId}/${channelId}`; // Embeds having the same URL allows an embed to have multiple images for whatever reason...
-            embed.setUrl(sameUrl);
-            embed.setDescription(`${buildUser(user.id)} ${user.premium_type == USER_PREMIUM_TYPE.NONE ? '' : ':whale:'}`);
-            embed.addField('Server name', guildMember.nick, true);
-            embed.addField('Display name', user.global_name, true);
-            embed.addField('Username', user.username, true);
-            if (user.discriminator != '0') {
-                embed.addField('#', user.discriminator, true);
-            }
-            let roles = '';
-            guildMember.roles.forEach(roleId => {
-                roles += `${buildRole(roleId)} `;
-            });
-            embed.addField('Roles', roles);
-            if (guildMember.joined_at) {
-                const joinedServer = new Date(guildMember.joined_at);
-                embed.addField('Joined server', joinedServer.toString(), true);
-            }
-            if (guildMember.premium_since) {
-                const boosterSince = new Date(guildMember.premium_since);
-                embed.addField('Booster since', boosterSince.toString(), true);
-            }
-            embed.addBlankField()
-            const snowflake = new Snowflake(user.id);
-            const joinedDiscord = new Date(snowflake.timestamp);
-            embed.addField('Joined Discord', joinedDiscord.toString(), true);
-            if (guildMember.communication_disabled_until) {
-                const timeoutExpires = new Date(guildMember.communication_disabled_until);
-                embed.addField('Timeout expires', timeoutExpires.toString(), true);
-            }
-            interactionResponse.data?.addEmbed(embed);
-            if (guildMember.avatar) {
-                const format = guildMember.avatar.startsWith('a_') ? IMAGE_FORMAT.GIF : IMAGE_FORMAT.PNG;
-                const url = buildDiscordImageUrl(['guilds', interaction.guild_id, 'users', userId, 'avatars', guildMember.avatar], format, IMAGE_SIZE.XXX_LARGE);
+            const actionRow = new ActionRow();
+            const userSelect = new UserSelect('user_select');
+            userSelect.setPlaceholder('Select a user');
+            actionRow.addComponent(userSelect);
+            interactionResponse.data?.addComponent(actionRow);
+            if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
+                interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
+                const guildId = interaction.guild_id;
+                const channelId = interaction.channel_id;
+                const userId = interaction.data.values[0];
+                const data = interaction.data.resolved.users[userId];
+                const resolvedMember = guildId ? interaction.data.resolved.members[userId] : null;
+                const guildMember = new GuildMember();
+                guildMember.assignObject(resolvedMember);
+                const user = new User(data.id, data.string, data.discriminator);
+                user.assignObject(data);
+
                 const embed = new Embed();
-                embed.image?.setUrl(url);
+                embed.setTitle('User Info');
+                const sameUrl = `https://discord.com/channels/${guildId}/${channelId}`; // Embeds having the same URL allows an embed to have multiple images for whatever reason...
                 embed.setUrl(sameUrl);
+                embed.setDescription(`${buildUser(user.id)}${user.premium_type == USER_PREMIUM_TYPE.NONE || !user.premium_type ? '' : ' :whale:'}`);
+                embed.addField('Server name', guildMember.nick, true);
+                embed.addField('Display name', user.global_name, true);
+                embed.addField('Username', user.username, true);
+                if (user.discriminator != '0') {
+                    embed.addField('#', user.discriminator, true);
+                }
+                let roles = '';
+                guildMember.roles.forEach(roleId => {
+                    roles += `${buildRole(roleId)} `;
+                });
+                embed.addField('Roles', roles);
+                if (guildMember.joined_at) {
+                    const joinedServer = new Date(guildMember.joined_at);
+                    embed.addField('Joined server', joinedServer.toString(), true);
+                }
+                if (guildMember.premium_since) {
+                    const boosterSince = new Date(guildMember.premium_since);
+                    embed.addField('Booster since', boosterSince.toString(), true);
+                }
+                embed.addBlankField()
+                const snowflake = new Snowflake(user.id);
+                const joinedDiscord = new Date(snowflake.timestamp);
+                embed.addField('Joined Discord', joinedDiscord.toString(), true);
+                if (guildMember.communication_disabled_until) {
+                    const timeoutExpires = new Date(guildMember.communication_disabled_until);
+                    embed.addField('Timeout expires', timeoutExpires.toString(), true);
+                }
                 interactionResponse.data?.addEmbed(embed);
-            }
-            if (user.avatar) {
-                const format = user.avatar.startsWith('a_') ? IMAGE_FORMAT.GIF : IMAGE_FORMAT.PNG;
-                const url = buildDiscordImageUrl(['avatars', userId, user.avatar], format, IMAGE_SIZE.XXX_LARGE);
-                const embed = new Embed();
-                embed.image?.setUrl(url);
-                embed.setUrl(sameUrl);
-                interactionResponse.data?.addEmbed(embed);
-            }
-            if (user.avatar_decoration) {
-                const url = buildDiscordImageUrl(['avatar-decorations', userId, user.avatar_decoration], IMAGE_FORMAT.PNG, IMAGE_SIZE.XXX_LARGE);
-                const embed = new Embed();
-                embed.image?.setUrl(url);
-                embed.setUrl(sameUrl);
-                interactionResponse.data?.addEmbed(embed);
-            }
-            if (user.banner) {
-                const format = user.banner.startsWith('a_') ? IMAGE_FORMAT.GIF : IMAGE_FORMAT.PNG;
-                const url = buildDiscordImageUrl(['banners', userId, user.banner], format, IMAGE_SIZE.XXX_LARGE);
-                const embed = new Embed();
-                embed.image?.setUrl(url);
-                embed.setUrl(sameUrl);
-                interactionResponse.data?.addEmbed(embed);
+                if (guildMember.avatar) {
+                    const format = guildMember.avatar.startsWith('a_') ? IMAGE_FORMAT.GIF : IMAGE_FORMAT.PNG;
+                    const url = buildDiscordImageUrl(['guilds', interaction.guild_id, 'users', userId, 'avatars', guildMember.avatar], format, IMAGE_SIZE.XXX_LARGE);
+                    const embed = new Embed();
+                    embed.image?.setUrl(url);
+                    embed.setUrl(sameUrl);
+                    interactionResponse.data?.addEmbed(embed);
+                }
+                if (user.avatar) {
+                    const format = user.avatar.startsWith('a_') ? IMAGE_FORMAT.GIF : IMAGE_FORMAT.PNG;
+                    const url = buildDiscordImageUrl(['avatars', userId, user.avatar], format, IMAGE_SIZE.XXX_LARGE);
+                    const embed = new Embed();
+                    embed.image?.setUrl(url);
+                    embed.setUrl(sameUrl);
+                    interactionResponse.data?.addEmbed(embed);
+                }
+                if (user.avatar_decoration) {
+                    const url = buildDiscordImageUrl(['avatar-decorations', userId, user.avatar_decoration], IMAGE_FORMAT.PNG, IMAGE_SIZE.XXX_LARGE);
+                    const embed = new Embed();
+                    embed.image?.setUrl(url);
+                    embed.setUrl(sameUrl);
+                    interactionResponse.data?.addEmbed(embed);
+                }
+                if (user.banner) {
+                    const format = user.banner.startsWith('a_') ? IMAGE_FORMAT.GIF : IMAGE_FORMAT.PNG;
+                    const url = buildDiscordImageUrl(['banners', userId, user.banner], format, IMAGE_SIZE.XXX_LARGE);
+                    const embed = new Embed();
+                    embed.image?.setUrl(url);
+                    embed.setUrl(sameUrl);
+                    interactionResponse.data?.addEmbed(embed);
+                }
             }
             break;
         }

@@ -31,6 +31,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
     interactionResponse.data?.addComponent(actionRow);
 
     if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
+        interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
         const userChoice = interaction.data.custom_id;
         const botChoice = [RPS_CHOICE.ROCK, RPS_CHOICE.PAPER, RPS_CHOICE.SCISSORS][getRandomInt(0, 2)];
         const result = evaluateRps(userChoice, botChoice);
@@ -46,7 +47,6 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         embed.addField('Bot chose', RpsToEmoji[botChoice], true);
         embed.addField('Result', result);
         interactionResponse.data?.addEmbed(embed);
-        interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
     }
 
     return interactionResponse;
