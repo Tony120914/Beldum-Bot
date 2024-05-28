@@ -78,16 +78,6 @@ const guildOption = new ApplicationCommandOption(
 applicationCommand.addOptions(guildOption);
 
 /**
- * Channel Thread option
- */
-const threadOption = new ApplicationCommandOption(
-    'thread',
-    'Get the thread\'s information',
-    APPLICATION_COMMAND_OPTION_TYPE.SUB_COMMAND
-);
-applicationCommand.addOptions(threadOption);
-
-/**
  * User options
  */
 const userOption = new ApplicationCommandOption(
@@ -95,13 +85,6 @@ const userOption = new ApplicationCommandOption(
     'Get a user\'s information and images.',
     APPLICATION_COMMAND_OPTION_TYPE.SUB_COMMAND
 );
-const userInputOption = new ApplicationCommandOption(
-    'user',
-    'The desired user',
-    APPLICATION_COMMAND_OPTION_TYPE.USER
-);
-userInputOption.setRequired(true);
-userOption.addOption(userInputOption);
 applicationCommand.addOptions(userOption);
 
 const execute = async function(interaction: any, env: any, args: string[]) {
@@ -180,8 +163,15 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 embed.setTitle('Channel Info');
                 const url = `https://discord.com/channels/${guildId}/${channelId}`;
                 embed.setUrl(url);
+                if (channel.nsfw) { embed.setDescription('NSFW :face_with_peeking_eye:'); }
                 embed.addField('Name', channel.name, true);
                 embed.addField('Topic', channel.topic, true);
+                embed.addField('Creator', buildUser(channel.owner_id), true);
+                embed.addField('Bitrate', channel.bitrate?.toString(), true);
+                if (channel.message_count && channel.total_message_sent) {
+                    const deletedMessagesCount = Math.abs(channel.total_message_sent - channel.message_count);
+                    embed.addField('Deleted / total messages', `${deletedMessagesCount} / ${channel.total_message_sent}`, true);
+                }
                 const snowflake = new Snowflake(channel.id);
                 const created = new Date(snowflake.timestamp);
                 embed.addField('Created', created.toString());
@@ -191,7 +181,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             break;
         }
         case 'emoji': {
-            const emojiString = interaction.data.options[0].options[0].value;
+            const emojiString = args[2];
             const emoji = parseEmoji(emojiString);
             if (!emoji) {
                 interactionResponse.data?.setContent('Error: Custom emojis only.');
@@ -269,7 +259,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             embed.setUrl(sameUrl);
             embed.addField('Name', guild.name, true);
             embed.addField('Owner', buildUser(guild.owner_id), true);
-            embed.addField('Users online / users total (approx)', `${guild.approximate_presence_count} / ${guild.approximate_member_count}`, true);
+            embed.addField('Online / total users (approx)', `${guild.approximate_presence_count} / ${guild.approximate_member_count}`, true);
             embed.addBlankField();
             embed.addField('Description', guild.description, true);
             embed.addBlankField();
@@ -324,35 +314,6 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 embed.setUrl(sameUrl);
                 interactionResponse.data?.addEmbed(embed);
             }
-            break;
-        }
-        case 'thread': {
-            const channelId = interaction.channel_id;
-            const channelType = interaction.channel.type;
-            const guildId = interaction.guild_id;
-            if (!channelId || channelType == null || channelType != CHANNEL_TYPE.PUBLIC_THREAD) {
-                interactionResponse.data?.setContent('Error: Must be used in public threads.');
-                interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
-                return interactionResponse;
-            }
-            const channel = new Channel(channelId, channelType);
-            channel.assignObject(interaction.channel);
-            const embed = new Embed();
-            embed.setTitle('Thread Info');
-            const url = `https://discord.com/channels/${guildId}/${channelId}`;
-            embed.setUrl(url);
-            embed.addField('Name', channel.name, true);
-            embed.addField('Creator', buildUser(channel.owner_id), true);
-            embed.addBlankField();
-            if (channel.message_count && channel.total_message_sent) {
-                const deletedMessagesCount = Math.abs(channel.total_message_sent - channel.message_count);
-                embed.addField('Deleted messages', deletedMessagesCount.toString(), true);
-                embed.addField('Total messages', channel.message_count.toString(), true);
-            }
-            const snowflake = new Snowflake(channel.id);
-            const created = new Date(snowflake.timestamp);
-            embed.addField('Created', created.toString());
-            interactionResponse.data?.addEmbed(embed);
             break;
         }
         case 'user': {
