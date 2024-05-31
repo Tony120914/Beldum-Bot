@@ -35,7 +35,7 @@ applicationCommand.addOptions(botOption);
  */
 const channelOption = new ApplicationCommandOption(
     'channel',
-    'Get the channel\'s information',
+    'Get the selected channel\'s information',
     APPLICATION_COMMAND_OPTION_TYPE.SUB_COMMAND
 );
 applicationCommand.addOptions(channelOption);
@@ -62,7 +62,7 @@ applicationCommand.addOptions(customEmojiOption);
  */
 const roleOption = new ApplicationCommandOption(
     'role',
-    'Get a role\'s information and image.',
+    'Get the selected role\'s information and image.',
     APPLICATION_COMMAND_OPTION_TYPE.SUB_COMMAND
 );
 applicationCommand.addOptions(roleOption);
@@ -82,7 +82,7 @@ applicationCommand.addOptions(guildOption);
  */
 const userOption = new ApplicationCommandOption(
     'user',
-    'Get a user\'s information and images.',
+    'Get the selected user\'s information and images.',
     APPLICATION_COMMAND_OPTION_TYPE.SUB_COMMAND
 );
 applicationCommand.addOptions(userOption);
@@ -117,6 +117,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             embed.addField('Prefix (slash commands)', '`/`', true);
             embed.addField('List of commands', '`/help`', true);
             embed.addField('Creator', buildUser(application.owner?.id), true);
+            embed.footer?.setIconUrl('https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/images/info_ultra_ball.png');
             const snowflake = new Snowflake(application.id);
             const joinedDiscord = new Date(snowflake.timestamp);
             embed.addField('Created', joinedDiscord.toString());

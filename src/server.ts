@@ -40,9 +40,7 @@ router.post('/', async (request, env) => {
         });
     }
 
-    if (interaction.type === INTERACTION_TYPE.APPLICATION_COMMAND ||
-        interaction.type === INTERACTION_TYPE.MESSAGE_COMPONENT)
-    {
+    if (interaction.type === INTERACTION_TYPE.APPLICATION_COMMAND || interaction.type === INTERACTION_TYPE.MESSAGE_COMPONENT) {
         const args = parseArgs(interaction);
         console.log(args);
         const commandName = args[0];

@@ -11,9 +11,7 @@ export function parseArgs(interaction: any) {
         let options = interaction.data.options;
         while (Array.isArray(options) && options.length != 0) {
             options.forEach(option => {
-                if (option.type == APPLICATION_COMMAND_OPTION_TYPE.SUB_COMMAND ||
-                    option.type == APPLICATION_COMMAND_OPTION_TYPE.SUB_COMMAND_GROUP)
-                {
+                if (option.type == APPLICATION_COMMAND_OPTION_TYPE.SUB_COMMAND || option.type == APPLICATION_COMMAND_OPTION_TYPE.SUB_COMMAND_GROUP) {
                     args.push(option.name);
                 }
                 else {

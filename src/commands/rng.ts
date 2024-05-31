@@ -49,7 +49,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
 
     const embed = new Embed();
     embed.setTitle('Random Number Generator');
-    embed.setDescription(`Between ${min} and ${max} (both inclusive)`);
+    embed.setDescription(`:game_die: Between ${min} and ${max} (both inclusive)`);
     embed.addField('Result', randomInt.toString());
     interactionResponse.data?.addEmbed(embed);
 
