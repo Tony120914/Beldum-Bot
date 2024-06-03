@@ -22,7 +22,7 @@ applicationCommand.addOptions(questionInputOption);
 const execute = async function(interaction: any, env: any, args: string[]) {
     const question = args[1];
     const answers = [
-        // Yes - answers
+        // "Yes" answers
         ':white_check_mark: Oh yeah, 100%.',
         ':white_check_mark: Of course!',
         ':white_check_mark: Yes, obviously...',
@@ -34,14 +34,14 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         ':white_check_mark: Yes, indeed.',
         ':white_check_mark: Probably, yes.',
 
-        // Maybe - answers
+        // "Maybe" answers
         ':grey_question: ¯\\_(ツ)_/¯',
         ':grey_question: My crystal ball is foggy...',
         ':grey_question: Zzz...',
         ':grey_question: Huh? What?',
         ':grey_question: I\'m busy right now. Ask me again later.',
     
-        // No - answers
+        // "No" answers
         ':no_entry_sign: Hahaha. No.',
         ':no_entry_sign: Nah, in your dreams...',
         ':no_entry_sign: Nope. Nope. Nope. Nope. Nope.',

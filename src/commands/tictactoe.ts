@@ -28,33 +28,39 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         let currentPlayerId: string;
         let gameState: GAME_STATE;
         if (interaction.data.custom_id == 'user_select') {
+            // Initialize Tic-Tac-Toe game
             const players = randomizePlayerOrder(interaction.message.interaction_metadata.user_id, interaction.data.values[0], interaction.application_id);
             currentPlayerId = players[0];
             data.setOpponentId(players[1]);
             if (data.opponentId != interaction.application_id) {
+                // Player vs player initialization
                 data.setGrid(Array(GRID_SIZE).fill(SYMBOL.VACANT));
                 data.setSymbol(SYMBOL.X);
             }
             else {
-                data.setGrid(Array(GRID_SIZE - 1).fill(SYMBOL.VACANT).concat([SYMBOL.X]));
+                // Player vs bot initialization
+                data.setGrid(Array(GRID_SIZE - 1).fill(SYMBOL.VACANT).concat([SYMBOL.X])); // Always start in the corner (assuming the bot will be going first)
                 data.setSymbol(SYMBOL.O);
             }
             gameState = GAME_STATE.ONGOING;
         }
         else {
+            // Update Tic-Tac-Toe game after a button press
             const prevData = new GameData();
             prevData.assignObject(JSON.parse(interaction.data.custom_id));
             data.setGrid(prevData.getGrid().slice(0, prevData.buttonId)
                 .concat([prevData.symbol])
-                .concat(prevData.getGrid().slice(prevData.buttonId + 1, prevData.getGrid().length)));
-            data.setSymbol(prevData.symbol); // Let game state be evaluated before changing symbols
+                .concat(prevData.getGrid().slice(prevData.buttonId + 1, prevData.getGrid().length))); // Update grid based on button pressed from previous interaction
             if (prevData.opponentId != interaction.application_id) {
+                // Player vs player update
                 currentPlayerId = prevData.opponentId;
                 data.setOpponentId(interaction.message.interaction_metadata.user_id);
+                data.setSymbol(prevData.symbol);
                 gameState = evaluateTicTacToe(data);
                 data.setSymbol(prevData.symbol == SYMBOL.X ? SYMBOL.O : SYMBOL.X);
             }
             else {
+                // Player vs bot update
                 currentPlayerId = interaction.message.interaction_metadata.user_id;
                 data.setOpponentId(interaction.application_id);
                 data.setSymbol(SYMBOL.X);
@@ -124,6 +130,9 @@ enum GAME_STATE {
     DRAW,
 }
 
+/**
+ * Tic-Tac-Toe game data structure when passing data through buttons
+ */
 class GameData {
     buttonId: number
     symbol: SYMBOL
@@ -155,14 +164,21 @@ class GameData {
     setOpponentId(opponentId: string) { this.opponentId = opponentId; }
 }
 
+/**
+ * Randomly selects which player goes first.
+ * (The bot will always "go first" by making its first move during the grid initialization.)
+ * (The bot will be considered player 2 to retain opponent status, since it will technically always be the player's turn.)
+ */
 function randomizePlayerOrder(player1Id: string, player2Id: string, botId: string) {
-    // Bot always player2 to retain opponent status
     if (player2Id == botId) { return [player1Id, botId]; }
     const randomInt = getRandomInt(0, 1);
     if (randomInt == 0) { return [player1Id, player2Id]; }
     else { return [player2Id, player1Id]; }
 }
 
+/**
+ * Evaluate Tic-Tac-Toe game and returns the game state
+ */
 function evaluateTicTacToe(data: GameData) {
     // Checking for row wins
     for (let i = 0; i < GRID_SIZE; i+=GRID_WIDTH) {
@@ -197,12 +213,16 @@ function evaluateTicTacToe(data: GameData) {
     return GAME_STATE.DRAW;
 }
 
+/**
+ * The bot will make decisions based on the minimax algorithm.
+ * https://en.wikipedia.org/wiki/Minimax
+ */
 function minimax(data: GameData, depth: number) {
     let isBotTurn = data.symbol == SYMBOL.X;
     const gameState = evaluateTicTacToe(data);
-    if (gameState == GAME_STATE.WIN && isBotTurn) { return GRID_SIZE - depth; }
-    else if (gameState == GAME_STATE.WIN && !isBotTurn) { return -GRID_SIZE + depth; }
-    else if (gameState == GAME_STATE.DRAW) { return 0; }
+    if (gameState == GAME_STATE.WIN && isBotTurn) { return GRID_SIZE - depth; } // Less depth means faster wins are favored
+    else if (gameState == GAME_STATE.WIN && !isBotTurn) { return -GRID_SIZE + depth; } // More depths means slower losses are favored
+    else if (gameState == GAME_STATE.DRAW) { return 0; } // Draws are neutral
     isBotTurn = !isBotTurn;
 
     if (isBotTurn) {
@@ -223,6 +243,9 @@ function minimax(data: GameData, depth: number) {
     }
 }
 
+/**
+ * Find and return all grid positions that are one move away from the current position
+ */
 function getChildPositions(data: GameData, symbol: SYMBOL) {
     const grid = data.getGrid();
     const childPositions: GameData[] = [];
@@ -240,6 +263,9 @@ function getChildPositions(data: GameData, symbol: SYMBOL) {
     return childPositions;
 }
 
+/**
+ * Find and return the best child grid position that is one move away from the current position
+ */
 function getBestPosition(data: GameData) {
     let maxScore = Number.NEGATIVE_INFINITY;
     let bestPosition: SYMBOL[] = data.getGrid();

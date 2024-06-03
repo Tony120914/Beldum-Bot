@@ -59,6 +59,9 @@ const execute = async function(interaction: object, env: any, args: string[]) {
     return interactionResponse;
 }
 
+/**
+ * Urban Dictionary structure.
+ */
 class UrbanDictionaryDefinition {
     defid: number
     definition: string

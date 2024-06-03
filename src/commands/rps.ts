@@ -15,9 +15,9 @@ const applicationCommand = new ApplicationCommand(
 const execute = async function(interaction: any, env: any, args: string[]) {
     const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
 
-    const buttonRock = new ButtonNonLink('rock');
-    const buttonPaper = new ButtonNonLink('paper');
-    const buttonScissors = new ButtonNonLink('scissors');
+    const buttonRock = new ButtonNonLink(RPS.ROCK);
+    const buttonPaper = new ButtonNonLink(RPS.PAPER);
+    const buttonScissors = new ButtonNonLink(RPS.SCISSORS);
     buttonRock.setStyle(BUTTON_STYLE.PRIMARY);
     buttonPaper.setStyle(BUTTON_STYLE.SUCCESS);
     buttonScissors.setStyle(BUTTON_STYLE.DANGER);
@@ -33,12 +33,12 @@ const execute = async function(interaction: any, env: any, args: string[]) {
     if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
         interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
         const userChoice = interaction.data.custom_id;
-        const botChoice = [RPS_CHOICE.ROCK, RPS_CHOICE.PAPER, RPS_CHOICE.SCISSORS][getRandomInt(0, 2)];
+        const botChoice = [RPS.ROCK, RPS.PAPER, RPS.SCISSORS][getRandomInt(0, 2)];
         const result = evaluateRps(userChoice, botChoice);
         const RpsToEmoji = {
-            [RPS_CHOICE.ROCK]: ':rock:',
-            [RPS_CHOICE.PAPER]: ':roll_of_paper:',
-            [RPS_CHOICE.SCISSORS]: ':scissors:'
+            [RPS.ROCK]: ':rock:',
+            [RPS.PAPER]: ':roll_of_paper:',
+            [RPS.SCISSORS]: ':scissors:'
         }
 
         const embed = new Embed();
@@ -52,17 +52,20 @@ const execute = async function(interaction: any, env: any, args: string[]) {
     return interactionResponse;
 }
 
-enum RPS_CHOICE {
+enum RPS {
     ROCK = 'rock',
     PAPER = 'paper',
     SCISSORS = 'scissors'
 }
 
-function evaluateRps(userChoice: RPS_CHOICE, botChoice: RPS_CHOICE) {
+/**
+ * Evaluate Rock-Paper-Scissors match and return result game state text.
+ */
+function evaluateRps(userChoice: RPS, botChoice: RPS) {
     const losesTo = {
-        [RPS_CHOICE.ROCK]: RPS_CHOICE.SCISSORS,
-        [RPS_CHOICE.PAPER]: RPS_CHOICE.ROCK,
-        [RPS_CHOICE.SCISSORS]: RPS_CHOICE.PAPER
+        [RPS.ROCK]: RPS.SCISSORS,
+        [RPS.PAPER]: RPS.ROCK,
+        [RPS.SCISSORS]: RPS.PAPER
     }
     if (userChoice == losesTo[botChoice]) { return ':skull: _it\'s not very effective..._'; }
     else if (botChoice == losesTo[userChoice]) { return ':boom: _it\'s super effective!_'; }
