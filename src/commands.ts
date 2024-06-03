@@ -4,6 +4,7 @@ import { Info } from "./commands/info.js";
 import { Ping } from "./commands/ping.js";
 import { Rng } from "./commands/rng.js";
 import { Rps } from "./commands/rps.js";
+import { TicTacToe } from "./commands/tictactoe.js";
 import { UrbanDictionary } from "./commands/urbandictionary.js";
 import { CommandsMap } from "./templates/app/Command.js";
 
@@ -17,4 +18,5 @@ Commands.addCommand(Info);
 Commands.addCommand(Ping);
 Commands.addCommand(Rng);
 Commands.addCommand(Rps);
+Commands.addCommand(TicTacToe);
 Commands.addCommand(UrbanDictionary);
