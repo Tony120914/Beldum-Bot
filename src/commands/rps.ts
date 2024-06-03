@@ -1,10 +1,11 @@
-import { ApplicationCommand, ApplicationCommandOption } from '../templates/discord/ApplicationCommand.js'
+import { ApplicationCommand } from '../templates/discord/ApplicationCommand.js'
 import { Command } from '../templates/app/Command.js';
-import { APPLICATION_COMMAND_OPTION_TYPE, APPLICATION_COMMAND_TYPE, BUTTON_STYLE, INTERACTION_RESPONSE_TYPE, INTERACTION_TYPE, TEXT_INPUT_STYLE } from '../templates/discord/Enums.js';
+import { APPLICATION_COMMAND_TYPE, BUTTON_STYLE, INTERACTION_RESPONSE_FLAGS, INTERACTION_RESPONSE_TYPE, INTERACTION_TYPE } from '../templates/discord/Enums.js';
 import { Embed } from '../templates/discord/Embed.js';
 import { InteractionResponse } from '../templates/discord/InteractionResponse.js'
 import { getRandomInt } from '../handlers/Utils.js';
-import { ActionRow, ButtonNonLink, TextInput } from '../templates/discord/MessageComponents.js';
+import { ActionRow, ButtonNonLink } from '../templates/discord/MessageComponents.js';
+import { isOriginalUser } from '../handlers/InteractionHandler.js';
 
 const applicationCommand = new ApplicationCommand(
     'rps',
@@ -15,22 +16,12 @@ const applicationCommand = new ApplicationCommand(
 const execute = async function(interaction: any, env: any, args: string[]) {
     const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
 
-    const buttonRock = new ButtonNonLink(RPS.ROCK);
-    const buttonPaper = new ButtonNonLink(RPS.PAPER);
-    const buttonScissors = new ButtonNonLink(RPS.SCISSORS);
-    buttonRock.setStyle(BUTTON_STYLE.PRIMARY);
-    buttonPaper.setStyle(BUTTON_STYLE.SUCCESS);
-    buttonScissors.setStyle(BUTTON_STYLE.DANGER);
-    buttonRock.setLabel('Rock');
-    buttonPaper.setLabel('Paper');
-    buttonScissors.setLabel('Scissors');
-    const actionRow = new ActionRow();
-    actionRow.addComponent(buttonRock);
-    actionRow.addComponent(buttonPaper);
-    actionRow.addComponent(buttonScissors);
-    interactionResponse.data?.addComponent(actionRow);
-
     if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
+        if (!isOriginalUser(interaction)) {
+            interactionResponse.data?.setContent('\`Error: You are not the original user who triggered the interaction. Please invoke a new slash command.\`');
+            interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
+            return interactionResponse;
+        }
         interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
         const userChoice = interaction.data.custom_id;
         const botChoice = [RPS.ROCK, RPS.PAPER, RPS.SCISSORS][getRandomInt(0, 2)];
@@ -48,6 +39,21 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         embed.addField('Result', result);
         interactionResponse.data?.addEmbed(embed);
     }
+    
+    const buttonRock = new ButtonNonLink(RPS.ROCK);
+    const buttonPaper = new ButtonNonLink(RPS.PAPER);
+    const buttonScissors = new ButtonNonLink(RPS.SCISSORS);
+    buttonRock.setStyle(BUTTON_STYLE.PRIMARY);
+    buttonPaper.setStyle(BUTTON_STYLE.SUCCESS);
+    buttonScissors.setStyle(BUTTON_STYLE.DANGER);
+    buttonRock.setLabel('Rock');
+    buttonPaper.setLabel('Paper');
+    buttonScissors.setLabel('Scissors');
+    const actionRow = new ActionRow();
+    actionRow.addComponent(buttonRock);
+    actionRow.addComponent(buttonPaper);
+    actionRow.addComponent(buttonScissors);
+    interactionResponse.data?.addComponent(actionRow);
 
     return interactionResponse;
 }

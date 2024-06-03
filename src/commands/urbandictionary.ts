@@ -31,13 +31,13 @@ const execute = async function(interaction: object, env: any, args: string[]) {
     if (!response.ok) {
         const error = await getFetchErrorText(response);
         console.error(error);
-        interactionResponse.data?.setContent('Error: Something went wrong. Please try again later.');
+        interactionResponse.data?.setContent('\`Error: Something went wrong. Please try again later.\`');
         interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
         return interactionResponse;
     }
     const data = await response.json();
     if (!data || !Array.isArray(data.list) || data.list.length == 0) {
-        interactionResponse.data?.setContent(`Urban Dictionary has no results for: ${keywords}`);
+        interactionResponse.data?.setContent(`\`Urban Dictionary has no results for: ${keywords}\``);
         interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
         return interactionResponse;
     }

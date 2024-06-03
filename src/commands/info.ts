@@ -1,6 +1,6 @@
 import { ApplicationCommand, ApplicationCommandOption } from '../templates/discord/ApplicationCommand.js'
 import { Command } from '../templates/app/Command.js';
-import { APPLICATION_COMMAND_OPTION_TYPE, APPLICATION_COMMAND_TYPE, CHANNEL_TYPE, IMAGE_FORMAT, IMAGE_SIZE, INTERACTION_RESPONSE_FLAGS, INTERACTION_RESPONSE_TYPE, INTERACTION_TYPE, USER_PREMIUM_TYPE } from '../templates/discord/Enums.js';
+import { APPLICATION_COMMAND_OPTION_TYPE, APPLICATION_COMMAND_TYPE, IMAGE_FORMAT, IMAGE_SIZE, INTERACTION_RESPONSE_FLAGS, INTERACTION_RESPONSE_TYPE, INTERACTION_TYPE, USER_PREMIUM_TYPE } from '../templates/discord/Enums.js';
 import { Embed } from '../templates/discord/Embed.js';
 import { InteractionResponse } from '../templates/discord/InteractionResponse.js'
 import { buildDiscordAPIUrl, buildDiscordImageUrl, buildEmoji, buildRole, buildUser, parseEmoji } from '../handlers/MessageHandler.js';
@@ -13,6 +13,7 @@ import { User } from '../templates/discord/UserResources.js';
 import { Application } from '../templates/discord/ApplicationResources.js';
 import { Sticker } from '../templates/discord/StickerResources.js';
 import { ActionRow, ButtonLink, ChannelSelect, RoleSelect, UserSelect } from '../templates/discord/MessageComponents.js';
+import { isOriginalUser } from '../handlers/InteractionHandler.js';
 
 const applicationCommand = new ApplicationCommand(
     'info',
@@ -104,7 +105,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             if (!response.ok) {
                 const error = await getFetchErrorText(response);
                 console.error(error);
-                interactionResponse.data?.setContent('Error: Something went wrong. Please try again later.');
+                interactionResponse.data?.setContent('\`Error: Something went wrong. Please try again later.\`');
                 interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
                 return interactionResponse;
             }
@@ -148,12 +149,12 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             break;
         }
         case 'channel': {
-            const channelSelect = new ChannelSelect('channel_select');
-            channelSelect.setPlaceholder('Select a channel');
-            const actionRow = new ActionRow();
-            actionRow.addComponent(channelSelect);
-            interactionResponse.data?.addComponent(actionRow);
             if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
+                if (!isOriginalUser(interaction)) {
+                    interactionResponse.data?.setContent('\`Error: You are not the original user who triggered the interaction. Please invoke a new slash command.\`');
+                    interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
+                    return interactionResponse;
+                }
                 interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
                 const guildId = interaction.guild_id;
                 const channelId = interaction.data.values[0];
@@ -179,13 +180,18 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 embed.addField('Created', created.toString());
                 interactionResponse.data?.addEmbed(embed);
             }
+            const channelSelect = new ChannelSelect('channel_select');
+            channelSelect.setPlaceholder('Select a channel');
+            const actionRow = new ActionRow();
+            actionRow.addComponent(channelSelect);
+            interactionResponse.data?.addComponent(actionRow);
             break;
         }
         case 'emoji': {
             const emojiString = args[2];
             const emoji = parseEmoji(emojiString);
             if (!emoji) {
-                interactionResponse.data?.setContent('Error: Custom emojis only.');
+                interactionResponse.data?.setContent('\`Error: Custom emojis only.\`');
                 interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
                 return interactionResponse;
             }
@@ -204,12 +210,12 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             break;
         }
         case 'role': {
-            const roleSelect = new RoleSelect('role_select');
-            roleSelect.setPlaceholder('Select a role');
-            const actionRow = new ActionRow();
-            actionRow.addComponent(roleSelect);
-            interactionResponse.data?.addComponent(actionRow);
             if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
+                if (!isOriginalUser(interaction)) {
+                    interactionResponse.data?.setContent('\`Error: You are not the original user who triggered the interaction. Please invoke a new slash command.\`');
+                    interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
+                    return interactionResponse;
+                }
                 interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
                 const roleId = interaction.data.values[0];
                 const data = interaction.data.resolved.roles[roleId];
@@ -230,13 +236,18 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 }
                 interactionResponse.data?.addEmbed(embed);
             }
+            const roleSelect = new RoleSelect('role_select');
+            roleSelect.setPlaceholder('Select a role');
+            const actionRow = new ActionRow();
+            actionRow.addComponent(roleSelect);
+            interactionResponse.data?.addComponent(actionRow);
             break;
         }
         case 'server': {
             const guildId = interaction.guild_id;
             const channelId = interaction.channel_id;
             if (!guildId) {
-                interactionResponse.data?.setContent('Error: Must be used in servers.');
+                interactionResponse.data?.setContent('\`Error: Must be used in servers.\`');
                 interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
                 return interactionResponse;
             }
@@ -247,7 +258,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             if (!response.ok) {
                 const error = await getFetchErrorText(response);
                 console.error(error);
-                interactionResponse.data?.setContent('Error: Something went wrong. Please try again later.');
+                interactionResponse.data?.setContent('\`Error: Something went wrong. Please try again later.\`');
                 interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
                 return interactionResponse;
             }
@@ -318,12 +329,12 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             break;
         }
         case 'user': {
-            const actionRow = new ActionRow();
-            const userSelect = new UserSelect('user_select');
-            userSelect.setPlaceholder('Select a user');
-            actionRow.addComponent(userSelect);
-            interactionResponse.data?.addComponent(actionRow);
             if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
+                if (!isOriginalUser(interaction)) {
+                    interactionResponse.data?.setContent('\`Error: You are not the original user who triggered the interaction. Please invoke a new slash command.\`');
+                    interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
+                    return interactionResponse;
+                }
                 interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
                 const guildId = interaction.guild_id;
                 const channelId = interaction.channel_id;
@@ -400,10 +411,15 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                     interactionResponse.data?.addEmbed(embed);
                 }
             }
+            const actionRow = new ActionRow();
+            const userSelect = new UserSelect('user_select');
+            userSelect.setPlaceholder('Select a user');
+            actionRow.addComponent(userSelect);
+            interactionResponse.data?.addComponent(actionRow);
             break;
         }
         default: {
-            interactionResponse.data?.setContent('Error: Incorrect subcommand.')
+            interactionResponse.data?.setContent('\`Error: Incorrect subcommand.\`')
             interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
             return interactionResponse;
         }

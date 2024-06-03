@@ -39,12 +39,12 @@ const response = await fetch(url, {
     body: JSON.stringify(applicationCommands),
 });
 
-if (response.ok) {
-    console.log('Registered all commands');
-    const data = await response.json();
-    console.log(JSON.stringify(data, null, 2));
-} else {
+if (!response.ok) {
     console.error('Error registering commands');
     const errorText = getFetchErrorText(response);
     console.error(errorText);
+} else {
+    console.log('Registered all commands');
+    const data = await response.json();
+    console.log(JSON.stringify(data, null, 2));
 }

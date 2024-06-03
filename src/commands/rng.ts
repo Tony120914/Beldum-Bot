@@ -1,10 +1,11 @@
 import { ApplicationCommand, ApplicationCommandOption } from '../templates/discord/ApplicationCommand.js'
 import { Command } from '../templates/app/Command.js';
-import { APPLICATION_COMMAND_OPTION_TYPE, APPLICATION_COMMAND_TYPE, BUTTON_STYLE, INTERACTION_RESPONSE_TYPE, INTERACTION_TYPE } from '../templates/discord/Enums.js';
+import { APPLICATION_COMMAND_OPTION_TYPE, APPLICATION_COMMAND_TYPE, BUTTON_STYLE, INTERACTION_RESPONSE_FLAGS, INTERACTION_RESPONSE_TYPE, INTERACTION_TYPE } from '../templates/discord/Enums.js';
 import { Embed } from '../templates/discord/Embed.js';
 import { InteractionResponse } from '../templates/discord/InteractionResponse.js'
 import { getRandomInt } from '../handlers/Utils.js';
 import { ButtonNonLink, ActionRow } from '../templates/discord/MessageComponents.js';
+import { isOriginalUser } from '../handlers/InteractionHandler.js';
 
 const applicationCommand = new ApplicationCommand(
     'rng',
@@ -12,21 +13,21 @@ const applicationCommand = new ApplicationCommand(
     APPLICATION_COMMAND_TYPE.CHAT_INPUT
 );
 
-const FirstNumberInputOption = new ApplicationCommandOption(
+const firstNumberInputOption = new ApplicationCommandOption(
     'int1',
     'First integer (inclusive)',
     APPLICATION_COMMAND_OPTION_TYPE.INTEGER
 );
-FirstNumberInputOption.setRequired(true);
-applicationCommand.addOptions(FirstNumberInputOption);
+firstNumberInputOption.setRequired(true);
+applicationCommand.addOptions(firstNumberInputOption);
 
-const SecondNumberInputOption = new ApplicationCommandOption(
+const secondNumberInputOption = new ApplicationCommandOption(
     'int2',
     'Second integer (inclusive)',
     APPLICATION_COMMAND_OPTION_TYPE.INTEGER
 );
-SecondNumberInputOption.setRequired(true);
-applicationCommand.addOptions(SecondNumberInputOption);
+secondNumberInputOption.setRequired(true);
+applicationCommand.addOptions(secondNumberInputOption);
 
 const execute = async function(interaction: any, env: any, args: string[]) {
     const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
@@ -38,6 +39,11 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         int2 = interaction.data.options[1].value;
     }
     else if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
+        if (!isOriginalUser(interaction)) {
+            interactionResponse.data?.setContent('\`Error: You are not the original user who triggered the interaction. Please invoke a new slash command.\`');
+            interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
+            return interactionResponse;
+        }
         interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
         const data = JSON.parse(interaction.data.custom_id);
         int1 = data.int1;

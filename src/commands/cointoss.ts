@@ -1,10 +1,11 @@
 import { ApplicationCommand } from '../templates/discord/ApplicationCommand.js'
 import { Command } from '../templates/app/Command.js';
-import { APPLICATION_COMMAND_TYPE, BUTTON_STYLE, INTERACTION_RESPONSE_TYPE, INTERACTION_TYPE } from '../templates/discord/Enums.js';
+import { APPLICATION_COMMAND_TYPE, BUTTON_STYLE, INTERACTION_RESPONSE_FLAGS, INTERACTION_RESPONSE_TYPE, INTERACTION_TYPE } from '../templates/discord/Enums.js';
 import { Embed } from '../templates/discord/Embed.js';
 import { InteractionResponse } from '../templates/discord/InteractionResponse.js'
 import { getRandomInt } from '../handlers/Utils.js';
 import { ActionRow, ButtonNonLink } from '../templates/discord/MessageComponents.js';
+import { isOriginalUser } from '../handlers/InteractionHandler.js';
 
 const applicationCommand = new ApplicationCommand(
     'cointoss',
@@ -16,6 +17,11 @@ const execute = async function(interaction: any, env: any, args: string[]) {
     const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
     let history = '';
     if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
+        if (!isOriginalUser(interaction)) {
+            interactionResponse.data?.setContent('\`Error: You are not the original user who triggered the interaction. Please invoke a new slash command.\`');
+            interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
+            return interactionResponse;
+        }
         interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
         history = interaction.data.custom_id;
     }

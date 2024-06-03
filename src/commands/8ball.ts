@@ -30,7 +30,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         ':white_check_mark: Absolutely!',
         ':white_check_mark: Certainly.',
         ':white_check_mark: There\'s no doubt.',
-        ':white_check_mark: Yeee...n...ye...n...YES.',
+        ':white_check_mark: Affirmative.',
         ':white_check_mark: Yes, indeed.',
         ':white_check_mark: Probably, yes.',
 
@@ -38,7 +38,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         ':grey_question: ¯\\_(ツ)_/¯',
         ':grey_question: My crystal ball is foggy...',
         ':grey_question: Zzz...',
-        ':grey_question: Huh? What?',
+        ':grey_question: Huh? What? Pardon?',
         ':grey_question: I\'m busy right now. Ask me again later.',
     
         // "No" answers
@@ -46,7 +46,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         ':no_entry_sign: Nah, in your dreams...',
         ':no_entry_sign: Nope. Nope. Nope. Nope. Nope.',
         ':no_entry_sign: Absolutely not.',
-        ':no_entry_sign: Science says no.',
+        ':no_entry_sign: Negative.',
         ];
     const randomInt = getRandomInt(0, answers.length - 1);
 
