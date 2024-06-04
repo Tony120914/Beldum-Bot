@@ -1,11 +1,12 @@
 import { ApplicationCommand } from '../templates/discord/ApplicationCommand.js'
 import { Command } from '../templates/app/Command.js';
-import { APPLICATION_COMMAND_TYPE, BUTTON_STYLE, INTERACTION_RESPONSE_TYPE, INTERACTION_TYPE } from '../templates/discord/Enums.js';
+import { APPLICATION_COMMAND_TYPE, BUTTON_STYLE, INTERACTION_RESPONSE_FLAGS, INTERACTION_RESPONSE_TYPE, INTERACTION_TYPE } from '../templates/discord/Enums.js';
 import { Embed } from '../templates/discord/Embed.js';
 import { InteractionResponse } from '../templates/discord/InteractionResponse.js'
 import { getRandomInt } from '../handlers/Utils.js';
 import { ActionRow, ButtonNonLink, UserSelect } from '../templates/discord/MessageComponents.js';
 import { buildUser } from '../handlers/MessageHandler.js';
+import { isOriginalUserInvoked } from '../handlers/InteractionHandler.js';
 
 const applicationCommand = new ApplicationCommand(
     'tictactoe',
@@ -23,58 +24,78 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         interactionResponse.data?.addComponent(actionRow);
     }
     else if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
-        interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
         const data = new GameData();
+        const originalUserId = interaction.message.interaction_metadata.user.id;
+        const invokingUserId = interaction.member?.user?.id ? interaction.member.user.id : interaction.user.id;
+        let selectedUserId: string;
+        const botId = interaction.application_id;
         let currentPlayerId: string;
         let gameState: GAME_STATE;
         if (interaction.data.custom_id == 'user_select') {
+            if (!isOriginalUserInvoked(interaction)) {
+                interactionResponse.data?.setContent('\`Error: You are not the original user who triggered the interaction. Please invoke a new slash command.\`');
+                interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
+                return interactionResponse;
+            }
             // Initialize Tic-Tac-Toe game
-            const players = randomizePlayerOrder(interaction.message.interaction_metadata.user_id, interaction.data.values[0], interaction.application_id);
-            currentPlayerId = players[0];
-            data.setOpponentId(players[1]);
-            if (data.opponentId != interaction.application_id) {
+            selectedUserId = interaction.data.values[0];
+            currentPlayerId = chooseFirstPlayer(originalUserId, selectedUserId, botId);
+            data.setTurn(currentPlayerId == originalUserId ? TURN.ORIGINAL_USER : TURN.SELECTED_USER);
+            data.setSelectedId(selectedUserId);
+            if (selectedUserId != botId) {
                 // Player vs player initialization
                 data.setGrid(Array(GRID_SIZE).fill(SYMBOL.VACANT));
                 data.setSymbol(SYMBOL.X);
             }
             else {
                 // Player vs bot initialization
-                data.setGrid(Array(GRID_SIZE - 1).fill(SYMBOL.VACANT).concat([SYMBOL.X])); // Always start in the corner (assuming the bot will be going first)
+                const startingGrid = Array(GRID_SIZE).fill(SYMBOL.VACANT);
+                const indexesOfInterest = [0, GRID_WIDTH-1, GRID_SIZE-GRID_WIDTH, GRID_SIZE-1, GRID_CENTER]; // 4 Corners and 1 center
+                startingGrid[indexesOfInterest[getRandomInt(0, 4)]] = SYMBOL.X;
+                data.setGrid(startingGrid); // Bot will always start in a corner or center;
                 data.setSymbol(SYMBOL.O);
             }
             gameState = GAME_STATE.ONGOING;
         }
         else {
             // Update Tic-Tac-Toe game after a button press
-            const prevData = new GameData();
-            prevData.assignObject(JSON.parse(interaction.data.custom_id));
-            data.setGrid(prevData.getGrid().slice(0, prevData.buttonId)
-                .concat([prevData.symbol])
-                .concat(prevData.getGrid().slice(prevData.buttonId + 1, prevData.getGrid().length))); // Update grid based on button pressed from previous interaction
-            if (prevData.opponentId != interaction.application_id) {
+            data.assignObject(JSON.parse(interaction.data.custom_id));
+            selectedUserId = data.selectedId;
+            const prevGrid = data.getGrid();
+            data.setGrid(prevGrid.slice(0, data.buttonId)
+                .concat([data.symbol])
+                .concat(prevGrid.slice(data.buttonId + 1, prevGrid.length))); // Update grid based on button pressed from previous interaction
+            currentPlayerId = data.turn == TURN.ORIGINAL_USER ? originalUserId : selectedUserId;
+            if (invokingUserId != currentPlayerId) {
+                interactionResponse.data?.setContent('\`Error: It is either not your turn yet, or you are not involved in this match.\`');
+                interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
+                return interactionResponse;
+            }
+            if (selectedUserId != botId) {
                 // Player vs player update
-                currentPlayerId = prevData.opponentId;
-                data.setOpponentId(interaction.message.interaction_metadata.user_id);
-                data.setSymbol(prevData.symbol);
                 gameState = evaluateTicTacToe(data);
-                data.setSymbol(prevData.symbol == SYMBOL.X ? SYMBOL.O : SYMBOL.X);
+                data.setSymbol(data.symbol == SYMBOL.X ? SYMBOL.O : SYMBOL.X);
+                data.setTurn(data.turn == TURN.ORIGINAL_USER ? TURN.SELECTED_USER : TURN.ORIGINAL_USER);
+                currentPlayerId = data.turn == TURN.ORIGINAL_USER ? originalUserId : selectedUserId;
             }
             else {
                 // Player vs bot update
-                currentPlayerId = interaction.message.interaction_metadata.user_id;
-                data.setOpponentId(interaction.application_id);
                 data.setSymbol(SYMBOL.X);
                 data.setGrid(getBestPosition(data));
                 gameState = evaluateTicTacToe(data);
                 data.setSymbol(SYMBOL.O);
+                currentPlayerId = originalUserId;
             }
         }
-        
+        interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
+
         const embed = new Embed();
         embed.setTitle('Tic-Tac-Toe');
-        embed.setDescription(`Game between ${buildUser(currentPlayerId)} and ${buildUser(data.opponentId)}${currentPlayerId == data.opponentId ? '\n***What a loser, playing this game with yourself :joy:***' : ''}`);
+        embed.setDescription(`Game between ${buildUser(originalUserId)} and ${buildUser(selectedUserId)}${originalUserId == selectedUserId ? '\n***What a loser, playing this game with yourself :joy:***' : ''}`);
         if (gameState == GAME_STATE.WIN) {
-            embed.addField('Winner', `${buildUser(data.opponentId)} won! Congratulations :tada:`);
+            let winnerId = isOriginalUserInvoked(interaction) ? originalUserId : selectedUserId; // Most recent user to invoke is the winner.
+            winnerId = selectedUserId == botId ? botId : winnerId; // Bot is programmed to always win if a win state is achieved.
+            embed.addField('Winner', `${buildUser(winnerId)} won! Congratulations :tada:`);
         }
         else if (gameState == GAME_STATE.DRAW) {
             embed.addField('Draw', 'It\'s a draw :yawning_face:');
@@ -124,6 +145,11 @@ enum SYMBOL {
     O = 'O'
 }
 
+enum TURN {
+    ORIGINAL_USER,
+    SELECTED_USER
+}
+
 enum GAME_STATE {
     ONGOING,
     WIN,
@@ -137,7 +163,8 @@ class GameData {
     buttonId: number
     symbol: SYMBOL
     grid: string // of SYMBOL
-    opponentId: string
+    selectedId: string
+    turn: TURN
 
     assignObject(object: object) {
         Object.assign(this, object);
@@ -161,19 +188,19 @@ class GameData {
         });
         this.grid = grid.join('');
     }
-    setOpponentId(opponentId: string) { this.opponentId = opponentId; }
+    setSelectedId(selectedId: string) { this.selectedId = selectedId; }
+    setTurn(turn: TURN) { this.turn = turn; }
 }
 
 /**
  * Randomly selects which player goes first.
- * (The bot will always "go first" by making its first move during the grid initialization.)
- * (The bot will be considered player 2 to retain opponent status, since it will technically always be the player's turn.)
+ * (The bot will always "go first" by making its first move during the grid initialization.
+ * However, the bot will be considered player 2 to retain opponent status,
+ * since it will technically always be the player's turn.)
  */
-function randomizePlayerOrder(player1Id: string, player2Id: string, botId: string) {
-    if (player2Id == botId) { return [player1Id, botId]; }
-    const randomInt = getRandomInt(0, 1);
-    if (randomInt == 0) { return [player1Id, player2Id]; }
-    else { return [player2Id, player1Id]; }
+function chooseFirstPlayer(player1Id: string, player2Id: string, botId: string) {
+    if (player2Id == botId) { return player1Id; }
+    return [player1Id, player2Id][getRandomInt(0, 1)];
 }
 
 /**

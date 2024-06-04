@@ -5,7 +5,7 @@ import { Embed } from '../templates/discord/Embed.js';
 import { InteractionResponse } from '../templates/discord/InteractionResponse.js'
 import { getRandomInt } from '../handlers/Utils.js';
 import { ButtonNonLink, ActionRow } from '../templates/discord/MessageComponents.js';
-import { isOriginalUser } from '../handlers/InteractionHandler.js';
+import { isOriginalUserInvoked } from '../handlers/InteractionHandler.js';
 
 const applicationCommand = new ApplicationCommand(
     'rng',
@@ -39,7 +39,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         int2 = interaction.data.options[1].value;
     }
     else if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
-        if (!isOriginalUser(interaction)) {
+        if (!isOriginalUserInvoked(interaction)) {
             interactionResponse.data?.setContent('\`Error: You are not the original user who triggered the interaction. Please invoke a new slash command.\`');
             interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
             return interactionResponse;

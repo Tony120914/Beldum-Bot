@@ -13,7 +13,7 @@ import { User } from '../templates/discord/UserResources.js';
 import { Application } from '../templates/discord/ApplicationResources.js';
 import { Sticker } from '../templates/discord/StickerResources.js';
 import { ActionRow, ButtonLink, ChannelSelect, RoleSelect, UserSelect } from '../templates/discord/MessageComponents.js';
-import { isOriginalUser } from '../handlers/InteractionHandler.js';
+import { isOriginalUserInvoked } from '../handlers/InteractionHandler.js';
 
 const applicationCommand = new ApplicationCommand(
     'info',
@@ -150,7 +150,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         }
         case 'channel': {
             if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
-                if (!isOriginalUser(interaction)) {
+                if (!isOriginalUserInvoked(interaction)) {
                     interactionResponse.data?.setContent('\`Error: You are not the original user who triggered the interaction. Please invoke a new slash command.\`');
                     interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
                     return interactionResponse;
@@ -211,7 +211,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         }
         case 'role': {
             if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
-                if (!isOriginalUser(interaction)) {
+                if (!isOriginalUserInvoked(interaction)) {
                     interactionResponse.data?.setContent('\`Error: You are not the original user who triggered the interaction. Please invoke a new slash command.\`');
                     interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
                     return interactionResponse;
@@ -330,7 +330,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         }
         case 'user': {
             if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
-                if (!isOriginalUser(interaction)) {
+                if (!isOriginalUserInvoked(interaction)) {
                     interactionResponse.data?.setContent('\`Error: You are not the original user who triggered the interaction. Please invoke a new slash command.\`');
                     interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
                     return interactionResponse;
