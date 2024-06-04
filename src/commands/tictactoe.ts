@@ -242,9 +242,11 @@ function evaluateTicTacToe(data: GameData) {
 
 /**
  * The bot will make decisions based on the minimax algorithm.
+ * (Includes alpha beta pruning.)
  * https://en.wikipedia.org/wiki/Minimax
+ * https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning
  */
-function minimax(data: GameData, depth: number) {
+function minimaxAB(data: GameData, depth: number, alpha: number, beta: number) {
     let isBotTurn = data.symbol == SYMBOL.X;
     const gameState = evaluateTicTacToe(data);
     if (gameState == GAME_STATE.WIN && isBotTurn) { return GRID_SIZE - depth; } // Less depth means faster wins are favored
@@ -255,17 +257,23 @@ function minimax(data: GameData, depth: number) {
     if (isBotTurn) {
         let score = Number.NEGATIVE_INFINITY;
         const childPositions = getChildPositions(data, SYMBOL.X);
-        childPositions.forEach(childData => {
-            score = Math.max(score, minimax(childData, depth + 1));
-        })
+        for (let i = 0; i < childPositions.length; i++) {
+            const childData = childPositions[i];
+            score = Math.max(score, minimaxAB(childData, depth + 1, alpha, beta));
+            alpha = Math.max(alpha, score);
+            if (score >= beta) { break; }
+        }
         return score;
     }
     else {
         let score = Number.POSITIVE_INFINITY;
         const childPositions = getChildPositions(data, SYMBOL.O);
-        childPositions.forEach(childData => {
-            score = Math.min(score, minimax(childData, depth + 1));
-        })
+        for (let i = 0; i < childPositions.length; i++) {
+            const childData = childPositions[i];
+            score = Math.min(score, minimaxAB(childData, depth + 1, alpha, beta));
+            beta = Math.min(beta, score);
+            if (score <= alpha) { break; }
+        }
         return score;
     }
 }
@@ -297,7 +305,7 @@ function getBestPosition(data: GameData) {
     let maxScore = Number.NEGATIVE_INFINITY;
     let bestPosition: SYMBOL[] = data.getGrid();
     getChildPositions(data, data.symbol).forEach(childData => {
-        const childScore = minimax(childData, 0);
+        const childScore = minimaxAB(childData, 0, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY);
         if (childScore > maxScore) {
             maxScore = childScore;
             bestPosition = childData.getGrid();
