@@ -14,6 +14,7 @@ import { Application } from '../templates/discord/ApplicationResources.js';
 import { Sticker } from '../templates/discord/StickerResources.js';
 import { ActionRow, ButtonLink, ChannelSelect, RoleSelect, UserSelect } from '../templates/discord/MessageComponents.js';
 import { isOriginalUserInvoked } from '../handlers/InteractionHandler.js';
+import { Commands } from '../commands.js';
 
 const applicationCommand = new ApplicationCommand(
     'info',
@@ -116,8 +117,18 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             embed.setTitle(application.name);
             embed.setDescription(application.description);
             embed.addField('Prefix (slash commands)', '`/`', true);
-            embed.addField('List of commands', '`/help`', true);
             embed.addField('Creator', buildUser(application.owner?.id), true);
+            const listOfCommands: string[] = [];
+            const commands = Array.from(Commands.map.values());
+            commands.forEach(command => {
+                const commandName = command.applicationCommand.name;
+                const commandOptions = command.applicationCommand.options?.filter(option => {
+                    return option.type == APPLICATION_COMMAND_OPTION_TYPE.SUB_COMMAND ||
+                        option.type == APPLICATION_COMMAND_OPTION_TYPE.SUB_COMMAND_GROUP;
+                });
+                listOfCommands.push(`\`/${commandName}${commandOptions?.length != 0 ? ' <subcommands>' : ''}\``);
+            });
+            embed.addField('List of commands', listOfCommands.join(' '));
             embed.footer?.setIconUrl('https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/images/info_ultra_ball.png');
             const snowflake = new Snowflake(application.id);
             const joinedDiscord = new Date(snowflake.timestamp);
@@ -134,16 +145,16 @@ const execute = async function(interaction: any, env: any, args: string[]) {
 
             const actionRow = new ActionRow();
             const buttonInvite = new ButtonLink('https://discord.com/api/oauth2/authorize?client_id=454764425090433034&permissions=19456&scope=bot%20applications.commands');
+            const buttonDocumentation = new ButtonLink('https://tony120914.github.io/beldum-bot-site');
             const buttonDonate = new ButtonLink('https://ko-fi.com/toeknee');
-            const buttonWebsite = new ButtonLink('https://tony120914.github.io/beldum-bot-site');
             const buttonSourceCode = new ButtonLink('https://github.com/Tony120914/Beldum-Bot');
             buttonInvite.setLabel('Invite');
+            buttonDocumentation.setLabel('Documentation');
             buttonDonate.setLabel('Donate');
-            buttonWebsite.setLabel('Website');
             buttonSourceCode.setLabel('Source Code');
             actionRow.addComponent(buttonInvite);
+            actionRow.addComponent(buttonDocumentation);
             actionRow.addComponent(buttonDonate);
-            actionRow.addComponent(buttonWebsite);
             actionRow.addComponent(buttonSourceCode);
             interactionResponse.data?.addComponent(actionRow);
             break;
