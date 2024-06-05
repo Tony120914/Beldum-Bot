@@ -3,6 +3,7 @@ import { Command } from '../templates/app/Command.js';
 import { APPLICATION_COMMAND_TYPE, INTERACTION_RESPONSE_FLAGS, INTERACTION_RESPONSE_TYPE } from '../templates/discord/Enums.js';
 import { Embed } from '../templates/discord/Embed.js';
 import { InteractionResponse } from '../templates/discord/InteractionResponse.js'
+import { ActionRow, ButtonLink } from '../templates/discord/MessageComponents.js';
 
 const applicationCommand = new ApplicationCommand(
     'Spongebob Mock',
@@ -12,19 +13,28 @@ const applicationCommand = new ApplicationCommand(
 
 const execute = async function(interaction: any, env: any, args: string[]) {
     const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
+    const guildId = interaction.guild_id;
+    const channelId = interaction.channel_id;
     const messageId = interaction.data.target_id;
     const message = interaction.data.resolved.messages[messageId];
-    const text = message.content;
-    if (text.length < 2) {
+    const messageText = message.content;
+    const messageUrl = `https://discord.com/channels/${guildId}/${channelId}/${messageId}`;
+    if (messageText.length < 2) {
         interactionResponse.data?.setContent(`\`${mockText('Error: The selected message is too short to mock.')}\``);
         interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
         return interactionResponse;
     }
 
     const embed = new Embed();
-    embed.setDescription(mockText(text));
+    embed.setDescription(mockText(messageText));
     embed.thumbnail?.setUrl('https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/images/spongebobmock.png');
     interactionResponse.data?.addEmbed(embed);
+
+    const actionRow = new ActionRow();
+    const button = new ButtonLink(messageUrl);
+    button.setLabel('Original message');
+    actionRow.addComponent(button);
+    interactionResponse.data?.addComponent(actionRow);
 
     return interactionResponse;
 }
