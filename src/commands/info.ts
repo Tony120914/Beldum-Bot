@@ -118,17 +118,9 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             embed.setDescription(application.description);
             embed.addField('Prefix (slash commands)', '`/`', true);
             embed.addField('Creator', buildUser(application.owner?.id), true);
-            const listOfCommands: string[] = [];
-            const commands = Array.from(Commands.map.values());
-            commands.forEach(command => {
-                const commandName = command.applicationCommand.name;
-                const commandOptions = command.applicationCommand.options?.filter(option => {
-                    return option.type == APPLICATION_COMMAND_OPTION_TYPE.SUB_COMMAND ||
-                        option.type == APPLICATION_COMMAND_OPTION_TYPE.SUB_COMMAND_GROUP;
-                });
-                listOfCommands.push(`\`/${commandName}${commandOptions?.length != 0 ? ' <subcommands>' : ''}\``);
-            });
-            embed.addField('List of commands', listOfCommands.join(' '));
+            embed.addBlankField();
+            embed.addField('Chat commands', getChatInputCommands().join(' '), true);
+            embed.addField('Message commands', getMessageCommands().join(' '), true);
             embed.footer?.setIconUrl('https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/images/info_ultra_ball.png');
             const snowflake = new Snowflake(application.id);
             const joinedDiscord = new Date(snowflake.timestamp);
@@ -436,6 +428,42 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         }
     }
     return interactionResponse;
+}
+
+/**
+ * Returns a list of chat input commands where each command is in the form of:
+ * `/command <subcommands>`
+ */
+function getChatInputCommands() {
+    const chatInputCommands: string[] = [];
+    const commands = Array.from(Commands.map.values());
+    commands.forEach(command => {
+        if (command.applicationCommand.type == APPLICATION_COMMAND_TYPE.CHAT_INPUT) {
+            const commandName = command.applicationCommand.name;
+            const commandOptions = command.applicationCommand.options?.filter(option => {
+                return option.type == APPLICATION_COMMAND_OPTION_TYPE.SUB_COMMAND ||
+                    option.type == APPLICATION_COMMAND_OPTION_TYPE.SUB_COMMAND_GROUP;
+            });
+            chatInputCommands.push(`\`/${commandName}${commandOptions?.length != 0 ? ' <subcommands>' : ''}\``);
+        }        
+    });
+    return chatInputCommands;
+}
+
+/**
+ * Returns a list of message commands where each command is in the form of:
+ * `/command`
+ */
+function getMessageCommands() {
+    const messageCommands: string[] = [];
+    const commands = Array.from(Commands.map.values());
+    commands.forEach(command => {
+        if (command.applicationCommand.type == APPLICATION_COMMAND_TYPE.MESSAGE) {
+            const commandName = command.applicationCommand.name;
+            messageCommands.push(`\`${commandName}\``);
+        }        
+    });
+    return messageCommands;
 }
 
 /**
