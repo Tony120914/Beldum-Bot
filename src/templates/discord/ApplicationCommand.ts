@@ -21,7 +21,7 @@ export class ApplicationCommand {
     default_member_permissions?: string
     dm_permission?: boolean = true;
     // default_permissions?: boolean = true; // will be deprecated in the future
-    type?: APPLICATION_COMMAND_TYPE = 1;
+    type?: APPLICATION_COMMAND_TYPE = APPLICATION_COMMAND_TYPE.CHAT_INPUT;
     nsfw?: boolean
 
     constructor(name: string, description: string, type: APPLICATION_COMMAND_TYPE) {
@@ -31,16 +31,22 @@ export class ApplicationCommand {
                 `${JSON.stringify(name)}`);
             return;
         }
-        if (!(APPLICATION_COMMAND_DESCRIPTION_LIMIT_MIN <= description.length && description.length <= APPLICATION_COMMAND_DESCRIPTION_LIMIT_MAX)) {
+        if (type == APPLICATION_COMMAND_TYPE.CHAT_INPUT && !(APPLICATION_COMMAND_DESCRIPTION_LIMIT_MIN <= description.length && description.length <= APPLICATION_COMMAND_DESCRIPTION_LIMIT_MAX)) {
             console.error(
-                `The condition must be met: ${APPLICATION_COMMAND_DESCRIPTION_LIMIT_MIN} <= description <= ${APPLICATION_COMMAND_DESCRIPTION_LIMIT_MAX} in application command.\n` +
+                `The condition must be met (chat input): ${APPLICATION_COMMAND_DESCRIPTION_LIMIT_MIN} <= description <= ${APPLICATION_COMMAND_DESCRIPTION_LIMIT_MAX} in application command.\n` +
                 `${JSON.stringify(description)}`);
             return;
         }
-        if (!/^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$/u.test(name)) {
+        if (type == APPLICATION_COMMAND_TYPE.CHAT_INPUT && !/^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$/u.test(name)) {
             console.error(
-                `Application command name must match regex:/^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$/u\n` +
+                `Application command (chat input) name must match regex:/^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$/u\n` +
                 `${JSON.stringify(name)}`);
+            return;
+        }
+        if ((type == APPLICATION_COMMAND_TYPE.MESSAGE || type == APPLICATION_COMMAND_TYPE.USER) && description != '') {
+            console.error(
+                `Application command (message/user) description must be an empty string\n` +
+                `${JSON.stringify(description)}`);
             return;
         }
         this.name = name;
