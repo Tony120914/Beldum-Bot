@@ -2,7 +2,7 @@ import { ApplicationCommand, ApplicationCommandOption } from '../templates/disco
 import { Command } from '../templates/app/Command.js';
 import { APPLICATION_COMMAND_OPTION_TYPE, APPLICATION_COMMAND_TYPE, INTERACTION_RESPONSE_FLAGS, INTERACTION_RESPONSE_TYPE } from '../templates/discord/Enums.js';
 import { Embed } from '../templates/discord/Embed.js';
-import { InteractionResponse } from '../templates/discord/InteractionResponse.js'
+import { InteractionResponse, MessageData } from '../templates/discord/InteractionResponse.js'
 import { getFetchErrorText } from '../handlers/ErrorHandler.js';
 
 const applicationCommand = new ApplicationCommand(
@@ -19,7 +19,7 @@ keywordInputOption.setRequired(true);
 applicationCommand.addOptions(keywordInputOption);
 
 const execute = async function(interaction: any, env: any, args: string[]) {
-    const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
+    const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE, new MessageData());
     const keywords = args[1];
     const url = `http://api.urbandictionary.com/v0/define?term=${encodeURI(keywords)}`;
     const response = await fetch(url, {

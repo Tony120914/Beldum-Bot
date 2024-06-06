@@ -2,7 +2,7 @@ import { ApplicationCommand, ApplicationCommandOption } from '../templates/disco
 import { Command } from '../templates/app/Command.js';
 import { APPLICATION_COMMAND_OPTION_TYPE, APPLICATION_COMMAND_TYPE, IMAGE_FORMAT, IMAGE_SIZE, INTERACTION_RESPONSE_FLAGS, INTERACTION_RESPONSE_TYPE, INTERACTION_TYPE, USER_PREMIUM_TYPE } from '../templates/discord/Enums.js';
 import { Embed } from '../templates/discord/Embed.js';
-import { InteractionResponse } from '../templates/discord/InteractionResponse.js'
+import { InteractionResponse, MessageData } from '../templates/discord/InteractionResponse.js'
 import { buildDiscordAPIUrl, buildDiscordImageUrl, buildEmoji, buildRole, buildUser, parseEmoji } from '../handlers/MessageHandler.js';
 import { getFetchErrorText } from '../handlers/ErrorHandler.js';
 import { Role } from '../templates/discord/PermissionsResources.js';
@@ -95,7 +95,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         'User-Agent': env.USER_AGENT,
         'Authorization': `Bot ${env.DISCORD_TOKEN}`,
     }
-    const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
+    const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE, new MessageData());
     const subcommand = args[1];
     switch (subcommand) {
         case 'bot': {

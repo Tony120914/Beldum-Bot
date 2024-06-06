@@ -2,7 +2,7 @@ import { ApplicationCommand, ApplicationCommandOption } from '../templates/disco
 import { Command } from '../templates/app/Command.js';
 import { APPLICATION_COMMAND_OPTION_TYPE, APPLICATION_COMMAND_TYPE, INTERACTION_RESPONSE_TYPE } from '../templates/discord/Enums.js';
 import { Embed } from '../templates/discord/Embed.js';
-import { InteractionResponse } from '../templates/discord/InteractionResponse.js'
+import { InteractionResponse, MessageData } from '../templates/discord/InteractionResponse.js'
 import { getRandomInt } from '../handlers/Utils.js';
 
 const applicationCommand = new ApplicationCommand(
@@ -55,7 +55,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
     embed.setDescription(`:8ball: ${question}`);
     embed.addField('Answer', answers[randomInt], true);
     
-    const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
+    const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE, new MessageData());
     interactionResponse.data?.addEmbed(embed);
 
     return interactionResponse;

@@ -2,7 +2,7 @@ import { ApplicationCommand } from '../templates/discord/ApplicationCommand.js'
 import { Command } from '../templates/app/Command.js';
 import { APPLICATION_COMMAND_TYPE, INTERACTION_RESPONSE_FLAGS, INTERACTION_RESPONSE_TYPE } from '../templates/discord/Enums.js';
 import { Embed } from '../templates/discord/Embed.js';
-import { InteractionResponse } from '../templates/discord/InteractionResponse.js'
+import { InteractionResponse, MessageData } from '../templates/discord/InteractionResponse.js'
 import { ActionRow, ButtonLink } from '../templates/discord/MessageComponents.js';
 
 const applicationCommand = new ApplicationCommand(
@@ -12,7 +12,7 @@ const applicationCommand = new ApplicationCommand(
 );
 
 const execute = async function(interaction: any, env: any, args: string[]) {
-    const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
+    const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE, new MessageData());
     const guildId = interaction.guild_id;
     const channelId = interaction.channel_id;
     const messageId = interaction.data.target_id;

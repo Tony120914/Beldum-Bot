@@ -2,7 +2,7 @@ import { ApplicationCommand, ApplicationCommandOption } from '../templates/disco
 import { Command } from '../templates/app/Command.js';
 import { APPLICATION_COMMAND_OPTION_TYPE, APPLICATION_COMMAND_TYPE, BUTTON_STYLE, INTERACTION_RESPONSE_FLAGS, INTERACTION_RESPONSE_TYPE, INTERACTION_TYPE } from '../templates/discord/Enums.js';
 import { Embed } from '../templates/discord/Embed.js';
-import { InteractionResponse } from '../templates/discord/InteractionResponse.js'
+import { InteractionResponse, MessageData } from '../templates/discord/InteractionResponse.js'
 import { getRandomInt } from '../handlers/Utils.js';
 import { ButtonNonLink, ActionRow } from '../templates/discord/MessageComponents.js';
 import { isOriginalUserInvoked } from '../handlers/InteractionHandler.js';
@@ -30,7 +30,7 @@ secondNumberInputOption.setRequired(true);
 applicationCommand.addOptions(secondNumberInputOption);
 
 const execute = async function(interaction: any, env: any, args: string[]) {
-    const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
+    const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE, new MessageData());
     let int1: number = 0;
     let int2: number = 0;
     if (interaction.type == INTERACTION_TYPE.APPLICATION_COMMAND) {
