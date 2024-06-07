@@ -18,7 +18,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
     const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE, new MessageData());
     if (interaction.type == INTERACTION_TYPE.APPLICATION_COMMAND) {
         const actionRow = new ActionRow();
-        const userSelect = new UserSelect('user_select');
+        const userSelect = new UserSelect(COMPONENT.USER_SELECT);
         userSelect.setPlaceholder('Select a user to play tic-tac-toe with');
         actionRow.addComponent(userSelect);
         interactionResponse.data?.addComponent(actionRow);
@@ -31,7 +31,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         const botId = interaction.application_id;
         let currentPlayerId: string;
         let gameState: GAME_STATE;
-        if (interaction.data.custom_id == 'user_select') {
+        if (interaction.data.custom_id == COMPONENT.USER_SELECT) {
             if (!isOriginalUserInvoked(interaction)) {
                 interactionResponse.data?.setContent('\`Error: You are not the original user who triggered the interaction. Please invoke a new slash command.\`');
                 interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
@@ -138,6 +138,10 @@ const execute = async function(interaction: any, env: any, args: string[]) {
 const GRID_WIDTH = 3;
 const GRID_SIZE = GRID_WIDTH * GRID_WIDTH;
 const GRID_CENTER = GRID_WIDTH * Math.floor(GRID_WIDTH/2) + Math.floor(GRID_WIDTH/2);
+
+enum COMPONENT {
+    USER_SELECT = 'user_select'
+}
 
 enum SYMBOL {
     VACANT = '-',

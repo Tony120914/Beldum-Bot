@@ -37,13 +37,7 @@ export function parseEmoji(format: string): any {
     const animated = format.match(/<a:/);
     const name = format.match(/(?<=\:)(\w*)(?=\:)/);
     const id = format.match(/(?<=\:)(\d*)(?=\>)/);
-    if (!id || !name) {
-        console.error(
-            `id or name did not match:\n` +
-            `id:${id}\n` +
-            `name:${name}`);
-        return;
-    }
+    if (!id || !name) { return; }
     const emoji = new Emoji(id[0], name[0]);
     emoji.setAnimated(animated ? true : false);
     return emoji;

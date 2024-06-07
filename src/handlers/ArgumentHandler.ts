@@ -21,7 +21,10 @@ export function parseArgs(interaction: any) {
             options = options[0].options;
         }
     }
-    else if (interaction.type === INTERACTION_TYPE.MESSAGE_COMPONENT) {
+    else if (interaction.type === INTERACTION_TYPE.MESSAGE_COMPONENT ||
+        interaction.type === INTERACTION_TYPE.APPLICATION_COMMAND_AUTOCOMPLETE ||
+        interaction.type === INTERACTION_TYPE.MODAL_SUBMIT)
+    {
         const commandName = interaction.message.interaction_metadata.name.toLowerCase();
         args = commandName.split(' ');
     }
