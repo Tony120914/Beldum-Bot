@@ -5,6 +5,9 @@ import { Embed } from '../templates/discord/Embed.js';
 import { InteractionResponse, MessageData, ModalData } from '../templates/discord/InteractionResponse.js'
 import { ActionRow, ButtonNonLink, StringSelect, StringSelectOption, TextInput } from '../templates/discord/MessageComponents.js';
 import { isOriginalUserInvoked } from '../handlers/InteractionHandler.js';
+import { insertUserReminder, selectUserReminders, selectUserTimezone, upsertUserTimezone } from '../handlers/DatabaseHandler.js';
+import { UserReminder, UserTimezone } from '../templates/db/Reminder.js';
+import { ephemeralError } from '../handlers/ErrorHandler.js';
 
 const applicationCommand = new ApplicationCommand(
     'reminder',
@@ -14,19 +17,19 @@ const applicationCommand = new ApplicationCommand(
 
 const execute = async function(interaction: any, env: any, args: string[]) {
     const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE, new MessageData());
+    const channelId = interaction.channel_id;
+    const userId = interaction.member?.user?.id ? interaction.member.user.id : interaction.user.id;
 
     const embed = new Embed();
     embed.setTitle('Reminder');
-    // TODO: get existing reminders and put it on embed
     
     if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
         if (!isOriginalUserInvoked(interaction)) {
-            interactionResponse.data?.setContent('\`Error: You are not the original user who triggered the interaction. Please invoke a new slash command.\`');
-            interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
-            return interactionResponse;
+            return ephemeralError(interactionResponse, 'Error: You are not the original user who triggered the interaction. Please invoke a new slash command.');
         }
         interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
 
+        const userId = interaction.message.interaction_metadata.user.id;
         const componentTriggered = interaction.data.custom_id;
         if (componentTriggered == COMPONENT.ADD_BUTTON) {
             // Add reminder button was pressed
@@ -41,6 +44,9 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             reminderInput.setPlaceholder('Input reminder here');
             dateInput.setPlaceholder('YYYY/MM/DD');
             timeInput.setPlaceholder('HH:MM');
+            reminderInput.setMaxLength(256);
+            dateInput.setMaxLength('YYYY/MM/DD'.length);
+            timeInput.setMaxLength('HH:MM'.length);
             reminderRow.addComponent(reminderInput);
             dateRow.addComponent(dateInput);
             timeRow.addComponent(timeInput);
@@ -59,7 +65,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             const timezoneSelect = new StringSelect(COMPONENT.TIMEZONE_SELECT);
             timezoneSelect.setPlaceholder('Select your timezone');
             for (let i = -11; i < 13; i++) {
-                const offsetString = i > 0 ? `+${i}` : i.toString();
+                const offsetString = prependPlus(i);
                 const time = new Date();
                 time.setHours(time.getHours() + i);
                 const timezoneOption = new StringSelectOption(time.toUTCString(), offsetString);
@@ -73,35 +79,59 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         }
         else if (componentTriggered == COMPONENT.TIMEZONE_SELECT) {
             // Timezone was selected
-            const offsetString = interaction.data.values[0];
-            // push timezone offset to db
+            const offset = Number(interaction.data.values[0]);
+            const userTimezone = new UserTimezone(userId, offset);
+            try {
+                await upsertUserTimezone(env, userTimezone);
+            } catch(error) {
+                return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
+            }
         }
     }
     else if (interaction.type == INTERACTION_TYPE.MODAL_SUBMIT) {
         // Modal containing the added reminder data was submitted
         interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
+        const userId = interaction.message.interaction_metadata.user.id;
         const reminder = interaction.data.components[0].components[0].value;
         const dateString = interaction.data.components[1].components[0].value;
         const timeString = interaction.data.components[2].components[0].value;
         const date = parseDate(dateString);
         if (!date) {
-            interactionResponse.setType(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
-            interactionResponse.data?.setContent('\`Error: The date must be in YYYY/MM/DD format.\`');
-            interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
-            return interactionResponse;
+            return ephemeralError(interactionResponse, 'Error: The date must be in YYYY/MM/DD format.');
         }
         const time = parseTime(timeString);
         if (!time) {
-            interactionResponse.setType(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
-            interactionResponse.data?.setContent('\`Error: The time must be in HH:MM format.\`');
-            interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
-            return interactionResponse;
+            return ephemeralError(interactionResponse, 'Error: The time must be in HH:MM format.');
         }
         const dateTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes());
-        // TODO: upload new reminder to database
-        // TODO: update embed desc
+        const userReminder = new UserReminder(userId, channelId, reminder, dateTime.toISOString());
+        try {
+            await insertUserReminder(env, userReminder);
+        } catch(error) {
+            return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
+        }
+        // TODO: limit the amount of reminders that can be added
+        // field has 25 count limit
     }
 
+    let offset: any;
+    let reminders: any;
+    try {
+        offset = await selectUserTimezone(env, userId);
+        reminders = await selectUserReminders(env, userId);
+        reminders = reminders.results;
+    } catch(error) {
+        return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
+    }
+
+    embed.addField('UTC Offset', offset ? prependPlus(offset) : 'Please set your timezone');
+    for (let i = 0; i < reminders.length; i++) {
+        const reminder = reminders[i];
+        embed.addField(`${i+1}: ${reminder.reminderDatetime}`, reminder.reminder, true);
+    }
+    
+    
+    // TODO: put existing reminders on embed
     interactionResponse.data?.addEmbed(embed);
     
     const buttonAdd = new ButtonNonLink(COMPONENT.ADD_BUTTON);
@@ -152,6 +182,13 @@ function parseTime(timeString: string) {
         return;
     }
     return new Date(0, 0, 0, Number(hour), Number(minute));
+}
+
+/**
+ * Prepend '+' sign in front of positive integers and return as a string
+ */
+function prependPlus(number: number) {
+    return number > 0 ? `+${number}` : number.toString();
 }
 
 /**
