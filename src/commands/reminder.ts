@@ -5,8 +5,8 @@ import { Embed } from '../templates/discord/Embed.js';
 import { InteractionResponse, MessageData, ModalData } from '../templates/discord/InteractionResponse.js'
 import { ActionRow, ButtonNonLink, StringSelect, StringSelectOption, TextInput } from '../templates/discord/MessageComponents.js';
 import { isOriginalUserInvoked } from '../handlers/InteractionHandler.js';
-import { insertUserReminder, selectUserReminders, selectUserTimezone, upsertUserTimezone } from '../handlers/DatabaseHandler.js';
-import { UserReminder, UserTimezone } from '../templates/db/Reminder.js';
+import { insertUserReminder, selectUserReminderAll, selectUserField, selectUserReminderCount, upsertUser, deleteUserReminder } from '../handlers/DatabaseHandler.js';
+import { UserReminder, User } from '../templates/db/Reminder.js';
 import { ephemeralError } from '../handlers/ErrorHandler.js';
 
 const applicationCommand = new ApplicationCommand(
@@ -15,13 +15,12 @@ const applicationCommand = new ApplicationCommand(
     APPLICATION_COMMAND_TYPE.CHAT_INPUT
 );
 
+const REMINDER_LIMIT = 10;
+const REMINDER_ERROR_RANGE_MINUTE = 5;
 const execute = async function(interaction: any, env: any, args: string[]) {
     const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE, new MessageData());
     const channelId = interaction.channel_id;
-    const userId = interaction.member?.user?.id ? interaction.member.user.id : interaction.user.id;
-
-    const embed = new Embed();
-    embed.setTitle('Reminder');
+    let userId = interaction.member?.user?.id ? interaction.member.user.id : interaction.user.id;
     
     if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
         if (!isOriginalUserInvoked(interaction)) {
@@ -29,10 +28,20 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         }
         interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
 
-        const userId = interaction.message.interaction_metadata.user.id;
+        userId = interaction.message.interaction_metadata.user.id;
         const componentTriggered = interaction.data.custom_id;
         if (componentTriggered == COMPONENT.ADD_BUTTON) {
             // Add reminder button was pressed
+            let reminderCount: any;
+            try {
+                reminderCount = await selectUserReminderCount(env, userId);
+                reminderCount.results;
+            } catch(error) {
+                return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
+            }
+            if (reminderCount >= REMINDER_LIMIT) {
+                return ephemeralError(interactionResponse, `Error: You can only have up to ${reminderCount} reminders.`);
+            }
             interactionResponse.setType(INTERACTION_RESPONSE_TYPE.MODAL);
             interactionResponse.setData(new ModalData('modal', 'Add Reminder'));
             const reminderRow = new ActionRow();
@@ -40,7 +49,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             const timeRow = new ActionRow();
             const reminderInput = new TextInput('reminder', TEXT_INPUT_STYLE.PARAGRAPH, 'What is the reminder for?');
             const dateInput = new TextInput('date', TEXT_INPUT_STYLE.SHORT, 'Date YYYY/MM/DD');
-            const timeInput = new TextInput('time', TEXT_INPUT_STYLE.SHORT, 'Time HH:MM');
+            const timeInput = new TextInput('time', TEXT_INPUT_STYLE.SHORT, `Time HH:MM (Expect up to ${REMINDER_ERROR_RANGE_MINUTE} minutes of delay)`);
             reminderInput.setPlaceholder('Input reminder here');
             dateInput.setPlaceholder('YYYY/MM/DD');
             timeInput.setPlaceholder('HH:MM');
@@ -57,7 +66,24 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         }
         else if (componentTriggered == COMPONENT.REMOVE_BUTTON) {
             // Remove reminder button was pressed
-            // TODO: put reminders to delete as buttons
+            const actionRow = new ActionRow();
+            const removeSelect = new StringSelect(COMPONENT.REMOVE_SELECT);
+            removeSelect.setPlaceholder('Select the reminder to remove');
+            let reminders: any;
+            try {
+                reminders = await selectUserReminderAll(env, userId);
+                reminders = reminders.results;
+            } catch(error) {
+                return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
+            }
+            for (let i = 0; i < reminders.length; i++) {
+                const userReminder = <UserReminder>reminders[i];
+                const removeOption = new StringSelectOption(new Date(userReminder.reminderDatetime).toUTCString().replace('GMT', ''), userReminder.rowId.toString());
+                removeOption.setDescription(userReminder.reminder.slice(0,100));
+                removeSelect.addOption(removeOption);
+            }
+            actionRow.addComponent(removeSelect);
+            interactionResponse.data?.addComponent(actionRow);
         }
         else if (componentTriggered == COMPONENT.TIMEZONE_BUTTON) {
             // Timezone button was pressed
@@ -68,21 +94,28 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 const offsetString = prependPlus(i);
                 const time = new Date();
                 time.setHours(time.getHours() + i);
-                const timezoneOption = new StringSelectOption(time.toUTCString(), offsetString);
+                const timezoneOption = new StringSelectOption(time.toUTCString().replace('GMT', ''), offsetString);
                 timezoneOption.setDescription(offsetString);
                 timezoneSelect.addOption(timezoneOption);
             }
             actionRow.addComponent(timezoneSelect);
-            interactionResponse.data?.addEmbed(embed);
             interactionResponse.data?.addComponent(actionRow);
-            return interactionResponse;
+        }
+        else if (componentTriggered == COMPONENT.REMOVE_SELECT) {
+            // Remove a certain reminder was selected
+            const rowId = Number(interaction.data.values[0]);
+            try {
+                await deleteUserReminder(env, rowId);
+            } catch(error) {
+                return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
+            }
         }
         else if (componentTriggered == COMPONENT.TIMEZONE_SELECT) {
             // Timezone was selected
             const offset = Number(interaction.data.values[0]);
-            const userTimezone = new UserTimezone(userId, offset);
+            const userTimezone = new User(userId, offset);
             try {
-                await upsertUserTimezone(env, userTimezone);
+                await upsertUser(env, userTimezone);
             } catch(error) {
                 return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
             }
@@ -110,28 +143,31 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         } catch(error) {
             return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
         }
-        // TODO: limit the amount of reminders that can be added
-        // field has 25 count limit
     }
 
+    // Fetch data from DB to show for embed
     let offset: any;
     let reminders: any;
     try {
-        offset = await selectUserTimezone(env, userId);
-        reminders = await selectUserReminders(env, userId);
+        offset = await selectUserField(env, userId, 'utcOffset');
+        offset = offset == null ? 0 : offset;
+        reminders = await selectUserReminderAll(env, userId);
         reminders = reminders.results;
     } catch(error) {
         return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
     }
 
-    embed.addField('UTC Offset', offset ? prependPlus(offset) : 'Please set your timezone');
+    const embed = new Embed();
+    embed.setTitle('Reminder');
+    const datetime = new Date();
+    datetime.setHours(datetime.getHours() + offset);
+    embed.addField('Your current time', `${datetime.toUTCString().replace('GMT', '')}\n(If the time is wrong, change your timezone.)`, true);
+    embed.addField('UTC Offset', prependPlus(offset), true);
+    embed.addBlankField();
     for (let i = 0; i < reminders.length; i++) {
-        const reminder = reminders[i];
-        embed.addField(`${i+1}: ${reminder.reminderDatetime}`, reminder.reminder, true);
+        const userReminder = <UserReminder>reminders[i];
+        embed.addField(new Date(userReminder.reminderDatetime).toUTCString().replace('GMT', ''), userReminder.reminder, true);
     }
-    
-    
-    // TODO: put existing reminders on embed
     interactionResponse.data?.addEmbed(embed);
     
     const buttonAdd = new ButtonNonLink(COMPONENT.ADD_BUTTON);
@@ -155,6 +191,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
 enum COMPONENT {
     ADD_BUTTON = 'add',
     REMOVE_BUTTON = 'remove',
+    REMOVE_SELECT = 'remove_select',
     TIMEZONE_BUTTON = 'timezone',
     TIMEZONE_SELECT = 'timezone_select'
 }

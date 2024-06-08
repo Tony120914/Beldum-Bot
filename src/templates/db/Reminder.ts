@@ -1,9 +1,9 @@
 
 /**
- * Structure for UserTimezone DB Table
+ * Structure for User DB Table
  */
-export class UserTimezone {
-    userId: string
+export class User {
+    userId: string // Primary key
     utcOffset: number
 
     constructor(userId: string, utcOffset: number) {
@@ -16,6 +16,7 @@ export class UserTimezone {
  * Structure for UserReminder DB Table
  */
 export class UserReminder {
+    rowId: number // Primary key (auto generated)
     userId: string
     channelId: string
     reminder: string
