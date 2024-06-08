@@ -7,3 +7,6 @@ compatibility_date = "2024-05-24"
 binding = "DB" # available in your Worker on env.DB
 database_name = "beldum-bot-db"
 database_id = "b5108a8d-6d0c-4a68-9a37-6ab960a98655"
+
+[triggers]
+crons = ["*/2 * * * *"]

@@ -50,7 +50,7 @@ export async function selectUserReminderAll(env: any, userId: string) {
         'SELECT rowid AS rowId, *\
         FROM UserReminder\
         WHERE userId=?1\
-        ORDER BY reminderDatetime'
+        ORDER BY reminderDatetime ASC'
     )
     .bind(userId)
     .all();
@@ -68,6 +68,22 @@ export async function selectUserReminderCount(env: any, userId: string) {
     )
     .bind(userId)
     .first('reminderCount');
+    return result;
+}
+
+/**
+ * Select all expired reminders from table UserReminder
+ */
+export async function selectUserReminderExpired(env: any) {
+    const now = new Date().toISOString();
+    const result = await env.DB.prepare(
+        'SELECT rowid AS rowId, *\
+        FROM UserReminder\
+        WHERE (UNIXEPOCH(reminderDatetime) - UNIXEPOCH(?1)) <= 0\
+        ORDER BY reminderDatetime ASC'
+    )
+    .bind(now)
+    .all();
     return result;
 }
 

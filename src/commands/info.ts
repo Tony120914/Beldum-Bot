@@ -90,7 +90,7 @@ const userOption = new ApplicationCommandOption(
 applicationCommand.addOptions(userOption);
 
 const execute = async function(interaction: any, env: any, args: string[]) {
-    let headers = {
+    const headers = {
         'Content-Type': 'application/json',
         'User-Agent': env.USER_AGENT,
         'Authorization': `Bot ${env.DISCORD_TOKEN}`,

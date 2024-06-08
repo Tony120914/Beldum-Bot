@@ -8,6 +8,7 @@ import { Commands } from './commands.js';
 import { JsonResponse } from './templates/app/JsonResponse.js';
 import { parseArgs } from './handlers/ArgumentHandler.js';
 import { INTERACTION_RESPONSE_TYPE, INTERACTION_TYPE } from './templates/discord/Enums.js';
+import { triggerReminder } from './commands/reminder.js';
 
 const router = Router();
 
@@ -54,7 +55,6 @@ router.post('/', async (request, env) => {
         }
         const interactionResponse = await Commands.map.get(commandName)?.execute(interaction, env, args);
         return new JsonResponse(interactionResponse);
-
     }
 
     console.error('Unknown Type');
@@ -77,11 +77,27 @@ async function verifyDiscordRequest(request: any, env: any) {
     return { interaction: JSON.parse(body), isValid: true };
 }
 
+/**
+ * Clouflare Worker Cron Trigger
+ * https://developers.cloudflare.com/workers/configuration/cron-triggers/
+ */
+async function scheduled(controller: any, env: any, ctx: any) {
+    switch (controller.cron) {
+        case "*/2 * * * *": {
+            // Every 2 minutes: check reminders
+            await triggerReminder(env);
+            break;
+        }
+        default: { break; }
+    }
+}
+
 const server = {
     verifyDiscordRequest: verifyDiscordRequest,
     fetch: async function (request: any, env: any) {
         return router.handle(request, env);
     },
+    scheduled: scheduled,
 };
 
 export default server;

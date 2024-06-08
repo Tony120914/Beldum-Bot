@@ -5,7 +5,7 @@
   "main": "src/server.js",
   "scripts": {
     "register": "tsx src/register.ts",
-    "dev": "wrangler dev src/server.ts",
+    "dev": "wrangler dev --test-scheduled src/server.ts",
     "tunnel": ".\\tunnel\\cloudflared tunnel --url http://localhost:8787"
   },
   "devDependencies": {

@@ -1,13 +1,14 @@
 import { ApplicationCommand } from '../templates/discord/ApplicationCommand.js'
 import { Command } from '../templates/app/Command.js';
-import { APPLICATION_COMMAND_TYPE, BUTTON_STYLE, INTERACTION_RESPONSE_FLAGS, INTERACTION_RESPONSE_TYPE, INTERACTION_TYPE, TEXT_INPUT_STYLE } from '../templates/discord/Enums.js';
+import { APPLICATION_COMMAND_TYPE, BUTTON_STYLE, INTERACTION_RESPONSE_TYPE, INTERACTION_TYPE, TEXT_INPUT_STYLE } from '../templates/discord/Enums.js';
 import { Embed } from '../templates/discord/Embed.js';
 import { InteractionResponse, MessageData, ModalData } from '../templates/discord/InteractionResponse.js'
 import { ActionRow, ButtonNonLink, StringSelect, StringSelectOption, TextInput } from '../templates/discord/MessageComponents.js';
 import { isOriginalUserInvoked } from '../handlers/InteractionHandler.js';
-import { insertUserReminder, selectUserReminderAll, selectUserField, selectUserReminderCount, upsertUser, deleteUserReminder } from '../handlers/DatabaseHandler.js';
+import { insertUserReminder, selectUserReminderAll, selectUserField, selectUserReminderCount, upsertUser, deleteUserReminder, selectUserReminderExpired } from '../handlers/DatabaseHandler.js';
 import { UserReminder, User } from '../templates/db/Reminder.js';
-import { ephemeralError } from '../handlers/ErrorHandler.js';
+import { ephemeralError, getFetchErrorText } from '../handlers/ErrorHandler.js';
+import { buildDiscordAPIUrl, buildUser } from '../handlers/MessageHandler.js';
 
 const applicationCommand = new ApplicationCommand(
     'reminder',
@@ -16,7 +17,6 @@ const applicationCommand = new ApplicationCommand(
 );
 
 const REMINDER_LIMIT = 10;
-const REMINDER_ERROR_RANGE_MINUTE = 5;
 const execute = async function(interaction: any, env: any, args: string[]) {
     const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE, new MessageData());
     const channelId = interaction.channel_id;
@@ -49,7 +49,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             const timeRow = new ActionRow();
             const reminderInput = new TextInput('reminder', TEXT_INPUT_STYLE.PARAGRAPH, 'What is the reminder for?');
             const dateInput = new TextInput('date', TEXT_INPUT_STYLE.SHORT, 'Date YYYY/MM/DD');
-            const timeInput = new TextInput('time', TEXT_INPUT_STYLE.SHORT, `Time HH:MM (Expect up to ${REMINDER_ERROR_RANGE_MINUTE} minutes of delay)`);
+            const timeInput = new TextInput('time', TEXT_INPUT_STYLE.SHORT, 'Time HH:MM (Expect a few minutes of delay)');
             reminderInput.setPlaceholder('Input reminder here');
             dateInput.setPlaceholder('YYYY/MM/DD');
             timeInput.setPlaceholder('HH:MM (24 hour format)');
@@ -166,6 +166,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
 
     const embed = new Embed();
     embed.setTitle('Reminder');
+    embed.setDescription('Make sure I have `Send Messages` and `Embed Links` permissions for reminders to work.');
     const datetime = new Date();
     datetime.setHours(datetime.getHours() + offset);
     embed.addField('Your current time', `${datetime.toUTCString().replace('GMT', '')}\n(If the time is wrong, change your timezone.)`, true);
@@ -233,6 +234,57 @@ function parseTime(timeString: string) {
  */
 function prependPlus(number: number) {
     return number > 0 ? `+${number}` : number.toString();
+}
+
+/**
+ * Scheduled cron job will trigger this to trigger reminders
+ */
+export async function triggerReminder(env: any) {
+    const headers = {
+        'Content-Type': 'application/json',
+        'User-Agent': env.USER_AGENT,
+        'Authorization': `Bot ${env.DISCORD_TOKEN}`,
+    }
+    let expiredReminders: any;
+    try {
+        expiredReminders = await selectUserReminderExpired(env);
+        expiredReminders = expiredReminders.results;
+    } catch(error) {
+        console.error(`Reminder(s) failed to trigger.\n${error}`);
+        return;
+    }
+    for (let i = 0; i < expiredReminders.length; i++) {
+        // Send out reminders
+        const userReminder = <UserReminder>expiredReminders[i];
+        const embed = new Embed();
+        embed.setTitle('Reminder');
+        embed.setDescription(`${buildUser(userReminder.userId)}\n${userReminder.reminder}`);
+        const body = {
+            content: buildUser(userReminder.userId),
+            embeds: [embed]
+        }
+        const url = buildDiscordAPIUrl(['channels', userReminder.channelId, 'messages'], []);
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(body)
+        });
+        if (!response.ok) {
+            const error = await getFetchErrorText(response);
+            console.error(error);
+            return;
+        }
+        // Removed the reminder that was send out from the DB
+        try {
+            await deleteUserReminder(env, userReminder.rowId);
+        } catch(error) {
+            console.error(`Reminder(s) failed to trigger.\n${error}`);
+            return;
+        }
+        // Rate limiting watch
+        const rateLimitRemaining= Number(response.headers.get('x-ratelimit-remaining'));
+        if (rateLimitRemaining == 1) { break; } // Break 1 before 0 remaining just in case
+    }
 }
 
 /**
