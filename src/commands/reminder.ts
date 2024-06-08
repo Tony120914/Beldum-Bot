@@ -52,7 +52,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             const timeInput = new TextInput('time', TEXT_INPUT_STYLE.SHORT, `Time HH:MM (Expect up to ${REMINDER_ERROR_RANGE_MINUTE} minutes of delay)`);
             reminderInput.setPlaceholder('Input reminder here');
             dateInput.setPlaceholder('YYYY/MM/DD');
-            timeInput.setPlaceholder('HH:MM');
+            timeInput.setPlaceholder('HH:MM (24 hour format)');
             reminderInput.setMaxLength(256);
             dateInput.setMaxLength('YYYY/MM/DD'.length);
             timeInput.setMaxLength('HH:MM'.length);
@@ -136,7 +136,14 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         if (!time) {
             return ephemeralError(interactionResponse, 'Error: The time must be in HH:MM format.');
         }
-        const dateTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes());
+        let offset: any;
+        try {
+            offset = await selectUserField(env, userId, 'utcOffset');
+            offset = offset == null ? 0 : offset;
+        } catch(error) {
+            return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
+        }
+        const dateTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours() + offset, time.getMinutes());
         const userReminder = new UserReminder(userId, channelId, reminder, dateTime.toISOString());
         try {
             await insertUserReminder(env, userReminder);
