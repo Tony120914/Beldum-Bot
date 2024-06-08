@@ -109,7 +109,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             }
             const data = await response.json();
             const application = new Application(data.id, data.name);
-            application.assignObject(data);
+            Object.assign(application, data);
             const embed = new Embed();
             embed.setTitle(application.name);
             embed.setDescription(application.description);
@@ -159,7 +159,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 const data = interaction.data.resolved.channels[channelId];
                 const channelType = data.type;
                 const channel = new Channel(channelId, channelType);
-                channel.assignObject(data);
+                Object.assign(channel, data);
                 const embed = new Embed();
                 embed.setTitle('Channel Info');
                 const url = `https://discord.com/channels/${guildId}/${channelId}`;
@@ -215,7 +215,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 const data = interaction.data.resolved.roles[roleId];
                 const roleName = data.name;
                 const role = new Role(roleId, roleName);
-                role.assignObject(data);
+                Object.assign(role, data);
                 const embed = new Embed();
                 embed.setTitle('Role Info');
                 embed.setDescription(`${role.unicode_emoji || ''} ${buildRole(roleId)}`);
@@ -253,7 +253,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             }
             const data = await response.json();
             const guild = new Guild(data.id, data.name);
-            guild.assignObject(data);
+            Object.assign(guild, data);
             const embed = new Embed();
             embed.setTitle('Server Info');
             const sameUrl = `https://discord.com/channels/${guildId}/${channelId}`; // Embeds having the same URL allows an embed to have multiple images for whatever reason...
@@ -329,9 +329,9 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 const data = interaction.data.resolved.users[userId];
                 const resolvedMember = guildId ? interaction.data.resolved.members[userId] : null;
                 const guildMember = new GuildMember();
-                guildMember.assignObject(resolvedMember);
+                Object.assign(guildMember, resolvedMember);
                 const user = new User(data.id, data.string, data.discriminator);
-                user.assignObject(data);
+                Object.assign(user, data);
 
                 const embed = new Embed();
                 embed.setTitle('User Info');

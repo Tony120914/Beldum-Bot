@@ -58,7 +58,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         }
         else {
             // Update Tic-Tac-Toe game after a button press
-            data.assignObject(JSON.parse(interaction.data.custom_id));
+            Object.assign(data, JSON.parse(interaction.data.custom_id));
             selectedUserId = data.selectedId;
             const prevGrid = data.getGrid();
             data.setGrid(prevGrid.slice(0, data.buttonId)
@@ -166,10 +166,6 @@ class GameData {
     grid: string // of SYMBOL
     selectedId: string
     turn: TURN
-
-    assignObject(object: object) {
-        Object.assign(this, object);
-    }
 
     setButtonId(buttonId: number) { this.buttonId = buttonId; }
     setSymbol(symbol: SYMBOL) { this.symbol = symbol; }
@@ -290,7 +286,7 @@ function getChildPositions(data: GameData, symbol: SYMBOL) {
             const childData = new GameData();
             const childGrid = grid.slice();
             childGrid[i] = symbol;
-            childData.assignObject(data);
+            Object.assign(childData, data);
             childData.setSymbol(symbol);
             childData.setGrid(childGrid);
             childPositions.push(childData);

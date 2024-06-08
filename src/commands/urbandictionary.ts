@@ -37,7 +37,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         return ephemeralError(interactionResponse, 'Urban Dictionary has no results for: ${keywords}');
     }
     const definition = new UrbanDictionaryDefinition();
-    definition.assignObject(data.list[0]);
+    Object.assign(definition, data.list[0]);
     
     const embed = new Embed();
     embed.setTitle('Urban Dictionary');
@@ -68,10 +68,6 @@ class UrbanDictionaryDefinition {
     written_on: string
     example: string
     current_vote: string // deprecated?
-
-    assignObject(object: object) {
-        Object.assign(this, object);
-    }
 }
 
 /**
