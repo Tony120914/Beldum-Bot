@@ -4,7 +4,7 @@ import { APPLICATION_COMMAND_OPTION_TYPE, APPLICATION_COMMAND_TYPE, IMAGE_FORMAT
 import { Embed } from '../templates/discord/Embed.js';
 import { InteractionResponse, MessageData } from '../templates/discord/InteractionResponse.js'
 import { buildDiscordAPIUrl, buildDiscordImageUrl, buildEmoji, buildRole, buildUser, parseEmoji } from '../handlers/MessageHandler.js';
-import { getFetchErrorText } from '../handlers/ErrorHandler.js';
+import { ephemeralError, getFetchErrorText } from '../handlers/ErrorHandler.js';
 import { Role } from '../templates/discord/PermissionsResources.js';
 import { Guild, GuildMember } from '../templates/discord/GuildResources.js';
 import { Snowflake } from '../templates/discord/Snowflake.js';
@@ -105,10 +105,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             });
             if (!response.ok) {
                 const error = await getFetchErrorText(response);
-                console.error(error);
-                interactionResponse.data?.setContent('\`Error: Something went wrong. Please try again later.\`');
-                interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
-                return interactionResponse;
+                return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
             }
             const data = await response.json();
             const application = new Application(data.id, data.name);
@@ -154,9 +151,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         case 'channel': {
             if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
                 if (!isOriginalUserInvoked(interaction)) {
-                    interactionResponse.data?.setContent('\`Error: You are not the original user who triggered the interaction. Please invoke a new slash command.\`');
-                    interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
-                    return interactionResponse;
+                    return ephemeralError(interactionResponse, 'Error: You are not the original user who triggered the interaction. Please invoke a new slash command.');
                 }
                 interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
                 const guildId = interaction.guild_id;
@@ -194,9 +189,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             const emojiString = args[2];
             const emoji = parseEmoji(emojiString);
             if (!emoji) {
-                interactionResponse.data?.setContent('\`Error: Custom emojis only.\`');
-                interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
-                return interactionResponse;
+                return ephemeralError(interactionResponse, 'Error: Custom emojis only.');
             }
             const embed = new Embed();
             embed.setTitle('Emoji Info');
@@ -215,9 +208,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         case 'role': {
             if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
                 if (!isOriginalUserInvoked(interaction)) {
-                    interactionResponse.data?.setContent('\`Error: You are not the original user who triggered the interaction. Please invoke a new slash command.\`');
-                    interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
-                    return interactionResponse;
+                    return ephemeralError(interactionResponse, 'Error: You are not the original user who triggered the interaction. Please invoke a new slash command.');
                 }
                 interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
                 const roleId = interaction.data.values[0];
@@ -250,9 +241,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             const guildId = interaction.guild_id;
             const channelId = interaction.channel_id;
             if (!guildId) {
-                interactionResponse.data?.setContent('\`Error: Must be used in servers.\`');
-                interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
-                return interactionResponse;
+                return ephemeralError(interactionResponse, 'Error: Must be used in servers.');
             }
             const url = buildDiscordAPIUrl(['guilds', guildId], ['with_counts=true']);
             const response = await fetch(url, {
@@ -260,10 +249,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             });
             if (!response.ok) {
                 const error = await getFetchErrorText(response);
-                console.error(error);
-                interactionResponse.data?.setContent('\`Error: Something went wrong. Please try again later.\`');
-                interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
-                return interactionResponse;
+                return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
             }
             const data = await response.json();
             const guild = new Guild(data.id, data.name);
@@ -334,9 +320,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         case 'user': {
             if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
                 if (!isOriginalUserInvoked(interaction)) {
-                    interactionResponse.data?.setContent('\`Error: You are not the original user who triggered the interaction. Please invoke a new slash command.\`');
-                    interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
-                    return interactionResponse;
+                    return ephemeralError(interactionResponse, 'Error: You are not the original user who triggered the interaction. Please invoke a new slash command.');
                 }
                 interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
                 const guildId = interaction.guild_id;
@@ -422,9 +406,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             break;
         }
         default: {
-            interactionResponse.data?.setContent('\`Error: Incorrect subcommand.\`')
-            interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
-            return interactionResponse;
+            return ephemeralError(interactionResponse, 'Error: Incorrect subcommand.');
         }
     }
     return interactionResponse;

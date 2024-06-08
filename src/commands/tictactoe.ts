@@ -7,6 +7,7 @@ import { getRandomInt } from '../handlers/Utils.js';
 import { ActionRow, ButtonNonLink, UserSelect } from '../templates/discord/MessageComponents.js';
 import { buildUser } from '../handlers/MessageHandler.js';
 import { isOriginalUserInvoked } from '../handlers/InteractionHandler.js';
+import { ephemeralError } from '../handlers/ErrorHandler.js';
 
 const applicationCommand = new ApplicationCommand(
     'tictactoe',
@@ -33,9 +34,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         let gameState: GAME_STATE;
         if (interaction.data.custom_id == COMPONENT.USER_SELECT) {
             if (!isOriginalUserInvoked(interaction)) {
-                interactionResponse.data?.setContent('\`Error: You are not the original user who triggered the interaction. Please invoke a new slash command.\`');
-                interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
-                return interactionResponse;
+                return ephemeralError(interactionResponse, 'Error: You are not the original user who triggered the interaction. Please invoke a new slash command.');
             }
             // Initialize Tic-Tac-Toe game
             selectedUserId = interaction.data.values[0];
@@ -67,9 +66,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 .concat(prevGrid.slice(data.buttonId + 1, prevGrid.length))); // Update grid based on button pressed from previous interaction
             currentPlayerId = data.turn == TURN.ORIGINAL_USER ? originalUserId : selectedUserId;
             if (invokingUserId != currentPlayerId) {
-                interactionResponse.data?.setContent('\`Error: It is either not your turn yet, or you are not involved in this match.\`');
-                interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
-                return interactionResponse;
+                return ephemeralError(interactionResponse, 'Error: It is either not your turn yet, or you are not involved in this match.');
             }
             if (selectedUserId != botId) {
                 // Player vs player update

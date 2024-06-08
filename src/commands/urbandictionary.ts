@@ -3,7 +3,7 @@ import { Command } from '../templates/app/Command.js';
 import { APPLICATION_COMMAND_OPTION_TYPE, APPLICATION_COMMAND_TYPE, INTERACTION_RESPONSE_FLAGS, INTERACTION_RESPONSE_TYPE } from '../templates/discord/Enums.js';
 import { Embed } from '../templates/discord/Embed.js';
 import { InteractionResponse, MessageData } from '../templates/discord/InteractionResponse.js'
-import { getFetchErrorText } from '../handlers/ErrorHandler.js';
+import { ephemeralError, getFetchErrorText } from '../handlers/ErrorHandler.js';
 
 const applicationCommand = new ApplicationCommand(
     'urbandictionary',
@@ -30,16 +30,11 @@ const execute = async function(interaction: any, env: any, args: string[]) {
     });
     if (!response.ok) {
         const error = await getFetchErrorText(response);
-        console.error(error);
-        interactionResponse.data?.setContent('\`Error: Something went wrong. Please try again later.\`');
-        interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
-        return interactionResponse;
+        return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
     }
     const data = await response.json();
     if (!data || !Array.isArray(data.list) || data.list.length == 0) {
-        interactionResponse.data?.setContent(`\`Urban Dictionary has no results for: ${keywords}\``);
-        interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
-        return interactionResponse;
+        return ephemeralError(interactionResponse, 'Urban Dictionary has no results for: ${keywords}');
     }
     const definition = new UrbanDictionaryDefinition();
     definition.assignObject(data.list[0]);

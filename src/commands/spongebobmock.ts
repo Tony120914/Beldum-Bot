@@ -4,6 +4,7 @@ import { APPLICATION_COMMAND_TYPE, INTERACTION_RESPONSE_FLAGS, INTERACTION_RESPO
 import { Embed } from '../templates/discord/Embed.js';
 import { InteractionResponse, MessageData } from '../templates/discord/InteractionResponse.js'
 import { ActionRow, ButtonLink } from '../templates/discord/MessageComponents.js';
+import { ephemeralError } from '../handlers/ErrorHandler.js';
 
 const applicationCommand = new ApplicationCommand(
     'Spongebob Mock',
@@ -20,9 +21,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
     const messageText = message.content;
     const messageUrl = `https://discord.com/channels/${guildId}/${channelId}/${messageId}`;
     if (messageText.length < 2) {
-        interactionResponse.data?.setContent(`\`${mockText('Error: The selected message is too short to mock.')}\``);
-        interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
-        return interactionResponse;
+        return ephemeralError(interactionResponse, mockText('Error: The selected message is too short to mock.'));
     }
 
     const embed = new Embed();

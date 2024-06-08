@@ -6,6 +6,7 @@ import { InteractionResponse, MessageData } from '../templates/discord/Interacti
 import { getRandomInt } from '../handlers/Utils.js';
 import { ActionRow, ButtonNonLink } from '../templates/discord/MessageComponents.js';
 import { isOriginalUserInvoked } from '../handlers/InteractionHandler.js';
+import { ephemeralError } from '../handlers/ErrorHandler.js';
 
 const applicationCommand = new ApplicationCommand(
     'rps',
@@ -18,9 +19,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
 
     if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
         if (!isOriginalUserInvoked(interaction)) {
-            interactionResponse.data?.setContent('\`Error: You are not the original user who triggered the interaction. Please invoke a new slash command.\`');
-            interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
-            return interactionResponse;
+            return ephemeralError(interactionResponse, 'Error: You are not the original user who triggered the interaction. Please invoke a new slash command.');
         }
         interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
         const userChoice = interaction.data.custom_id;
