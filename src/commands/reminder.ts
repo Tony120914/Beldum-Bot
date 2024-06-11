@@ -283,7 +283,7 @@ export async function triggerReminder(env: any) {
         }
         // Rate limiting watch
         const rateLimitRemaining= Number(response.headers.get('x-ratelimit-remaining'));
-        if (rateLimitRemaining == 1) { break; } // Break 1 before 0 remaining just in case
+        if (rateLimitRemaining <= 1) { break; } // Break 1 before 0 remaining just in case
     }
 }
 

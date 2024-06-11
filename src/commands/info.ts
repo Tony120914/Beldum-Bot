@@ -133,7 +133,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             interactionResponse.data?.addEmbed(embed);
 
             const actionRow = new ActionRow();
-            const buttonInvite = new ButtonLink('https://discord.com/api/oauth2/authorize?client_id=454764425090433034&permissions=19456&scope=bot%20applications.commands');
+            const buttonInvite = new ButtonLink('https://discord.com/oauth2/authorize?client_id=454764425090433034');
             const buttonDocumentation = new ButtonLink('https://tony120914.github.io/beldum-bot-site');
             const buttonDonate = new ButtonLink('https://ko-fi.com/toeknee');
             const buttonSourceCode = new ButtonLink('https://github.com/Tony120914/Beldum-Bot');
