@@ -89,8 +89,8 @@ async function scheduled(controller: any, env: any, ctx: any) {
             await triggerReminder(env);
             break;
         }
-        case '0 0 * * *': {
-            // Every day at 00:00
+        case '0 * * * *': {
+            // Every hour at minute 0
             await postServerCount(env);
             break;
         }
