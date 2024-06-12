@@ -136,6 +136,11 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         if (!time) {
             return ephemeralError(interactionResponse, 'Error: The time must be in HH:MM format.');
         }
+        const dateTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes());
+        const now = new Date();
+        if (dateTime <= now) {
+            return ephemeralError(interactionResponse, 'Error: I wish I could set a reminder in the past too but... it was the choice of Stein;Gate.');
+        }
         let offset: any;
         try {
             offset = await selectUserField(env, userId, 'utcOffset');
@@ -143,7 +148,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         } catch(error) {
             return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
         }
-        const dateTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours() + offset, time.getMinutes());
+        dateTime.setHours(dateTime.getHours() + offset);
         const userReminder = new UserReminder(userId, channelId, reminder, dateTime.toISOString());
         try {
             await insertUserReminder(env, userReminder);
