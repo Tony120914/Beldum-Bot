@@ -98,11 +98,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             embed.addField('Draw', 'It\'s a draw :yawning_face:');
         }
         else if (gameState == GAME_STATE.ONGOING) {
-            const symbolToEmoji = {
-                [SYMBOL.X]: ':negative_squared_cross_mark:',
-                [SYMBOL.O]: ':o2:',
-            }
-            embed.addField('Instructions', `${buildUser(currentPlayerId)}'s turn. Your symbol is ${symbolToEmoji[data.symbol]}`);
+            embed.addField('Instructions', `${buildUser(currentPlayerId)}'s turn. Your symbol is ${SYMBOL_TO_EMOJI[data.symbol]}`);
         }
         interactionResponse.data?.addEmbed(embed);
 
@@ -111,7 +107,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             for (let j = i; j < i + GRID_WIDTH; j++) {
                 data.setButtonId(j);
                 const button = new ButtonNonLink(JSON.stringify(data));
-                button.setLabel(data.getGrid()[j]);
+                button.setEmoji(undefined, SYMBOL_TO_EMOJI[data.getGrid()[j]]);
                 if (data.getGrid()[j] == SYMBOL.X) {
                     button.setStyle(BUTTON_STYLE.SUCCESS);
                     button.setDisabled(true);
@@ -121,7 +117,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                     button.setDisabled(true);
                 }
                 else {
-                    button.setStyle(BUTTON_STYLE.PRIMARY);
+                    button.setStyle(BUTTON_STYLE.SECONDARY);
                     if (gameState != GAME_STATE.ONGOING) { button.setDisabled(true); }
                 }
                 actionRow.addComponent(button);
@@ -155,6 +151,12 @@ enum GAME_STATE {
     ONGOING,
     WIN,
     DRAW,
+}
+
+const SYMBOL_TO_EMOJI = {
+    [SYMBOL.VACANT]: '▪️',
+    [SYMBOL.X]: '❎',
+    [SYMBOL.O]: '🅾️'
 }
 
 /**

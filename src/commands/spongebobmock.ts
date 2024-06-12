@@ -31,7 +31,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
 
     const actionRow = new ActionRow();
     const button = new ButtonLink(messageUrl);
-    button.setLabel('Original message');
+    button.setLabel('Jump to original message');
     actionRow.addComponent(button);
     interactionResponse.data?.addComponent(actionRow);
 

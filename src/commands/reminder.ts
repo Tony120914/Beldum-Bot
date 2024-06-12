@@ -187,6 +187,9 @@ const execute = async function(interaction: any, env: any, args: string[]) {
     buttonAdd.setLabel('Add reminder');
     buttonRemove.setLabel('Remove reminder');
     buttonTimezone.setLabel('Set timezone');
+    buttonAdd.setEmoji(undefined, '➕');
+    buttonRemove.setEmoji(undefined, '➖');
+    buttonTimezone.setEmoji(undefined, '🕒');
     const actionRow = new ActionRow();
     actionRow.addComponent(buttonAdd);
     actionRow.addComponent(buttonRemove);

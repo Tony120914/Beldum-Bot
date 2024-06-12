@@ -25,16 +25,11 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         const userChoice = interaction.data.custom_id;
         const botChoice = [RPS.ROCK, RPS.PAPER, RPS.SCISSORS][getRandomInt(0, 2)];
         const result = evaluateRps(userChoice, botChoice);
-        const RpsToEmoji = {
-            [RPS.ROCK]: ':rock:',
-            [RPS.PAPER]: ':roll_of_paper:',
-            [RPS.SCISSORS]: ':scissors:'
-        }
 
         const embed = new Embed();
         embed.setTitle('Rock-Paper-Scissors');
-        embed.addField('You chose', RpsToEmoji[userChoice], true);
-        embed.addField('Bot chose', RpsToEmoji[botChoice], true);
+        embed.addField('You chose', RPS_TO_EMOJI[userChoice], true);
+        embed.addField('Bot chose', RPS_TO_EMOJI[botChoice], true);
         embed.addField('Result', result);
         interactionResponse.data?.addEmbed(embed);
     }
@@ -42,12 +37,15 @@ const execute = async function(interaction: any, env: any, args: string[]) {
     const buttonRock = new ButtonNonLink(RPS.ROCK);
     const buttonPaper = new ButtonNonLink(RPS.PAPER);
     const buttonScissors = new ButtonNonLink(RPS.SCISSORS);
-    buttonRock.setStyle(BUTTON_STYLE.PRIMARY);
-    buttonPaper.setStyle(BUTTON_STYLE.SUCCESS);
-    buttonScissors.setStyle(BUTTON_STYLE.DANGER);
+    buttonRock.setStyle(BUTTON_STYLE.DANGER);
+    buttonPaper.setStyle(BUTTON_STYLE.PRIMARY);
+    buttonScissors.setStyle(BUTTON_STYLE.SUCCESS);
     buttonRock.setLabel('Rock');
     buttonPaper.setLabel('Paper');
     buttonScissors.setLabel('Scissors');
+    buttonRock.setEmoji(undefined, '🪨');
+    buttonPaper.setEmoji(undefined, '🧻');
+    buttonScissors.setEmoji(undefined, '✂️');
     const actionRow = new ActionRow();
     actionRow.addComponent(buttonRock);
     actionRow.addComponent(buttonPaper);
@@ -61,6 +59,12 @@ enum RPS {
     ROCK = 'rock',
     PAPER = 'paper',
     SCISSORS = 'scissors'
+}
+
+const RPS_TO_EMOJI = {
+    [RPS.ROCK]: ':rock:',
+    [RPS.PAPER]: ':roll_of_paper:',
+    [RPS.SCISSORS]: ':scissors:'
 }
 
 /**

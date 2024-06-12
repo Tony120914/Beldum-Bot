@@ -58,6 +58,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
     const button = new ButtonNonLink(history); // Passing data through custom_id
     button.setStyle(BUTTON_STYLE.PRIMARY);
     button.setLabel('Toss again');
+    button.setEmoji(undefined, '🔁');
     const actionRow = new ActionRow();
     actionRow.addComponent(button);
     interactionResponse.data?.addComponent(actionRow);

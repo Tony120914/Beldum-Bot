@@ -132,20 +132,30 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             }
             interactionResponse.data?.addEmbed(embed);
 
-            const actionRow = new ActionRow();
+            const actionRow1 = new ActionRow();
+            const actionRow2 = new ActionRow();
             const buttonInvite = new ButtonLink('https://discord.com/oauth2/authorize?client_id=454764425090433034');
-            const buttonDocumentation = new ButtonLink('https://tony120914.github.io/beldum-bot-site');
+            const buttonVote = new ButtonLink('https://top.gg/bot/454764425090433034/vote');
             const buttonDonate = new ButtonLink('https://ko-fi.com/toeknee');
+            const buttonDocs = new ButtonLink('https://tony120914.github.io/beldum-bot-site');
             const buttonSourceCode = new ButtonLink('https://github.com/Tony120914/Beldum-Bot');
-            buttonInvite.setLabel('Invite');
-            buttonDocumentation.setLabel('Documentation');
-            buttonDonate.setLabel('Donate');
+            buttonInvite.setLabel('New invite');
+            buttonVote.setLabel('Vote me on Top.gg');
+            buttonDonate.setLabel('Donations');
+            buttonDocs.setLabel('Docs');
             buttonSourceCode.setLabel('Source Code');
-            actionRow.addComponent(buttonInvite);
-            actionRow.addComponent(buttonDocumentation);
-            actionRow.addComponent(buttonDonate);
-            actionRow.addComponent(buttonSourceCode);
-            interactionResponse.data?.addComponent(actionRow);
+            buttonInvite.setEmoji(undefined, '➕');
+            buttonVote.setEmoji(undefined, '🗳️');
+            buttonDonate.setEmoji(undefined, '💝');
+            buttonDocs.setEmoji(undefined, '📄');
+            buttonSourceCode.setEmoji(undefined, '💻');
+            actionRow1.addComponent(buttonInvite);
+            actionRow1.addComponent(buttonVote);
+            actionRow1.addComponent(buttonDonate);
+            actionRow2.addComponent(buttonDocs);
+            actionRow2.addComponent(buttonSourceCode);
+            interactionResponse.data?.addComponent(actionRow1);
+            interactionResponse.data?.addComponent(actionRow2);
             break;
         }
         case 'channel': {

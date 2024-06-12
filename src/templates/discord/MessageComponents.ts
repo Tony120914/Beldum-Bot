@@ -110,9 +110,9 @@ abstract class Button extends MessageComponent {
         }
         this.label = label.slice(0, BUTTON_LABEL_LIMIT);
     }
-    setEmoji(id: string, name: string, animated: boolean) {
+    setEmoji(id?: string, name?: string, animated?: boolean) {
         const emoji = new Emoji(id, name);
-        emoji.setAnimated(animated);
+        if (animated) { emoji.setAnimated(animated); }
         this.emoji = emoji;
     }
     setDisabled(isDisabled: boolean) { this.disabled = isDisabled; }

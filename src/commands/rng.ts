@@ -62,6 +62,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
     const button = new ButtonNonLink(JSON.stringify(data)); // Passing data through custom_id
     button.setStyle(BUTTON_STYLE.PRIMARY);
     button.setLabel('Roll again');
+    button.setEmoji(undefined, '🔁');
     const actionRow = new ActionRow();
     actionRow.addComponent(button);
     interactionResponse.data?.addComponent(actionRow);
