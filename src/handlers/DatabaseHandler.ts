@@ -1,6 +1,11 @@
 import { UserReminder, User } from "../templates/db/Reminder";
 
 /**
+ * Cloudflare D1: serverless SQL DB
+ * https://developers.cloudflare.com/d1/
+ */
+
+/**
  * Upsert a row to table User
  */
 export async function upsertUser(env: any, user: User) {
