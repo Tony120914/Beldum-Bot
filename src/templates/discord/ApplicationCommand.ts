@@ -24,7 +24,7 @@ export class ApplicationCommand {
     default_member_permissions?: string
     dm_permission?: boolean = true;
     nsfw?: boolean
-    integration_types?: APPLICATION_INTEGRATION_TYPE[] = [APPLICATION_INTEGRATION_TYPE.GUILD_INSTALL];
+    integration_types?: APPLICATION_INTEGRATION_TYPE[] = [APPLICATION_INTEGRATION_TYPE.GUILD_INSTALL, APPLICATION_INTEGRATION_TYPE.USER_INSTALL]; // Default is just GUILD_INSTALL, but probably easier for me to remove than add it every time
     contexts?: INTERACTION_CONTEXT_TYPE[] = [INTERACTION_CONTEXT_TYPE.GUILD, INTERACTION_CONTEXT_TYPE.BOT_DM, INTERACTION_CONTEXT_TYPE.PRIVATE_CHANNEL];
 
     constructor(name: string, description: string, type: APPLICATION_COMMAND_TYPE) {
@@ -61,6 +61,16 @@ export class ApplicationCommand {
     setDefaultMemberPermissions(default_member_permissions: string) { this.default_member_permissions = default_member_permissions; }
     setDmPermission(isAllowed: boolean) { this.dm_permission = isAllowed; }
     setNsfw(isNsfw: boolean) { this.nsfw = isNsfw; }
+    removeIntegrationType(integrationType: APPLICATION_INTEGRATION_TYPE) {
+        const index = this.integration_types?.indexOf(integrationType);
+        if (index == -1 || index == undefined) { return; }
+        this.integration_types?.splice(index, 1);
+    }
+    removeContext(context: INTERACTION_CONTEXT_TYPE) {
+        const index = this.contexts?.indexOf(context);
+        if (index == -1 || index == undefined) { return; }
+        this.contexts?.splice(index, 1);
+    }
 }
 
 const APPLICATION_COMMAND_OPTION_NAME_LIMIT_MIN = 1;
