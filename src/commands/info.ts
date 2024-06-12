@@ -332,14 +332,25 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 if (!isOriginalUserInvoked(interaction)) {
                     return ephemeralError(interactionResponse, 'Error: You are not the original user who triggered the interaction. Please invoke a new slash command.');
                 }
+                // Get GuildMember object
                 interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
                 const guildId = interaction.guild_id;
                 const channelId = interaction.channel_id;
                 const userId = interaction.data.values[0];
-                const data = interaction.data.resolved.users[userId];
                 const resolvedMember = guildId ? interaction.data.resolved.members[userId] : null;
                 const guildMember = new GuildMember();
                 Object.assign(guildMember, resolvedMember);
+
+                // Get User Object
+                const url = buildDiscordAPIUrl(['users', userId], []);
+                const response = await fetch(url, {
+                    headers: headers
+                });
+                if (!response.ok) {
+                    const error = await getFetchErrorText(response);
+                    return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
+                }
+                const data = await response.json();
                 const user = new User(data.id, data.string, data.discriminator);
                 Object.assign(user, data);
 
