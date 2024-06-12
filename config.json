@@ -1,11 +1,3 @@
 {
-  "creator_id": "184111117650493440",
-  "default_embed_color": "DARK_GOLD",
-  "embed_description_limit": 2048,
-  "embed_field_value_limit": 1024,
-  "mongodb_collections": {
-    "users": "users",
-    "reminders": "reminders",
-    "reminders_clone": "reminders_clone"
-  }
+    "embedColor": "0xC27C0E"
 }

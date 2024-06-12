@@ -1,35 +1,22 @@
 {
   "name": "beldum-bot",
-  "version": "1.0.0",
-  "description": "discord bot",
-  "main": "index.js",
+  "type": "module",
+  "private": true,
+  "main": "src/server.js",
   "scripts": {
-    "start": "node index.js",
-    "deployslashdev": "node ./js/deploy_slash_dev.js",
-    "deployslashprod": "node ./js/deploy_slash_prod.js"
+    "register": "tsx src/register.ts",
+    "dev": "wrangler dev --test-scheduled src/server.ts",
+    "tunnel": ".\\tunnel\\cloudflared tunnel --url http://localhost:8787"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Tony120914/Beldum-Bot.git"
+  "devDependencies": {
+    "dotenv": "^16.4.1",
+    "eslint": "^8.56.0",
+    "tsx": "^4.7.1",
+    "typescript": "^5.3.3",
+    "wrangler": "^3.58.0"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Tony120914/Beldum-Bot/issues"
-  },
-  "homepage": "https://github.com/Tony120914/Beldum-Bot#readme",
   "dependencies": {
-    "@discordjs/builders": "^0.6.0",
-    "@discordjs/rest": "0.1.0-canary.0",
-    "chrono-node": "^2.1.9",
-    "dblapi.js": "^2.4.1",
-    "discord-api-types": "^0.23.1",
-    "discord.js": "^13.1.0",
-    "dotenv": "^10.0.0",
-    "loglevel": "^1.7.1",
-    "mongodb": "^4.1.2",
-    "node-fetch": "^2.6.5",
-    "npm": "^7.24.0"
+    "discord-interactions": "^3.4.0",
+    "itty-router": "^4.0.27"
   }
 }

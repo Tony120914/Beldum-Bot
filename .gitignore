@@ -56,9 +56,16 @@ typings/
 
 # dotenv environment variables file
 .env
+.dev.vars
 
 # next.js build output
 .next
 
 # tester file
 test.js
+
+# Cloudflared tunnel (dev)
+tunnel/cloudflared.exe
+
+# Wrangler
+.wrangler/
