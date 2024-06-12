@@ -401,3 +401,22 @@ export enum STICKER_FORMAT_TYPE {
     LOTTIE = 3,
     GIF = 4,
 }
+
+/**
+ * Application Integration Types
+ * https://discord.com/developers/docs/resources/application#application-object-application-integration-types
+ */
+export enum APPLICATION_INTEGRATION_TYPE {
+    GUILD_INSTALL = 0,
+    USER_INSTALL = 1
+}
+
+/**
+ * Integration Context Types
+ * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-context-types
+ */
+export enum INTERACTION_CONTEXT_TYPE {
+    GUILD = 0,
+    BOT_DM = 1,
+    PRIVATE_CHANNEL = 2
+}

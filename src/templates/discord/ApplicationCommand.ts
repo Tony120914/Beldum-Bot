@@ -1,7 +1,9 @@
 import {
     APPLICATION_COMMAND_OPTION_TYPE,
     APPLICATION_COMMAND_TYPE,
-    CHANNEL_TYPE
+    APPLICATION_INTEGRATION_TYPE,
+    CHANNEL_TYPE,
+    INTERACTION_CONTEXT_TYPE
 } from "./Enums";
 
 const APPLICATION_COMMAND_NAME_LIMIT_MIN = 1;
@@ -13,16 +15,17 @@ const APPLICATION_COMMAND_DESCRIPTION_LIMIT_MAX = 100;
  * https://discord.com/developers/docs/interactions/application-commands#application-command-object
  */
 export class ApplicationCommand {
+    type?: APPLICATION_COMMAND_TYPE = APPLICATION_COMMAND_TYPE.CHAT_INPUT;
     name: string
     // name_localizations?: Dictionary with keys in available locales
     description?: string
-    // description_localizations?: Dictionary with withs in available locales
+    // description_localizations?: Dictionary with keys in available locales
     options?: ApplicationCommandOption[] = [];
     default_member_permissions?: string
     dm_permission?: boolean = true;
-    // default_permissions?: boolean = true; // will be deprecated in the future
-    type?: APPLICATION_COMMAND_TYPE = APPLICATION_COMMAND_TYPE.CHAT_INPUT;
     nsfw?: boolean
+    integration_types?: APPLICATION_INTEGRATION_TYPE[] = [APPLICATION_INTEGRATION_TYPE.GUILD_INSTALL];
+    contexts?: INTERACTION_CONTEXT_TYPE[] = [INTERACTION_CONTEXT_TYPE.GUILD, INTERACTION_CONTEXT_TYPE.BOT_DM, INTERACTION_CONTEXT_TYPE.PRIVATE_CHANNEL];
 
     constructor(name: string, description: string, type: APPLICATION_COMMAND_TYPE) {
         if (!(APPLICATION_COMMAND_NAME_LIMIT_MIN <= name.length && name.length <= APPLICATION_COMMAND_NAME_LIMIT_MAX)) {
