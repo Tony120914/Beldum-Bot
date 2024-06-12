@@ -9,6 +9,7 @@ import { JsonResponse } from './templates/app/JsonResponse.js';
 import { parseArgs } from './handlers/ArgumentHandler.js';
 import { INTERACTION_RESPONSE_TYPE, INTERACTION_TYPE } from './templates/discord/Enums.js';
 import { triggerReminder } from './commands/reminder.js';
+import { postServerCount } from './handlers/TopggHandler.js';
 
 const router = Router();
 
@@ -83,9 +84,14 @@ async function verifyDiscordRequest(request: any, env: any) {
  */
 async function scheduled(controller: any, env: any, ctx: any) {
     switch (controller.cron) {
-        case "*/2 * * * *": {
+        case '*/2 * * * *': {
             // Every 2 minutes: check reminders
             await triggerReminder(env);
+            break;
+        }
+        case '0 0 * * *': {
+            // Every day at 00:00
+            await postServerCount(env);
             break;
         }
         default: { break; }

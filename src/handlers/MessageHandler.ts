@@ -1,14 +1,17 @@
 import { Emoji } from "../templates/discord/EmojiResources";
 import { IMAGE_FORMAT, IMAGE_SIZE } from "../templates/discord/Enums";
-import { apiBaseUrl, apiVersion, imageBaseUrl } from "../../config.json";
 import { buildUrl } from "./Utils";
+
+const DISCORD_API_BASE_URL = 'https://discord.com/api/v';
+const DISCORD_API_VERSION = '10';
+const DISCORD_IMAGE_BASE_URL = 'https://cdn.discordapp.com';
 
 /**
  * Build Discord API URL string.
  * https://discord.com/developers/docs/reference#api-reference
  */
 export function buildDiscordAPIUrl(path: string[], query: string[]) {
-    const baseUrl = `${apiBaseUrl}${apiVersion}`;
+    const baseUrl = `${DISCORD_API_BASE_URL}${DISCORD_API_VERSION}`;
     const url = buildUrl(baseUrl, path, query);
     return url;
 }
@@ -19,13 +22,13 @@ export function buildDiscordAPIUrl(path: string[], query: string[]) {
  */
 export function buildDiscordImageUrl(path: string[], format: IMAGE_FORMAT, size: IMAGE_SIZE) {
     if (!path) {
-        return imageBaseUrl;
+        return DISCORD_IMAGE_BASE_URL;
     }
     const pathCopy = path.slice();
     const lastIndex = pathCopy.length - 1;
     pathCopy[lastIndex] = `${pathCopy[lastIndex]}${format}`;
     const query = [`size=${size}`];
-    const url = buildUrl(imageBaseUrl, pathCopy, query);
+    const url = buildUrl(DISCORD_IMAGE_BASE_URL, pathCopy, query);
     return url;
 }
 

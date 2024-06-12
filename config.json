@@ -1,6 +1,3 @@
 {
-    "apiBaseUrl": "https://discord.com/api/v",
-    "apiVersion": "10",
-    "embedColor": "0xC27C0E",
-    "imageBaseUrl": "https://cdn.discordapp.com"
+    "embedColor": "0xC27C0E"
 }

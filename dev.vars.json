@@ -3,7 +3,6 @@
     "DISCORD_PUBLIC_KEY": "Discord bot's public key",
     "DISCORD_TOKEN": "Discord bot's token",
     "INTERACTIONS_ENDPOINT": "Interactions endpoint URL",
-    "MONGODB_KEY": "MongoDB connection string",
-    "TOPGG_TOKEN": "top.gg's token",
+    "TOPGG_TOKEN": "Top.gg's token",
     "USER_AGENT": "This application's user agent in HTTP headers"
 }
