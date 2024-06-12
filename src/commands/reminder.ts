@@ -79,9 +79,18 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             if (reminders.length == 0) {
                 return ephemeralError(interactionResponse, 'Error: You don\'t have any reminders to remove.');
             }
+            let offset: any;
+            try {
+                offset = await selectUserField(env, userId, 'utcOffset');
+                offset = offset == null ? 0 : offset;
+            } catch(error) {
+                return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
+            }
             for (let i = 0; i < reminders.length; i++) {
                 const userReminder = <UserReminder>reminders[i];
-                const removeOption = new StringSelectOption(new Date(userReminder.reminderDatetime).toUTCString().replace('GMT', ''), userReminder.rowId.toString());
+                const datetime = new Date(userReminder.reminderDatetime);
+                datetime.setUTCHours(datetime.getUTCHours() + offset);
+                const removeOption = new StringSelectOption(datetime.toUTCString().replace('GMT', ''), userReminder.rowId.toString());
                 removeOption.setDescription(userReminder.reminder.slice(0,100));
                 removeSelect.addOption(removeOption);
             }
@@ -96,7 +105,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             for (let i = -11; i < 13; i++) {
                 const offsetString = prependPlus(i);
                 const time = new Date();
-                time.setHours(time.getHours() + i);
+                time.setUTCHours(time.getUTCHours() + i);
                 const timezoneOption = new StringSelectOption(time.toUTCString().replace('GMT', ''), offsetString);
                 timezoneOption.setDescription(offsetString);
                 timezoneSelect.addOption(timezoneOption);
@@ -139,11 +148,6 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         if (!time) {
             return ephemeralError(interactionResponse, 'Error: The time must be in HH:MM format.');
         }
-        const dateTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes());
-        const now = new Date();
-        if (dateTime <= now) {
-            return ephemeralError(interactionResponse, 'Error: I wish I could set a reminder in the past too but... it was the choice of Stein;Gate.');
-        }
         let offset: any;
         try {
             offset = await selectUserField(env, userId, 'utcOffset');
@@ -151,7 +155,11 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         } catch(error) {
             return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
         }
-        dateTime.setHours(dateTime.getHours() + offset);
+        const dateTime = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), time.getUTCHours() - offset, time.getUTCMinutes()));
+        const now = new Date();
+        if (dateTime <= now) {
+            return ephemeralError(interactionResponse, 'Error: I wish I could set a reminder in the past too but... it was the choice of Stein;Gate.');
+        }
         const userReminder = new UserReminder(userId, channelId, reminder, dateTime.toISOString());
         try {
             await insertUserReminder(env, userReminder);
@@ -176,13 +184,15 @@ const execute = async function(interaction: any, env: any, args: string[]) {
     embed.setTitle('Reminder');
     embed.setDescription('Make sure I have `Send Messages` and `Embed Links` permissions for reminders to work.');
     const datetime = new Date();
-    datetime.setHours(datetime.getHours() + offset);
+    datetime.setUTCHours(datetime.getUTCHours() + offset);
     embed.addField('Your current time', `${datetime.toUTCString().replace('GMT', '')}\n(If the time is wrong, change your timezone.)`, true);
     embed.addField('UTC Offset', prependPlus(offset), true);
     embed.addBlankField();
     for (let i = 0; i < reminders.length; i++) {
         const userReminder = <UserReminder>reminders[i];
-        embed.addField(new Date(userReminder.reminderDatetime).toUTCString().replace('GMT', ''), userReminder.reminder, true);
+        const datetime = new Date(userReminder.reminderDatetime);
+        datetime.setUTCHours(datetime.getUTCHours() + offset);
+        embed.addField(datetime.toUTCString().replace('GMT', ''), userReminder.reminder, true);
     }
     interactionResponse.data?.addEmbed(embed);
     
@@ -225,7 +235,11 @@ function parseDate(dateString: string) {
     if (year == null || month == null || day == null) {
         return;
     }
-    return new Date(Number(year), Number(month)-1, Number(day)); // Month value starts from 0 for whatever reason
+    const date = new Date();
+    date.setUTCFullYear(Number(year));
+    date.setUTCMonth(Number(month)-1); // Month value starts from 0 for whatever reason
+    date.setUTCDate(Number(day));
+    return date;
 }
 
 /**
@@ -237,7 +251,10 @@ function parseTime(timeString: string) {
     if (hour == null || minute == null) {
         return;
     }
-    return new Date(0, 0, 0, Number(hour), Number(minute));
+    const time = new Date();
+    time.setUTCHours(Number(hour));
+    time.setUTCMinutes(Number(minute));
+    return time;
 }
 
 /**
