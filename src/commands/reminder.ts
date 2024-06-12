@@ -76,6 +76,9 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             } catch(error) {
                 return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
             }
+            if (reminders.length == 0) {
+                return ephemeralError(interactionResponse, 'Error: You don\'t have any reminders to remove.');
+            }
             for (let i = 0; i < reminders.length; i++) {
                 const userReminder = <UserReminder>reminders[i];
                 const removeOption = new StringSelectOption(new Date(userReminder.reminderDatetime).toUTCString().replace('GMT', ''), userReminder.rowId.toString());
