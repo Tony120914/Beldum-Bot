@@ -18,7 +18,7 @@ import { Commands } from '../commands.js';
 
 const applicationCommand = new ApplicationCommand(
     'info',
-    'Get information and images from a selection of Discord related features.',
+    'Get information and downloadable images from a selection of Discord related features.',
     APPLICATION_COMMAND_TYPE.CHAT_INPUT
 );
 applicationCommand.removeIntegrationType(APPLICATION_INTEGRATION_TYPE.USER_INSTALL);
@@ -28,7 +28,7 @@ applicationCommand.removeIntegrationType(APPLICATION_INTEGRATION_TYPE.USER_INSTA
  */
 const botOption = new ApplicationCommandOption(
     'bot',
-    'Get Beldum Bot\'s information.',
+    'Get Beldum Bot\'s information and resources on how to use the bot.',
     APPLICATION_COMMAND_OPTION_TYPE.SUB_COMMAND
 );
 applicationCommand.addOptions(botOption);
@@ -48,7 +48,7 @@ applicationCommand.addOptions(channelOption);
  */
 const customEmojiOption = new ApplicationCommandOption(
     'emoji',
-    'Get a custom emoji\'s information and image.',
+    'Get a custom emoji\'s information and downloadable image with the highest possible size.',
     APPLICATION_COMMAND_OPTION_TYPE.SUB_COMMAND
 );
 const customEmojiInputOption = new ApplicationCommandOption(
@@ -65,7 +65,7 @@ applicationCommand.addOptions(customEmojiOption);
  */
 const roleOption = new ApplicationCommandOption(
     'role',
-    'Get the selected role\'s information and image.',
+    'Get the selected role\'s information and downloadable icon with the highest possible size.',
     APPLICATION_COMMAND_OPTION_TYPE.SUB_COMMAND
 );
 applicationCommand.addOptions(roleOption);
@@ -75,7 +75,7 @@ applicationCommand.addOptions(roleOption);
  */
 const guildOption = new ApplicationCommandOption(
     'server',
-    'Get the server\'s information and images.',
+    'Get the server\'s information and downloadable icon/splash/banner with the highest possible size.',
     APPLICATION_COMMAND_OPTION_TYPE.SUB_COMMAND
 );
 applicationCommand.addOptions(guildOption);
@@ -85,7 +85,7 @@ applicationCommand.addOptions(guildOption);
  */
 const userOption = new ApplicationCommandOption(
     'user',
-    'Get the selected user\'s information and images.',
+    'Get the selected user\'s information and avatar/decoration/banner with the highest possible size.',
     APPLICATION_COMMAND_OPTION_TYPE.SUB_COMMAND
 );
 applicationCommand.addOptions(userOption);

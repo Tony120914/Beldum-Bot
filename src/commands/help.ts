@@ -5,7 +5,7 @@ import { Info } from './info.js';
 
 const applicationCommand = new ApplicationCommand(
     'help',
-    'Get information on the bot and how to use the bot.',
+    'Get information on the bot and resources on how to use the bot.',
     APPLICATION_COMMAND_TYPE.CHAT_INPUT
 );
 
