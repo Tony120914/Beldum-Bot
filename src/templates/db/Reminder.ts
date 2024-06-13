@@ -12,6 +12,7 @@ export class User {
     }
 }
 
+const TTL = 3;
 /**
  * Structure for UserReminder DB Table
  */
@@ -21,6 +22,7 @@ export class UserReminder {
     channelId: string
     reminder: string
     reminderDatetime: string // ISO8601
+    ttl: number = TTL;
 
     constructor(userId: string, channelId: string, reminder: string, reminderDatetime: string) {
         this.userId = userId;
@@ -28,4 +30,6 @@ export class UserReminder {
         this.reminder = reminder;
         this.reminderDatetime = reminderDatetime;
     }
+
+    setTTL(ttl: number) { this.ttl = ttl; }
 }

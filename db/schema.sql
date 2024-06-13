@@ -9,5 +9,6 @@ CREATE TABLE IF NOT EXISTS UserReminder (
     userId TEXT,
     channelId TEXT,
     reminder TEXT,
-    reminderDatetime DATETIME
+    reminderDatetime DATETIME,
+    ttl INTEGER
 );

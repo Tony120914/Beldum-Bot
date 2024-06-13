@@ -1,11 +1,11 @@
 import { ApplicationCommand } from '../templates/discord/ApplicationCommand.js'
 import { Command } from '../templates/app/Command.js';
-import { APPLICATION_COMMAND_TYPE, BUTTON_STYLE, INTERACTION_RESPONSE_TYPE, INTERACTION_TYPE, TEXT_INPUT_STYLE } from '../templates/discord/Enums.js';
+import { APPLICATION_COMMAND_TYPE, APPLICATION_INTEGRATION_TYPE, BUTTON_STYLE, INTERACTION_RESPONSE_TYPE, INTERACTION_TYPE, TEXT_INPUT_STYLE } from '../templates/discord/Enums.js';
 import { Embed } from '../templates/discord/Embed.js';
 import { InteractionResponse, MessageData, ModalData } from '../templates/discord/InteractionResponse.js'
 import { ActionRow, ButtonNonLink, StringSelect, StringSelectOption, TextInput } from '../templates/discord/MessageComponents.js';
 import { isOriginalUserInvoked } from '../handlers/InteractionHandler.js';
-import { insertUserReminder, selectUserReminderAll, selectUserField, selectUserReminderCount, upsertUser, deleteUserReminder, selectUserReminderExpired } from '../handlers/DatabaseHandler.js';
+import { insertUserReminder, selectUserReminderAll, selectUserField, selectUserReminderCount, upsertUser, deleteUserReminder, selectUserReminderExpired, decrementUserReminderTTL } from '../handlers/DatabaseHandler.js';
 import { UserReminder, User } from '../templates/db/Reminder.js';
 import { ephemeralError, getFetchErrorText } from '../handlers/ErrorHandler.js';
 import { buildDiscordAPIUrl, buildUser } from '../handlers/MessageHandler.js';
@@ -15,6 +15,7 @@ const applicationCommand = new ApplicationCommand(
     'Add/remove/manage reminders.',
     APPLICATION_COMMAND_TYPE.CHAT_INPUT
 );
+applicationCommand.removeIntegrationType(APPLICATION_INTEGRATION_TYPE.USER_INSTALL);
 
 const REMINDER_LIMIT = 10;
 const execute = async function(interaction: any, env: any, args: string[]) {
@@ -278,7 +279,7 @@ export async function triggerReminder(env: any) {
         expiredReminders = await selectUserReminderExpired(env);
         expiredReminders = expiredReminders.results;
     } catch(error) {
-        console.error(`Reminder(s) failed to trigger.\n${error}`);
+        console.error(`Reminder(s) failed to trigger due to failed fetch from DB.\n${error}`);
         return;
     }
     for (let i = 0; i < expiredReminders.length; i++) {
@@ -299,14 +300,18 @@ export async function triggerReminder(env: any) {
         });
         if (!response.ok) {
             const error = await getFetchErrorText(response);
-            console.error(error);
+            console.error(`Reminder(s) failed to trigger upon sending the reminder.\n${error}`);
+            await decrementUserReminderTTL(env, userReminder.rowId);
+            if (userReminder.ttl <= 0) {
+                await deleteUserReminder(env, userReminder.rowId);
+            }
             return;
         }
         // Removed the reminder that was send out from the DB
         try {
             await deleteUserReminder(env, userReminder.rowId);
         } catch(error) {
-            console.error(`Reminder(s) failed to trigger.\n${error}`);
+            console.error(`Reminder(s) failed to delete after sending the reminder.\n${error}`);
             return;
         }
         // Rate limiting watch

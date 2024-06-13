@@ -39,10 +39,10 @@ export async function selectUserField(env: any, userId: string, field: string) {
  */
 export async function insertUserReminder(env: any, reminder: UserReminder) {
     const result = await env.DB.prepare(
-        'INSERT INTO UserReminder (userId, channelId, reminder, reminderDatetime)\
-        VALUES (?1, ?2, ?3, ?4)'
+        'INSERT INTO UserReminder (userId, channelId, reminder, reminderDatetime, ttl)\
+        VALUES (?1, ?2, ?3, ?4, ?5)'
     )
-    .bind(reminder.userId, reminder.channelId, reminder.reminder, reminder.reminderDatetime)
+    .bind(reminder.userId, reminder.channelId, reminder.reminder, reminder.reminderDatetime, reminder.ttl)
     .run();
     return result;
 }
@@ -91,6 +91,21 @@ export async function selectUserReminderExpired(env: any) {
     .all();
     return result;
 }
+
+/**
+ * Decrement from table UserReminder the TTL of a reminder
+ */
+export async function decrementUserReminderTTL(env: any, rowId: number) {
+    const result = await env.DB.prepare(
+        'UPDATE UserReminder\
+        SET ttl=ttl-1\
+        WHERE rowId=?1'
+    )
+    .bind(rowId)
+    .run();
+    return result;
+}
+
 
 /**
  * Delete from table UserReminder a reminder
