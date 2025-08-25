@@ -1,5 +1,5 @@
 # Beldum-Bot
-<img src="https://raw.githubusercontent.com/Tony120914/Beldum-Bot/main/images/avatar-animated-shiny-beldum.gif" width=25% align="right">
+<img src="https://raw.githubusercontent.com/Tony120914/Beldum-Bot/main/images/shiny-beldum-oras-promo.png" width=25% align="right">
 
 Hey, a cool Discord bot application.
 
