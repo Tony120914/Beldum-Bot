@@ -4,9 +4,10 @@
   "private": true,
   "main": "src/server.js",
   "scripts": {
-    "register": "tsx src/register.ts",
     "dev": "wrangler dev --test-scheduled src/server.ts",
-    "tunnel": ".\\tunnel\\cloudflared tunnel --url http://localhost:8787"
+    "tunnel": "cloudflared tunnel --url http://localhost:8787",
+    "types": "wrangler types",
+    "register": "tsx src/register.ts"
   },
   "devDependencies": {
     "dotenv": "^17.2.1",

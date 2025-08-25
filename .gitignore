@@ -65,7 +65,7 @@ typings/
 test.js
 
 # Cloudflared tunnel (dev)
-tunnel/cloudflared.exe
+*.exe
 
 # Wrangler
 .wrangler/

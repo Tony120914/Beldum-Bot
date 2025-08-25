@@ -10,4 +10,17 @@ Check it out. ¯\\\_(ツ)_/¯
 
 ---
 
+## Installation Guide
+TUNNEL FOR DEV ENVIRONMENT
+
+1) Download exe from:
+https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/do-more-with-tunnels/trycloudflare/
+
+2) rename to cloudflared.exe
+
+
+---
+
 <img src="https://top.gg/api/widget/454764425090433034.svg">
+
+
