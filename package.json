@@ -9,14 +9,14 @@
     "tunnel": ".\\tunnel\\cloudflared tunnel --url http://localhost:8787"
   },
   "devDependencies": {
-    "dotenv": "^16.4.1",
-    "eslint": "^8.56.0",
-    "tsx": "^4.7.1",
-    "typescript": "^5.3.3",
-    "wrangler": "^3.58.0"
+    "dotenv": "^17.2.1",
+    "eslint": "^9.34.0",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2",
+    "wrangler": "^4.32.0"
   },
   "dependencies": {
-    "discord-interactions": "^3.4.0",
-    "itty-router": "^4.0.27"
+    "discord-interactions": "^4.3.0",
+    "itty-router": "^5.0.22"
   }
 }
