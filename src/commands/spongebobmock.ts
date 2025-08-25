@@ -26,7 +26,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
 
     const embed = new Embed();
     embed.setDescription(mockText(messageText));
-    embed.thumbnail?.setUrl('https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/images/spongebobmock.png');
+    embed.thumbnail?.setUrl('https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/assets/spongebobmock.png');
     interactionResponse.data?.addEmbed(embed);
 
     const actionRow = new ActionRow();

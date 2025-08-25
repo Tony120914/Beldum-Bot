@@ -48,7 +48,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
     embed.addField(':thumbsdown:', definition.thumbs_down.toString(), true);
     embed.addField('Written by', `[${definition.author}](https://www.urbandictionary.com/author.php?author=${encodeURI(definition.author)})`, true);
     embed.footer?.setText(`Date posted: ${new Date(definition.written_on).toString()}`);
-    embed.thumbnail?.setUrl('https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/images/urbandictionary.png');
+    embed.thumbnail?.setUrl('https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/assets/urbandictionary.png');
     interactionResponse.data?.addEmbed(embed);
 
     return interactionResponse;

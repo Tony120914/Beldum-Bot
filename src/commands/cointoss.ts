@@ -32,19 +32,19 @@ const execute = async function(interaction: any, env: any, args: string[]) {
     if (randomInt < avgEdgeAttempts - 1) {
         // Heads: 0 - 5998
         result = 'Heads';
-        imgUrl = 'https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/images/cointoss-heads.png';
+        imgUrl = 'https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/assets/cointoss-heads.png';
     }
     else if (randomInt < ((avgEdgeAttempts - 1) * 2)) {
         // Tails: 5999 - 11997
         result = 'Tails';
-        imgUrl = 'https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/images/cointoss-tails.png';
+        imgUrl = 'https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/assets/cointoss-tails.png';
     }
     else {
         // Edge: 11998 - 11999
         result =
             'Edge... wait what?\n' +
             '(Fun fact: [there\'s a 1/6000 chance of a coin landing on its edge.](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.48.2547))';
-        imgUrl = 'https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/images/cointoss-edge.png';
+        imgUrl = 'https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/assets/cointoss-edge.png';
     }
 
     const embed = new Embed();

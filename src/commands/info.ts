@@ -119,7 +119,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             embed.addBlankField();
             embed.addField('Chat commands', getChatInputCommands().join(' '), true);
             embed.addField('Message commands', getMessageCommands().join(' '), true);
-            embed.footer?.setIconUrl('https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/images/info-ultra-ball.png');
+            embed.footer?.setIconUrl('https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/assets/info-ultra-ball.png');
             const snowflake = new Snowflake(application.id);
             const joinedDiscord = new Date(snowflake.timestamp);
             embed.addField('Created', joinedDiscord.toString());
