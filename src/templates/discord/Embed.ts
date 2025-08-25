@@ -1,5 +1,5 @@
-import { embedColor } from "../../../config.json";
 
+const EMBED_COLOR = 0xC27C0E
 const EMBED_TITLE_LIMIT = 256;
 const EMBED_DESCRIPTION_LIMIT = 4096;
 const EMBED_FIELDS_LIMIT = 25;
@@ -14,7 +14,7 @@ export class Embed {
     description?: string
     url?: string
     timestamp?: string // ISO8601 timestamp
-    color?: number = Number(embedColor);
+    color?: number = EMBED_COLOR;
     footer?: Footer = new Footer();
     image?: Image = new Image();
     thumbnail?: Thumbnail = new Thumbnail();
