@@ -59,8 +59,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
     interactionResponse.data?.addEmbed(embed);
 
     const data = {"int1": int1, "int2": int2};
-    const button = new ButtonNonLink(JSON.stringify(data)); // Passing data through custom_id
-    button.setStyle(BUTTON_STYLE.PRIMARY);
+    const button = new ButtonNonLink(JSON.stringify(data), BUTTON_STYLE.PRIMARY); // Passing data through custom_id
     button.setLabel('Roll again');
     button.setEmoji(undefined, '🔁');
     const actionRow = new ActionRow();

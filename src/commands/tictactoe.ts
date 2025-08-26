@@ -25,13 +25,13 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         interactionResponse.data?.addComponent(actionRow);
     }
     else if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
-        const data = new GameData();
         const originalUserId = interaction.message.interaction_metadata.user.id;
         const invokingUserId = interaction.member?.user?.id ? interaction.member.user.id : interaction.user.id;
         let selectedUserId: string;
         const botId = interaction.application_id;
         let currentPlayerId: string;
         let gameState: GAME_STATE;
+        const data = new GameData();
         if (interaction.data.custom_id == COMPONENT.USER_SELECT) {
             if (!isOriginalUserInvoked(interaction)) {
                 return ephemeralError(interactionResponse, 'Error: You are not the original user who triggered the interaction. Please invoke a new slash command.');
@@ -50,7 +50,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 // Player vs bot initialization
                 const startingGrid = Array(GRID_SIZE).fill(SYMBOL.VACANT);
                 const indexesOfInterest = [0, GRID_WIDTH-1, GRID_SIZE-GRID_WIDTH, GRID_SIZE-1, GRID_CENTER]; // 4 Corners and 1 center
-                startingGrid[indexesOfInterest[getRandomInt(0, 4)]] = SYMBOL.X;
+                startingGrid[indexesOfInterest[getRandomInt(0, 4)] || 0] = SYMBOL.X;
                 data.setGrid(startingGrid); // Bot will always start in a corner or center;
                 data.setSymbol(SYMBOL.O);
             }
@@ -58,6 +58,9 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         }
         else {
             // Update Tic-Tac-Toe game after a button press
+            if (!data || !data.selectedId || !data.symbol || !data.buttonId) {
+                return ephemeralError(interactionResponse, 'Error: Data error, please try again later.');
+            }
             Object.assign(data, JSON.parse(interaction.data.custom_id));
             selectedUserId = data.selectedId;
             const prevGrid = data.getGrid();
@@ -98,6 +101,10 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             embed.addField('Draw', 'It\'s a draw :yawning_face:');
         }
         else if (gameState == GAME_STATE.ONGOING) {
+            if (!data || !data.symbol) {
+                console.error(`Tic-Tac-Toe: undefined symbol.`)
+                return ephemeralError(interactionResponse, 'Error: The dev messed up ... 🐛');
+            }
             embed.addField('Instructions', `${buildUser(currentPlayerId)}'s turn. Your symbol is ${SYMBOL_TO_EMOJI[data.symbol]}`);
         }
         interactionResponse.data?.addEmbed(embed);
@@ -106,8 +113,13 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             const actionRow = new ActionRow();
             for (let j = i; j < i + GRID_WIDTH; j++) {
                 data.setButtonId(j);
-                const button = new ButtonNonLink(JSON.stringify(data));
-                button.setEmoji(undefined, SYMBOL_TO_EMOJI[data.getGrid()[j]]);
+                const button = new ButtonNonLink(JSON.stringify(data), BUTTON_STYLE.PRIMARY);
+                const symbol = data.getGrid()[j];
+                if (!data || !symbol) {
+                    console.error(`Tic-Tac-Toe: tried to find symbol outside of grid range.`)
+                    return ephemeralError(interactionResponse, 'Error: The dev messed up ... 🐛');
+                }
+                button.setEmoji(undefined, SYMBOL_TO_EMOJI[symbol]);
                 if (data.getGrid()[j] == SYMBOL.X) {
                     button.setStyle(BUTTON_STYLE.SUCCESS);
                     button.setDisabled(true);
@@ -163,15 +175,16 @@ const SYMBOL_TO_EMOJI = {
  * Tic-Tac-Toe game data structure when passing data through buttons
  */
 class GameData {
-    buttonId: number
-    symbol: SYMBOL
-    grid: string // of SYMBOL
-    selectedId: string
-    turn: TURN
+    buttonId?: number
+    symbol?: SYMBOL
+    grid?: string // of SYMBOL
+    selectedId?: string = ''
+    turn?: TURN = TURN.ORIGINAL_USER
 
     setButtonId(buttonId: number) { this.buttonId = buttonId; }
     setSymbol(symbol: SYMBOL) { this.symbol = symbol; }
-    getGrid() {
+    getGrid(): SYMBOL[] {
+        if (!this.grid) { return [] }
         return <SYMBOL[]>this.grid.split('');
     }
     setGrid(grid: SYMBOL[]) {
@@ -197,9 +210,9 @@ class GameData {
  * However, the bot will be considered player 2 to retain opponent status,
  * since it will technically always be the player's turn.)
  */
-function chooseFirstPlayer(player1Id: string, player2Id: string, botId: string) {
+function chooseFirstPlayer(player1Id: string, player2Id: string, botId: string): string {
     if (player2Id == botId) { return player1Id; }
-    return [player1Id, player2Id][getRandomInt(0, 1)];
+    return [player1Id, player2Id][getRandomInt(0, 1)] || player1Id;
 }
 
 /**
@@ -256,8 +269,7 @@ function minimaxAB(data: GameData, depth: number, alpha: number, beta: number) {
     if (isBotTurn) {
         let score = Number.NEGATIVE_INFINITY;
         const childPositions = getChildPositions(data, SYMBOL.X);
-        for (let i = 0; i < childPositions.length; i++) {
-            const childData = childPositions[i];
+        for (const childData of childPositions) {
             score = Math.max(score, minimaxAB(childData, depth + 1, alpha, beta));
             alpha = Math.max(alpha, score);
             if (score >= beta) { break; }
@@ -267,8 +279,7 @@ function minimaxAB(data: GameData, depth: number, alpha: number, beta: number) {
     else {
         let score = Number.POSITIVE_INFINITY;
         const childPositions = getChildPositions(data, SYMBOL.O);
-        for (let i = 0; i < childPositions.length; i++) {
-            const childData = childPositions[i];
+        for (const childData of childPositions) {
             score = Math.min(score, minimaxAB(childData, depth + 1, alpha, beta));
             beta = Math.min(beta, score);
             if (score <= alpha) { break; }
@@ -285,10 +296,9 @@ function getChildPositions(data: GameData, symbol: SYMBOL) {
     const childPositions: GameData[] = [];
     for (let i = 0; i < grid.length; i++) {
         if (grid[i] == SYMBOL.VACANT) {
-            const childData = new GameData();
             const childGrid = grid.slice();
             childGrid[i] = symbol;
-            Object.assign(childData, data);
+            const childData: GameData = data;
             childData.setSymbol(symbol);
             childData.setGrid(childGrid);
             childPositions.push(childData);
@@ -300,7 +310,8 @@ function getChildPositions(data: GameData, symbol: SYMBOL) {
 /**
  * Find and return the best child grid position that is one move away from the current position
  */
-function getBestPosition(data: GameData) {
+function getBestPosition(data: GameData): SYMBOL[] {
+    if (!data || !data.symbol) { return []; }
     let maxScore = Number.NEGATIVE_INFINITY;
     let bestPosition: SYMBOL[] = data.getGrid();
     getChildPositions(data, data.symbol).forEach(childData => {

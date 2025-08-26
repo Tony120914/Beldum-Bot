@@ -1,4 +1,4 @@
-import { APPLICATION_COMMAND_OPTION_TYPE, INTERACTION_TYPE } from "../templates/discord/Enums";
+import { APPLICATION_COMMAND_OPTION_TYPE, INTERACTION_TYPE } from "../templates/discord/Enums.js";
 
 /**
  * Parse interaction arguments

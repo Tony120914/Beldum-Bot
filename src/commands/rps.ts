@@ -22,8 +22,8 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             return ephemeralError(interactionResponse, 'Error: You are not the original user who triggered the interaction. Please invoke a new slash command.');
         }
         interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
-        const userChoice = interaction.data.custom_id;
-        const botChoice = [RPS.ROCK, RPS.PAPER, RPS.SCISSORS][getRandomInt(0, 2)];
+        const userChoice: RPS = interaction.data.custom_id;
+        const botChoice = [RPS.ROCK, RPS.PAPER, RPS.SCISSORS][getRandomInt(0, 2)] || RPS.PAPER;
         const result = evaluateRps(userChoice, botChoice);
 
         const embed = new Embed();
@@ -34,12 +34,9 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         interactionResponse.data?.addEmbed(embed);
     }
     
-    const buttonRock = new ButtonNonLink(RPS.ROCK);
-    const buttonPaper = new ButtonNonLink(RPS.PAPER);
-    const buttonScissors = new ButtonNonLink(RPS.SCISSORS);
-    buttonRock.setStyle(BUTTON_STYLE.DANGER);
-    buttonPaper.setStyle(BUTTON_STYLE.PRIMARY);
-    buttonScissors.setStyle(BUTTON_STYLE.SUCCESS);
+    const buttonRock = new ButtonNonLink(RPS.ROCK, BUTTON_STYLE.DANGER);
+    const buttonPaper = new ButtonNonLink(RPS.PAPER, BUTTON_STYLE.PRIMARY);
+    const buttonScissors = new ButtonNonLink(RPS.SCISSORS, BUTTON_STYLE.SUCCESS);
     buttonRock.setLabel('Rock');
     buttonPaper.setLabel('Paper');
     buttonScissors.setLabel('Scissors');

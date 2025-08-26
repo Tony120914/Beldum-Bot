@@ -1,4 +1,4 @@
-import { UserReminder, User } from "../templates/db/Reminder";
+import { UserReminder, User } from "../templates/db/Reminder.js";
 
 /**
  * Cloudflare D1: serverless SQL DB

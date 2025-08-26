@@ -6,14 +6,18 @@
   "scripts": {
     "dev": "wrangler dev --test-scheduled src/server.ts",
     "tunnel": "cloudflared tunnel --url http://localhost:8787",
+    "lint": "npx eslint .",
     "types": "wrangler types",
     "register": "tsx src/register.ts"
   },
   "devDependencies": {
+    "@eslint/js": "^9.34.0",
+    "@types/node": "^24.3.0",
     "dotenv": "^17.2.1",
     "eslint": "^9.34.0",
     "tsx": "^4.20.5",
     "typescript": "^5.9.2",
+    "typescript-eslint": "^8.41.0",
     "wrangler": "^4.32.0"
   },
   "dependencies": {

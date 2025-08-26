@@ -1,11 +1,7 @@
-import {
-    INTERACTION_RESPONSE_FLAGS,
-    INTERACTION_RESPONSE_TYPE,
-    MESSAGE_COMPONENT_TYPE,
-} from './Enums';
-import { Embed } from './Embed';
-import { AllowedMentions, Attachment } from './ChannelResources';
-import { MessageComponent } from './MessageComponents';
+import { INTERACTION_RESPONSE_FLAGS, INTERACTION_RESPONSE_TYPE, MESSAGE_COMPONENT_TYPE } from './Enums.js';
+import { Embed } from './Embed.js';
+import { AllowedMentions, Attachment } from './ChannelResources.js';
+import { MessageComponent } from './MessageComponents.js';
 
 /**
  * Response to an interaction

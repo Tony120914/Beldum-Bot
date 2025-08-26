@@ -5,16 +5,17 @@ import { Embed } from '../templates/discord/Embed.js';
 import { InteractionResponse, MessageData } from '../templates/discord/InteractionResponse.js'
 import { buildDiscordAPIUrl, buildDiscordImageUrl, buildEmoji, buildRole, buildUser, parseEmoji } from '../handlers/MessageHandler.js';
 import { ephemeralError, getFetchErrorText } from '../handlers/ErrorHandler.js';
-import { Role } from '../templates/discord/PermissionsResources.js';
-import { Guild, GuildMember } from '../templates/discord/GuildResources.js';
-import { Snowflake } from '../templates/discord/Snowflake.js';
-import { Channel } from '../templates/discord/ChannelResources.js';
-import { User } from '../templates/discord/UserResources.js';
-import { Application } from '../templates/discord/ApplicationResources.js';
-import { Sticker } from '../templates/discord/StickerResources.js';
+import type { Role } from '../templates/discord/PermissionsResources.js';
+import type { Guild, GuildMember } from '../templates/discord/GuildResources.js';
+import { SnowflakeParser } from '../templates/discord/Snowflake.js';
+import type { Channel } from '../templates/discord/ChannelResources.js';
+import type { User } from '../templates/discord/UserResources.js';
+import type { Application } from '../templates/discord/ApplicationResources.js';
+import type { Sticker } from '../templates/discord/StickerResources.js';
 import { ActionRow, ButtonLink, ChannelSelect, RoleSelect, UserSelect } from '../templates/discord/MessageComponents.js';
 import { isOriginalUserInvoked } from '../handlers/InteractionHandler.js';
 import { Commands } from '../commands.js';
+import { formatTypeToString } from '../handlers/Utils.js';
 
 const applicationCommand = new ApplicationCommand(
     'info',
@@ -108,9 +109,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 const error = await getFetchErrorText(response);
                 return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
             }
-            const data = await response.json();
-            const application = new Application(data.id, data.name);
-            Object.assign(application, data);
+            const application: Application = await response.json();
             const embed = new Embed();
             embed.setTitle(application.name);
             embed.setDescription(application.description);
@@ -120,15 +119,14 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             embed.addField('Chat commands', getChatInputCommands().join(' '), true);
             embed.addField('Message commands', getMessageCommands().join(' '), true);
             embed.footer?.setIconUrl('https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/assets/info-ultra-ball.png');
-            const snowflake = new Snowflake(application.id);
-            const joinedDiscord = new Date(snowflake.timestamp);
+            const joinedDiscord = new Date(SnowflakeParser.getTimestamp(application.id));
             embed.addField('Created', joinedDiscord.toString());
             if (application.icon) {
                 const url = buildDiscordImageUrl(['app-icons', application.id, application.icon], IMAGE_FORMAT.PNG, IMAGE_SIZE.XXX_LARGE);
                 embed.thumbnail?.setUrl(url);
             }
             if (application.approximate_guild_count) {
-                embed.footer?.setText(`Approximately in ${application.approximate_guild_count} servers.`);
+                embed.initFooter(`Approximately in ${application.approximate_guild_count} servers.`);
                 embed.setTimestampOn();
             }
             interactionResponse.data?.addEmbed(embed);
@@ -167,10 +165,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
                 const guildId = interaction.guild_id;
                 const channelId = interaction.data.values[0];
-                const data = interaction.data.resolved.channels[channelId];
-                const channelType = data.type;
-                const channel = new Channel(channelId, channelType);
-                Object.assign(channel, data);
+                const channel: Channel = interaction.data.resolved.channels[channelId];
                 const embed = new Embed();
                 embed.setTitle('Channel Info');
                 const url = `https://discord.com/channels/${guildId}/${channelId}`;
@@ -184,8 +179,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                     const deletedMessagesCount = Math.abs(channel.total_message_sent - channel.message_count);
                     embed.addField('Deleted / total messages', `${deletedMessagesCount} / ${channel.total_message_sent}`, true);
                 }
-                const snowflake = new Snowflake(channel.id);
-                const created = new Date(snowflake.timestamp);
+                const created = new Date(SnowflakeParser.getTimestamp(channel.id));
                 embed.addField('Created', created.toString());
                 interactionResponse.data?.addEmbed(embed);
             }
@@ -209,8 +203,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             embed.setUrl(url);
             embed.setDescription(emojiString);
             embed.addField('Name', emoji.name, true);
-            const snowflake = new Snowflake(emoji.id);
-            const created = new Date(snowflake.timestamp);
+            const created = new Date(SnowflakeParser.getTimestamp(emoji.id));
             embed.addField('Created', created.toString(), true);
             embed.image?.setUrl(url);
             interactionResponse.data?.addEmbed(embed);
@@ -223,16 +216,12 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 }
                 interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
                 const roleId = interaction.data.values[0];
-                const data = interaction.data.resolved.roles[roleId];
-                const roleName = data.name;
-                const role = new Role(roleId, roleName);
-                Object.assign(role, data);
+                const role: Role = interaction.data.resolved.roles[roleId];
                 const embed = new Embed();
                 embed.setTitle('Role Info');
                 embed.setDescription(`${role.unicode_emoji || ''} ${buildRole(roleId)}`);
                 embed.addField('Name', role.name, true);
-                const snowflake = new Snowflake(role.id);
-                const created = new Date(snowflake.timestamp);
+                const created = new Date(SnowflakeParser.getTimestamp(role.id));
                 embed.addField('Created', created.toString(), true);
                 if (role.icon) {
                     const url = buildDiscordImageUrl(['role-icons', role.id, role.icon], IMAGE_FORMAT.PNG, IMAGE_SIZE.XXX_LARGE);
@@ -262,9 +251,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 const error = await getFetchErrorText(response);
                 return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
             }
-            const data = await response.json();
-            const guild = new Guild(data.id, data.name);
-            Object.assign(guild, data);
+            const guild: Guild = await response.json();
             const embed = new Embed();
             embed.setTitle('Server Info');
             const sameUrl = `https://discord.com/channels/${guildId}/${channelId}`; // Embeds having the same URL allows an embed to have multiple images for whatever reason...
@@ -289,11 +276,10 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             embed.addField('Emojis', emojis, true);
             let stickers = '';
             guild.stickers?.forEach(sticker => {
-                stickers += `[${sticker.name}](${buildDiscordImageUrl(['stickers', sticker.id], Sticker.formatTypeToString(sticker.format_type), IMAGE_SIZE.XXX_LARGE)}), `;
+                stickers += `[${sticker.name}](${buildDiscordImageUrl(['stickers', sticker.id], formatTypeToString(sticker.format_type), IMAGE_SIZE.XXX_LARGE)}), `;
             });
             embed.addField('Stickers', stickers, true);
-            const snowflake = new Snowflake(guild.id);
-            const created = new Date(snowflake.timestamp);
+            const created = new Date(SnowflakeParser.getTimestamp(guild.id));
             embed.addField('Created', created.toString());
             interactionResponse.data?.addEmbed(embed);
             if (guild.icon) {
@@ -338,9 +324,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 const guildId = interaction.guild_id;
                 const channelId = interaction.channel_id;
                 const userId = interaction.data.values[0];
-                const resolvedMember = guildId ? interaction.data.resolved.members[userId] : null;
-                const guildMember = new GuildMember();
-                Object.assign(guildMember, resolvedMember);
+                const guildMember: GuildMember = guildId ? interaction.data.resolved.members[userId] : null;
 
                 // Get User Object
                 const url = buildDiscordAPIUrl(['users', userId], []);
@@ -351,9 +335,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                     const error = await getFetchErrorText(response);
                     return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
                 }
-                const data = await response.json();
-                const user = new User(data.id, data.string, data.discriminator);
-                Object.assign(user, data);
+                const user: User = await response.json();
 
                 const embed = new Embed();
                 embed.setTitle('User Info');
@@ -380,8 +362,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                     embed.addField('Booster since', boosterSince.toString(), true);
                 }
                 embed.addBlankField()
-                const snowflake = new Snowflake(user.id);
-                const joinedDiscord = new Date(snowflake.timestamp);
+                const joinedDiscord = new Date(SnowflakeParser.getTimestamp(user.id));
                 embed.addField('Joined Discord', joinedDiscord.toString(), true);
                 if (guildMember.communication_disabled_until) {
                     const timeoutExpires = new Date(guildMember.communication_disabled_until);

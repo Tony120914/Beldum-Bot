@@ -1,19 +1,16 @@
-import {
-    ALLOWED_MENTION_TYPE, ATTACHMENT_FLAGS, CHANNEL_FLAGS, CHANNEL_TYPE,
-} from './Enums';
-import { Resource } from './Resource';
-import { User } from './UserResources';
+import { ALLOWED_MENTION_TYPE, ATTACHMENT_FLAGS, CHANNEL_FLAGS, CHANNEL_TYPE } from './Enums.js';
+import type { User } from './UserResources.js';
 
 /**
  * Channel structure
  * https://discord.com/developers/docs/resources/channel#channel-object
  */
-export class Channel extends Resource {
+export interface Channel {
     id: string
     type: CHANNEL_TYPE
     guild_id?: string
     position?: number
-    permission_overwrites?: Overwrite[] = [];
+    permission_overwrites?: Overwrite[]
     name?: string
     topic?: string
     nsfw?: boolean
@@ -21,7 +18,7 @@ export class Channel extends Resource {
     bitrate?: number
     user_limit?: number
     rate_limit_per_user?: number
-    recipients?: User[] = [];
+    recipients?: User[]
     icon?: string
     owner_id?: string
     application_id?: string
@@ -44,47 +41,41 @@ export class Channel extends Resource {
     default_thread_rate_limit_per_user?: number
     default_sort_order?: number
     default_forum_layout?: number
-
-    constructor(id: string, type: CHANNEL_TYPE) {
-        super();
-        this.id = id;
-        this.type = type;
-    }
 }
 
 /**
  * Overwrite structure
  * https://discord.com/developers/docs/resources/channel#overwrite-object
  */
-export class Overwrite {
+interface Overwrite {
 }
 
 /**
  * Thread Metadata structure
  * https://discord.com/developers/docs/resources/channel#thread-metadata-object
  */
-export class ThreadMetadata {
+interface ThreadMetadata {
 }
 
 /**
  * Thread Member structure
  * https://discord.com/developers/docs/resources/channel#thread-member-object
  */
-export class ThreadMember {
+interface ThreadMember {
 }
 
 /**
  * Forum Tag structure
  * https://discord.com/developers/docs/resources/channel#forum-tag-object
  */
-export class ForumTag {
+interface ForumTag {
 }
 
 /**
  * Default Reaction structure
  * https://discord.com/developers/docs/resources/channel#default-reaction-object
  */
-export class DefaultReaction {
+interface DefaultReaction {
 }
 
 const ALLOWED_MENTION_ROLES_LIMIT = 100;
@@ -132,12 +123,12 @@ const ATTACHMENT_DESCRIPTION_LIMIT = 1024;
  */
 export class Attachment {
     id: string
-    filename: string
+    filename?: string // For the attachments array in Message Create/Edit requests, only the id is required.
     description?: string
     content_type?: string
-    size: number
-    url: string
-    proxy_url: string
+    size?: number // For the attachments array in Message Create/Edit requests, only the id is required.
+    url?: string // For the attachments array in Message Create/Edit requests, only the id is required.
+    proxy_url?: string // For the attachments array in Message Create/Edit requests, only the id is required.
     height?: number
     width?: number
     ephemeral?: boolean

@@ -1,13 +1,12 @@
-import { APPLICATION_FLAGS } from "./Enums"
-import { Guild } from "./GuildResources"
-import { Resource } from "./Resource"
-import { User } from "./UserResources"
+import { APPLICATION_FLAGS } from "./Enums.js"
+import type { Guild } from "./GuildResources.js"
+import type { User } from "./UserResources.js"
 
 /**
  * Application structure
  * https://discord.com/developers/docs/resources/application#application-object
  */
-export class Application extends Resource {
+export interface Application {
     id: string
     name: string
     icon?: string
@@ -34,19 +33,13 @@ export class Application extends Resource {
     tags?: string[]
     install_params?: InstallParams
     custom_install_url?: string
-
-    constructor(id: string, name: string) {
-        super();
-        this.id = id;
-        this.name = name;
-    }
 }
 
 /**
  * Team structure
  * https://discord.com/developers/docs/topics/teams#data-models-team-object
  */
-class Team {
+interface Team {
     icon?: string
     id: string
     members: TeamMember[]
@@ -58,7 +51,7 @@ class Team {
  * Team Member structure
  * https://discord.com/developers/docs/topics/teams#data-models-team-member-object
  */
-class TeamMember {
+interface TeamMember {
     membership_state: number
     team_id: string
     user: User // Partial User
@@ -69,7 +62,7 @@ class TeamMember {
  * Install Params structure
  * https://discord.com/developers/docs/resources/application#install-params-object
  */
-class InstallParams {
+interface InstallParams {
     scopes: string[]
     permissions: string
 }

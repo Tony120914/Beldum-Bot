@@ -1,12 +1,12 @@
-import { User } from "./UserResources";
+import type { User } from "./UserResources.js";
 
 /**
  * Emoji Structure 
  * https://discord.com/developers/docs/resources/emoji#emoji-object
  */
 export class Emoji {
-    id?: string
-    name?: string // can only be null in reaction emoji objects
+    id?: string | undefined
+    name?: string |undefined // can only be null in reaction emoji objects
     roles?: string[] = []; // list of role id
     user?: User
     required_colons?: boolean

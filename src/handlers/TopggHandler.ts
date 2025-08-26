@@ -1,7 +1,7 @@
-import { Application } from "../templates/discord/ApplicationResources";
-import { getFetchErrorText } from "./ErrorHandler";
-import { buildDiscordAPIUrl } from "./MessageHandler";
-import { buildUrl } from "./Utils";
+import type { Application } from "../templates/discord/ApplicationResources.js";
+import { getFetchErrorText } from "./ErrorHandler.js";
+import { buildDiscordAPIUrl } from "./MessageHandler.js";
+import { buildUrl } from "./Utils.js";
 
 const BASE_URL = 'https://top.gg/api';
 const BOT_ID = '454764425090433034';
@@ -22,9 +22,7 @@ export async function postServerCount(env: any) {
         console.error(error);
         return;
     }
-    const discordData = await discordResponse.json();
-    const application = new Application(discordData.id, discordData.name);
-    Object.assign(application, discordData);
+    const application : Application = await discordResponse.json();
     const serverCount = application.approximate_guild_count;
     
     // Post server count to Top.gg API

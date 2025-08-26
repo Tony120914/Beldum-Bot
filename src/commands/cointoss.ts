@@ -52,11 +52,10 @@ const execute = async function(interaction: any, env: any, args: string[]) {
     embed.setDescription(result);
     embed.image?.setUrl(imgUrl);
     history = `${history}${result[0]}`
-    embed.footer?.setText(`History: ${history}`)
+    embed.initFooter(`History: ${history}`)
     interactionResponse.data?.addEmbed(embed);
 
-    const button = new ButtonNonLink(history); // Passing data through custom_id
-    button.setStyle(BUTTON_STYLE.PRIMARY);
+    const button = new ButtonNonLink(history, BUTTON_STYLE.PRIMARY); // Passing data through custom_id
     button.setLabel('Toss again');
     button.setEmoji(undefined, '🔁');
     const actionRow = new ActionRow();

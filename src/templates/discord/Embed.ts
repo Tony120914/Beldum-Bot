@@ -10,17 +10,17 @@ const EMBED_FIELDS_LIMIT = 25;
  */
 export class Embed {
     title?: string
-    type?: string = 'rich'; // Will probably be deprecated in the future
+    type?: string = 'rich';
     description?: string
     url?: string
     timestamp?: string // ISO8601 timestamp
     color?: number = EMBED_COLOR;
-    footer?: Footer = new Footer();
-    image?: Image = new Image();
-    thumbnail?: Thumbnail = new Thumbnail();
-    video?: Video = new Video();
-    provider?: Provider = new Provider();
-    author?: Author = new Author();
+    footer?: Footer
+    image?: Image
+    thumbnail?: Thumbnail
+    video?: Video
+    provider?: Provider
+    author?: Author
     fields?: Field[] = [];
 
     setTitle(title: string) {
@@ -31,7 +31,7 @@ export class Embed {
         }
         this.title = title.slice(0, EMBED_TITLE_LIMIT);
     }
-    // setType(type) { this.type = type; } // Will probably be deprecated in the future
+    setType(type: string) { this.type = type; }
     setDescription(description?: string) {
         if (!description) { return; }
         if (description.length >= EMBED_DESCRIPTION_LIMIT) {
@@ -44,6 +44,24 @@ export class Embed {
     setUrl(url: string) { this.url = url; }
     setTimestampOn() { this.timestamp = new Date().toISOString(); }
     setColor(color: number) { this.color = color; }
+    initFooter(text: string) {
+        this.footer = new Footer(text);
+    }
+    initImage(url: string) {
+        this.image = new Image(url);
+    }
+    initThumbnail(url: string) {
+        this.thumbnail = new Thumbnail(url);
+    }
+    initVideo() {
+        this.video = new Video();
+    }
+    initProvider() {
+        this.provider = new Provider();
+    }
+    initAuthor(name: string) {
+        this.author = new Author(name);
+    }
     addField(name?: string, value?: string, inline?: boolean) {
         if (!this.fields || !name || !value) { return; }
         const field = new Field(name, value, inline);
@@ -79,7 +97,7 @@ class Footer {
     icon_url?: string
     proxy_icon_url?: string
 
-    setText(text: string) {
+    constructor(text: string) {
         if (text.length >= FOOTER_TEXT_LIMIT) {
             console.error(
                 `Attempted to exceed limit of ${FOOTER_TEXT_LIMIT} characters in footer text.\n` +
@@ -87,6 +105,7 @@ class Footer {
         }
         this.text = text.slice(0, FOOTER_TEXT_LIMIT);
     }
+
     setIconUrl(icon_url: string) { this.icon_url = icon_url; }
     setProxyIconUrl(proxy_icon_url: string) { this.proxy_icon_url = proxy_icon_url; }
 }
@@ -100,6 +119,10 @@ class Image {
     proxy_url?: string
     height?: number
     width?: number
+
+    constructor(url: string) {
+        this.url = url;
+    }
 
     setUrl(url: string) { this.url = url; }
     setProxyUrl(proxy_url: string) { this.proxy_url = proxy_url; }
@@ -116,6 +139,10 @@ class Thumbnail {
     proxy_url?: string
     height?: number
     width?: number
+
+    constructor(url: string) {
+        this.url = url;
+    }
 
     setUrl(url: string) { this.url = url; }
     setProxyUrl(proxy_url: string) { this.proxy_url = proxy_url; }
@@ -162,7 +189,7 @@ class Author {
     icon_url?: string
     proxy_icon_url?: string
 
-    setName(name: string) {
+    constructor(name: string) {
         if (name.length >= AUTHOR_NAME_LIMIT) {
             console.error(
                 `Attempted to exceed limit of ${AUTHOR_NAME_LIMIT} characters in author name.\n` +
@@ -170,6 +197,7 @@ class Author {
         }
         this.name = name.slice(0, AUTHOR_NAME_LIMIT);
     }
+
     setUrl(url: string) { this.url = url; }
     setIconUrl(icon_url: string) { this.icon_url = icon_url; }
     setProxyIconUrl(proxy_icon_url: string) { this.proxy_icon_url = proxy_icon_url; }
@@ -184,7 +212,7 @@ const FIELD_VALUE_LIMIT = 1024;
 class Field {
     name: string
     value: string
-    inline?: boolean
+    inline?: boolean | undefined
 
     constructor(name: string, value: string, inline?: boolean) {
         if (name.length >= FIELD_NAME_LIMIT) {

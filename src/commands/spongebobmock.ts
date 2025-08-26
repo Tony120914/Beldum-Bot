@@ -42,15 +42,14 @@ const execute = async function(interaction: any, env: any, args: string[]) {
  * Spongebob mocks the text.
  * (Alternating between lower-case and upper-case.)
  */
-function mockText(text: string) {
+function mockText(text: string): string {
     enum CASE {
         LOWER,
         UPPER
     }
     let mockedText = '';
     let currentCase = CASE.LOWER;
-    for (let i = 0; i < text.length; i++) {
-        const char = text[i];
+    for (const char of text) {
         if (isAlpha(char) && currentCase == CASE.LOWER) {
             mockedText += char.toLowerCase();
             currentCase = CASE.UPPER;

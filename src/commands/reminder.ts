@@ -197,12 +197,9 @@ const execute = async function(interaction: any, env: any, args: string[]) {
     }
     interactionResponse.data?.addEmbed(embed);
     
-    const buttonAdd = new ButtonNonLink(COMPONENT.ADD_BUTTON);
-    const buttonRemove = new ButtonNonLink(COMPONENT.REMOVE_BUTTON);
-    const buttonTimezone = new ButtonNonLink(COMPONENT.TIMEZONE_BUTTON);
-    buttonAdd.setStyle(BUTTON_STYLE.SUCCESS);
-    buttonRemove.setStyle(BUTTON_STYLE.DANGER);
-    buttonTimezone.setStyle(BUTTON_STYLE.PRIMARY);
+    const buttonAdd = new ButtonNonLink(COMPONENT.ADD_BUTTON, BUTTON_STYLE.SUCCESS);
+    const buttonRemove = new ButtonNonLink(COMPONENT.REMOVE_BUTTON, BUTTON_STYLE.DANGER);
+    const buttonTimezone = new ButtonNonLink(COMPONENT.TIMEZONE_BUTTON, BUTTON_STYLE.PRIMARY);
     buttonAdd.setLabel('Add reminder');
     buttonRemove.setLabel('Remove reminder');
     buttonTimezone.setLabel('Set timezone');

@@ -1,5 +1,5 @@
-import { INTERACTION_RESPONSE_FLAGS, INTERACTION_RESPONSE_TYPE } from "../templates/discord/Enums";
-import { InteractionResponse } from "../templates/discord/InteractionResponse";
+import { INTERACTION_RESPONSE_FLAGS, INTERACTION_RESPONSE_TYPE } from "../templates/discord/Enums.js";
+import { InteractionResponse } from "../templates/discord/InteractionResponse.js";
 
 /**
  * Get error text from a failed Fetch Response

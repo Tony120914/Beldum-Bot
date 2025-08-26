@@ -51,7 +51,7 @@ router.post('/', async (request, env) => {
         console.log(args);
         const commandName = args[0];
 
-        if (!Commands.map.has(commandName)) {
+        if (!commandName || !Commands.map.has(commandName)) {
             return new JsonResponse({ error: 'Unknown Type' }, { status: 400 });
         }
         const interactionResponse = await Commands.map.get(commandName)?.execute(interaction, env, args);
