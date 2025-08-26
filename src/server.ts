@@ -2,7 +2,7 @@
  * The core server that runs on a Cloudflare worker.
  */
 
-import { Router, type IRequest } from 'itty-router';
+import { AutoRouter, type IRequest } from 'itty-router';
 import { verifyKey } from 'discord-interactions';
 import { Commands } from './commands.js';
 import { JsonResponse } from './templates/app/JsonResponse.js';
@@ -11,7 +11,7 @@ import { INTERACTION_CALLBACK_TYPE, INTERACTION_TYPE } from './templates/discord
 import { triggerReminder } from './commands/reminder.js';
 import { postServerCount } from './handlers/TopggHandler.js';
 
-const router = Router();
+const router = AutoRouter();
 
 /**
  * A simple :wave: hello page to verify the worker is working.
@@ -70,7 +70,7 @@ async function verifyDiscordRequest(request: IRequest, env: Env) {
     const isValidRequest =
         signature &&
         timestamp &&
-        verifyKey(body, signature, timestamp, env.DISCORD_PUBLIC_KEY);
+        await (verifyKey(body, signature, timestamp, env.DISCORD_PUBLIC_KEY));
     if (!isValidRequest) {
         return { isValid: false };
     }
@@ -99,10 +99,8 @@ async function scheduled(controller: ScheduledController, env: Env, ctx: Executi
 }
 
 const server = {
-    verifyDiscordRequest: verifyDiscordRequest,
-    fetch: async function (request: IRequest, env: Env) {
-        return router.handle(request, env);
-    },
+    verifyDiscordRequest,
+    fetch: router.fetch,
     scheduled: scheduled,
 };
 
