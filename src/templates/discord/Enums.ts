@@ -47,10 +47,22 @@ export enum INTERACTION_TYPE {
 }
 
 /**
+ * Interaction Types
+ * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-type
+ */
+export enum INTERACTION_DATA {
+    PING = 1, // not guaranteed
+    APPLICATION_COMMAND = 2,
+    MESSAGE_COMPONENT = 3,
+    APPLICATION_COMMAND_AUTOCOMPLETE = 4,
+    MODAL_SUBMIT = 5
+}
+
+/**
  * Interaction Response Types
  * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type
  */
-export enum INTERACTION_RESPONSE_TYPE {
+export enum INTERACTION_CALLBACK_TYPE {
     /** ACK a ping */
     PONG = InteractionResponseType.PONG,
     /** Simple message response */

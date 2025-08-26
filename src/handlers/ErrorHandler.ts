@@ -1,4 +1,4 @@
-import { INTERACTION_RESPONSE_FLAGS, INTERACTION_RESPONSE_TYPE } from "../templates/discord/Enums.js";
+import { INTERACTION_RESPONSE_FLAGS, INTERACTION_CALLBACK_TYPE } from "../templates/discord/Enums.js";
 import { InteractionResponse } from "../templates/discord/InteractionResponse.js";
 
 /**
@@ -20,7 +20,7 @@ export async function getFetchErrorText(failedResponse: Response) {
  */
 export async function ephemeralError(interactionResponse: InteractionResponse, errorText: string, error?: any) {
     if (error) { console.error(error); }
-    interactionResponse.setType(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
+    interactionResponse.setType(INTERACTION_CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
     interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
     interactionResponse.data?.setContent(`\`${errorText}\``);
     return interactionResponse;

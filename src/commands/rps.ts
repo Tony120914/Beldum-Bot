@@ -1,6 +1,6 @@
 import { ApplicationCommand } from '../templates/discord/ApplicationCommand.js'
 import { Command } from '../templates/app/Command.js';
-import { APPLICATION_COMMAND_TYPE, BUTTON_STYLE, INTERACTION_RESPONSE_FLAGS, INTERACTION_RESPONSE_TYPE, INTERACTION_TYPE } from '../templates/discord/Enums.js';
+import { APPLICATION_COMMAND_TYPE, BUTTON_STYLE, INTERACTION_RESPONSE_FLAGS, INTERACTION_CALLBACK_TYPE, INTERACTION_TYPE } from '../templates/discord/Enums.js';
 import { Embed } from '../templates/discord/Embed.js';
 import { InteractionResponse, MessageData } from '../templates/discord/InteractionResponse.js'
 import { getRandomInt } from '../handlers/Utils.js';
@@ -15,13 +15,13 @@ const applicationCommand = new ApplicationCommand(
 );
 
 const execute = async function(interaction: any, env: any, args: string[]) {
-    const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE, new MessageData());
+    const interactionResponse = new InteractionResponse(INTERACTION_CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE, new MessageData());
 
     if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
         if (!isOriginalUserInvoked(interaction)) {
             return ephemeralError(interactionResponse, 'Error: You are not the original user who triggered the interaction. Please invoke a new slash command.');
         }
-        interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
+        interactionResponse.setType(INTERACTION_CALLBACK_TYPE.UPDATE_MESSAGE);
         const userChoice: RPS = interaction.data.custom_id;
         const botChoice = [RPS.ROCK, RPS.PAPER, RPS.SCISSORS][getRandomInt(0, 2)] || RPS.PAPER;
         const result = evaluateRps(userChoice, botChoice);

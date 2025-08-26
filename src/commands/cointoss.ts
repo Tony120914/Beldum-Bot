@@ -1,12 +1,13 @@
 import { ApplicationCommand } from '../templates/discord/ApplicationCommand.js'
 import { Command } from '../templates/app/Command.js';
-import { APPLICATION_COMMAND_TYPE, BUTTON_STYLE, INTERACTION_RESPONSE_FLAGS, INTERACTION_RESPONSE_TYPE, INTERACTION_TYPE } from '../templates/discord/Enums.js';
+import { APPLICATION_COMMAND_TYPE, BUTTON_STYLE, INTERACTION_RESPONSE_FLAGS, INTERACTION_CALLBACK_TYPE, INTERACTION_TYPE } from '../templates/discord/Enums.js';
 import { Embed } from '../templates/discord/Embed.js';
 import { InteractionResponse, MessageData } from '../templates/discord/InteractionResponse.js'
 import { getRandomInt } from '../handlers/Utils.js';
 import { ActionRow, ButtonNonLink } from '../templates/discord/MessageComponents.js';
 import { isOriginalUserInvoked } from '../handlers/InteractionHandler.js';
 import { ephemeralError } from '../handlers/ErrorHandler.js';
+import type { Interaction, InteractionMessageComponent } from '../templates/discord/InteractionReceive.js';
 
 const applicationCommand = new ApplicationCommand(
     'cointoss',
@@ -14,15 +15,15 @@ const applicationCommand = new ApplicationCommand(
     APPLICATION_COMMAND_TYPE.CHAT_INPUT
 );
 
-const execute = async function(interaction: any, env: any, args: string[]) {
-    const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE, new MessageData());
+const execute = async function(interaction: Interaction, env: Env, args: string[]) {
+    const interactionResponse = new InteractionResponse(INTERACTION_CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE, new MessageData());
     let history = '';
     if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
         if (!isOriginalUserInvoked(interaction)) {
             return ephemeralError(interactionResponse, 'Error: You are not the original user who triggered the interaction. Please invoke a new slash command.');
         }
-        interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
-        history = interaction.data.custom_id;
+        interactionResponse.setType(INTERACTION_CALLBACK_TYPE.UPDATE_MESSAGE);
+        history = (interaction.data as InteractionMessageComponent).custom_id;
     }
 
     const avgEdgeAttempts = 6000;
@@ -51,16 +52,16 @@ const execute = async function(interaction: any, env: any, args: string[]) {
     embed.setTitle('Coin Toss');
     embed.setDescription(result);
     embed.image?.setUrl(imgUrl);
-    history = `${history}${result[0]}`
-    embed.initFooter(`History: ${history}`)
-    interactionResponse.data?.addEmbed(embed);
+    history = `${history}${result[0]}`;
+    embed.initFooter(`History: ${history}`);
+    (interactionResponse.data as MessageData).addEmbed(embed);
 
     const button = new ButtonNonLink(history, BUTTON_STYLE.PRIMARY); // Passing data through custom_id
     button.setLabel('Toss again');
     button.setEmoji(undefined, '🔁');
     const actionRow = new ActionRow();
     actionRow.addComponent(button);
-    interactionResponse.data?.addComponent(actionRow);
+    (interactionResponse.data as MessageData).addComponent(actionRow);
 
     return interactionResponse;
 }

@@ -1,6 +1,6 @@
 import { ApplicationCommand, ApplicationCommandOption } from '../templates/discord/ApplicationCommand.js'
 import { Command } from '../templates/app/Command.js';
-import { APPLICATION_COMMAND_OPTION_TYPE, APPLICATION_COMMAND_TYPE, APPLICATION_INTEGRATION_TYPE, IMAGE_FORMAT, IMAGE_SIZE, INTERACTION_RESPONSE_TYPE, INTERACTION_TYPE, USER_PREMIUM_TYPE } from '../templates/discord/Enums.js';
+import { APPLICATION_COMMAND_OPTION_TYPE, APPLICATION_COMMAND_TYPE, APPLICATION_INTEGRATION_TYPE, IMAGE_FORMAT, IMAGE_SIZE, INTERACTION_CALLBACK_TYPE, INTERACTION_TYPE, USER_PREMIUM_TYPE } from '../templates/discord/Enums.js';
 import { Embed } from '../templates/discord/Embed.js';
 import { InteractionResponse, MessageData } from '../templates/discord/InteractionResponse.js'
 import { buildDiscordAPIUrl, buildDiscordImageUrl, buildEmoji, buildRole, buildUser, parseEmoji } from '../handlers/MessageHandler.js';
@@ -16,6 +16,7 @@ import { ActionRow, ButtonLink, ChannelSelect, RoleSelect, UserSelect } from '..
 import { isOriginalUserInvoked } from '../handlers/InteractionHandler.js';
 import { Commands } from '../commands.js';
 import { formatTypeToString } from '../handlers/Utils.js';
+import type { Interaction, InteractionMessageComponent } from '../templates/discord/InteractionReceive.js';
 
 const applicationCommand = new ApplicationCommand(
     'info',
@@ -91,13 +92,13 @@ const userOption = new ApplicationCommandOption(
 );
 applicationCommand.addOptions(userOption);
 
-const execute = async function(interaction: any, env: any, args: string[]) {
+const execute = async function(interaction: Interaction, env: Env, args: string[]) {
     const headers = {
         'Content-Type': 'application/json',
         'User-Agent': env.USER_AGENT,
         'Authorization': `Bot ${env.DISCORD_TOKEN}`,
     }
-    const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE, new MessageData());
+    const interactionResponse = new InteractionResponse(INTERACTION_CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE, new MessageData());
     const subcommand = args[1];
     switch (subcommand) {
         case 'bot': {
@@ -129,7 +130,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 embed.initFooter(`Approximately in ${application.approximate_guild_count} servers.`);
                 embed.setTimestampOn();
             }
-            interactionResponse.data?.addEmbed(embed);
+            (interactionResponse.data as MessageData).addEmbed(embed);
 
             const actionRow1 = new ActionRow();
             const actionRow2 = new ActionRow();
@@ -153,8 +154,8 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             actionRow1.addComponent(buttonDonate);
             actionRow2.addComponent(buttonDocs);
             actionRow2.addComponent(buttonSourceCode);
-            interactionResponse.data?.addComponent(actionRow1);
-            interactionResponse.data?.addComponent(actionRow2);
+            (interactionResponse.data as MessageData).addComponent(actionRow1);
+            (interactionResponse.data as MessageData).addComponent(actionRow2);
             break;
         }
         case 'channel': {
@@ -162,10 +163,10 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 if (!isOriginalUserInvoked(interaction)) {
                     return ephemeralError(interactionResponse, 'Error: You are not the original user who triggered the interaction. Please invoke a new slash command.');
                 }
-                interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
+                interactionResponse.setType(INTERACTION_CALLBACK_TYPE.UPDATE_MESSAGE);
                 const guildId = interaction.guild_id;
-                const channelId = interaction.data.values[0];
-                const channel: Channel = interaction.data.resolved.channels[channelId];
+                const channelId = (interaction.data as InteractionMessageComponent).values![0];
+                const channel: Channel = (interaction.data as InteractionMessageComponent).resolved?.channels![channelId];
                 const embed = new Embed();
                 embed.setTitle('Channel Info');
                 const url = `https://discord.com/channels/${guildId}/${channelId}`;
@@ -214,7 +215,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 if (!isOriginalUserInvoked(interaction)) {
                     return ephemeralError(interactionResponse, 'Error: You are not the original user who triggered the interaction. Please invoke a new slash command.');
                 }
-                interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
+                interactionResponse.setType(INTERACTION_CALLBACK_TYPE.UPDATE_MESSAGE);
                 const roleId = interaction.data.values[0];
                 const role: Role = interaction.data.resolved.roles[roleId];
                 const embed = new Embed();
@@ -320,7 +321,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                     return ephemeralError(interactionResponse, 'Error: You are not the original user who triggered the interaction. Please invoke a new slash command.');
                 }
                 // Get GuildMember object
-                interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
+                interactionResponse.setType(INTERACTION_CALLBACK_TYPE.UPDATE_MESSAGE);
                 const guildId = interaction.guild_id;
                 const channelId = interaction.channel_id;
                 const userId = interaction.data.values[0];

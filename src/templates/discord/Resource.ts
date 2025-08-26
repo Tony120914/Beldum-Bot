@@ -1,6 +1,6 @@
 
 /**
- * Parent Resource class
+ * Parent Resource interface
  */
-export abstract class Resource {
+export interface Resource {
 }

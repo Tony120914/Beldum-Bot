@@ -2,6 +2,7 @@ import { ApplicationCommand } from '../templates/discord/ApplicationCommand.js'
 import { Command } from '../templates/app/Command.js';
 import { APPLICATION_COMMAND_TYPE } from '../templates/discord/Enums.js';
 import { Info } from './info.js';
+import type { Interaction } from '../templates/discord/InteractionReceive.js';
 
 const applicationCommand = new ApplicationCommand(
     'help',
@@ -9,7 +10,7 @@ const applicationCommand = new ApplicationCommand(
     APPLICATION_COMMAND_TYPE.CHAT_INPUT
 );
 
-const execute = async function(interaction: any, env: any, args: string[]) {
+const execute = async function(interaction: Interaction, env: Env, args: string[]) {
     // Redirect to 'info bot' command
     args = ['info', 'bot'];
     return Info.execute(interaction, env, args);

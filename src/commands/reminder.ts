@@ -1,6 +1,6 @@
 import { ApplicationCommand } from '../templates/discord/ApplicationCommand.js'
 import { Command } from '../templates/app/Command.js';
-import { APPLICATION_COMMAND_TYPE, APPLICATION_INTEGRATION_TYPE, BUTTON_STYLE, INTERACTION_RESPONSE_TYPE, INTERACTION_TYPE, TEXT_INPUT_STYLE } from '../templates/discord/Enums.js';
+import { APPLICATION_COMMAND_TYPE, APPLICATION_INTEGRATION_TYPE, BUTTON_STYLE, INTERACTION_CALLBACK_TYPE, INTERACTION_TYPE, TEXT_INPUT_STYLE } from '../templates/discord/Enums.js';
 import { Embed } from '../templates/discord/Embed.js';
 import { InteractionResponse, MessageData, ModalData } from '../templates/discord/InteractionResponse.js'
 import { ActionRow, ButtonNonLink, StringSelect, StringSelectOption, TextInput } from '../templates/discord/MessageComponents.js';
@@ -19,7 +19,7 @@ applicationCommand.removeIntegrationType(APPLICATION_INTEGRATION_TYPE.USER_INSTA
 
 const REMINDER_LIMIT = 10;
 const execute = async function(interaction: any, env: any, args: string[]) {
-    const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE, new MessageData());
+    const interactionResponse = new InteractionResponse(INTERACTION_CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE, new MessageData());
     const channelId = interaction.channel_id;
     let userId = interaction.member?.user?.id ? interaction.member.user.id : interaction.user.id;
     
@@ -27,7 +27,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         if (!isOriginalUserInvoked(interaction)) {
             return ephemeralError(interactionResponse, 'Error: You are not the original user who triggered the interaction. Please invoke a new slash command.');
         }
-        interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
+        interactionResponse.setType(INTERACTION_CALLBACK_TYPE.UPDATE_MESSAGE);
 
         userId = interaction.message.interaction_metadata.user.id;
         const componentTriggered = interaction.data.custom_id;
@@ -43,7 +43,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             if (reminderCount >= REMINDER_LIMIT) {
                 return ephemeralError(interactionResponse, `Error: You can only have up to ${reminderCount} reminders.`);
             }
-            interactionResponse.setType(INTERACTION_RESPONSE_TYPE.MODAL);
+            interactionResponse.setType(INTERACTION_CALLBACK_TYPE.MODAL);
             interactionResponse.setData(new ModalData('modal', 'Add Reminder'));
             const reminderRow = new ActionRow();
             const dateRow = new ActionRow();
@@ -136,7 +136,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
     }
     else if (interaction.type == INTERACTION_TYPE.MODAL_SUBMIT) {
         // Modal containing the added reminder data was submitted
-        interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
+        interactionResponse.setType(INTERACTION_CALLBACK_TYPE.UPDATE_MESSAGE);
         const userId = interaction.message.interaction_metadata.user.id;
         const reminder = interaction.data.components[0].components[0].value;
         const dateString = interaction.data.components[1].components[0].value;
