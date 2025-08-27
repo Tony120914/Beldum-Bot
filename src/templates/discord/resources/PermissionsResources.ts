@@ -1,4 +1,4 @@
-import { ROLE_FLAGS } from "./Enums.js"
+import { ROLE_FLAGS } from "../Enums.js"
 
 /**
  * Role Structure

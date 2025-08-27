@@ -1,7 +1,7 @@
 import { INTERACTION_RESPONSE_FLAGS, INTERACTION_CALLBACK_TYPE, MESSAGE_COMPONENT_TYPE, INTERACTION_TYPE, INTERACTION_DATA, APPLICATION_INTEGRATION_TYPE, INTERACTION_CONTEXT_TYPE } from './Enums.js';
 import { Embed } from './Embed.js';
-import { AllowedMentions, Attachment, type Channel } from './ChannelResources.js';
-import { MessageComponent } from './MessageComponents.js';
+import { AllowedMentions, Attachment, type Channel } from './resources/ChannelResources.js';
+import type { MessageComponent } from './MessageComponents.js';
 
 /**
  * Response to an interaction
@@ -9,11 +9,24 @@ import { MessageComponent } from './MessageComponents.js';
  */
 export class InteractionResponse {
     type: INTERACTION_CALLBACK_TYPE
-    data?: InteractionCallbackData
+    data?: InteractionCallbackData | MessageData | AutocompleteData | ModalData
 
-    constructor(type: INTERACTION_CALLBACK_TYPE, data: InteractionCallbackData) {
+    constructor(type: INTERACTION_CALLBACK_TYPE) {
         this.type = type;
-        this.data = data;
+    }
+
+    initMessageData(): MessageData {
+        this.data = new MessageData();
+        return this.data as MessageData;
+    }
+    // TODO: when needed
+    // initAutocompleteData(): AutocompleteData {
+    //     this.data = new AutocompleteData();
+    //     return this.data as AutocompleteData;
+    // }
+    initModalData(custom_id: string, title: string): ModalData {
+        this.data = new ModalData(custom_id, title);
+        return this.data as ModalData;
     }
 
     setType(type: INTERACTION_CALLBACK_TYPE) { this.type = type; }
@@ -33,7 +46,7 @@ const MESSAGE_ACTION_ROW_LIMIT = 5;
  * Interaction response's data structure for message callbacks
  * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-messages
  */
-export class MessageData implements InteractionCallbackData {
+class MessageData implements InteractionCallbackData {
     tts?: boolean
     content?: string
     embeds?: Embed[] = [];
@@ -81,7 +94,8 @@ export class MessageData implements InteractionCallbackData {
 /**
  * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-autocomplete
  */
-export class AutocompleteData implements InteractionCallbackData {
+class AutocompleteData implements InteractionCallbackData {
+    // TODO: when needed
 }
 
 const MODAL_CUSTOM_ID_LIMIT = 100;

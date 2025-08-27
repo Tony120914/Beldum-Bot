@@ -2,13 +2,14 @@ import { ApplicationCommand } from '../templates/discord/ApplicationCommand.js'
 import { Command } from '../templates/app/Command.js';
 import { APPLICATION_COMMAND_TYPE, APPLICATION_INTEGRATION_TYPE, BUTTON_STYLE, INTERACTION_CALLBACK_TYPE, INTERACTION_TYPE, TEXT_INPUT_STYLE } from '../templates/discord/Enums.js';
 import { Embed } from '../templates/discord/Embed.js';
-import { InteractionResponse, MessageData, ModalData } from '../templates/discord/InteractionResponse.js'
+import { InteractionResponse, ModalData } from '../templates/discord/InteractionResponse.js'
 import { ActionRow, ButtonNonLink, StringSelect, StringSelectOption, TextInput } from '../templates/discord/MessageComponents.js';
 import { isOriginalUserInvoked } from '../handlers/InteractionHandler.js';
 import { insertUserReminder, selectUserReminderAll, selectUserField, selectUserReminderCount, upsertUser, deleteUserReminder, selectUserReminderExpired, decrementUserReminderTTL } from '../handlers/DatabaseHandler.js';
 import { UserReminder, User } from '../templates/db/Reminder.js';
 import { ephemeralError, getFetchErrorText } from '../handlers/ErrorHandler.js';
 import { buildDiscordAPIUrl, buildUser } from '../handlers/MessageHandler.js';
+import type { Interaction } from '../templates/discord/InteractionReceive.js';
 
 const applicationCommand = new ApplicationCommand(
     'reminder',
@@ -18,10 +19,11 @@ const applicationCommand = new ApplicationCommand(
 applicationCommand.removeIntegrationType(APPLICATION_INTEGRATION_TYPE.USER_INSTALL);
 
 const REMINDER_LIMIT = 10;
-const execute = async function(interaction: any, env: any, args: string[]) {
-    const interactionResponse = new InteractionResponse(INTERACTION_CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE, new MessageData());
+const execute = async function(interaction: Interaction, env: Env, args: string[]) {
+    const interactionResponse = new InteractionResponse(INTERACTION_CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
+    const data = interactionResponse.initMessageData();
     const channelId = interaction.channel_id;
-    let userId = interaction.member?.user?.id ? interaction.member.user.id : interaction.user.id;
+    let userId = interaction.member?.user?.id ? interaction.member.user.id : interaction.user?.id;
     
     if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
         if (!isOriginalUserInvoked(interaction)) {
@@ -29,14 +31,14 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         }
         interactionResponse.setType(INTERACTION_CALLBACK_TYPE.UPDATE_MESSAGE);
 
-        userId = interaction.message.interaction_metadata.user.id;
-        const componentTriggered = interaction.data.custom_id;
+        userId = interaction.message?.interaction_metadata?.user.id;
+        if (!userId) { return ephemeralError(interactionResponse, 'Error: user id not found.'); }
+        const componentTriggered = interaction.data?.custom_id;
         if (componentTriggered == COMPONENT.ADD_BUTTON) {
             // Add reminder button was pressed
-            let reminderCount: any;
+            let reminderCount: number;
             try {
-                reminderCount = await selectUserReminderCount(env, userId);
-                reminderCount.results;
+                reminderCount = await selectUserReminderCount(env, userId) as number;
             } catch(error) {
                 return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
             }
@@ -44,7 +46,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 return ephemeralError(interactionResponse, `Error: You can only have up to ${reminderCount} reminders.`);
             }
             interactionResponse.setType(INTERACTION_CALLBACK_TYPE.MODAL);
-            interactionResponse.setData(new ModalData('modal', 'Add Reminder'));
+            const data = interactionResponse.initModalData('modal', 'Add Reminder')
             const reminderRow = new ActionRow();
             const dateRow = new ActionRow();
             const timeRow = new ActionRow();
@@ -60,9 +62,9 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             reminderRow.addComponent(reminderInput);
             dateRow.addComponent(dateInput);
             timeRow.addComponent(timeInput);
-            interactionResponse.data.addComponent(reminderRow);
-            interactionResponse.data.addComponent(dateRow);
-            interactionResponse.data.addComponent(timeRow);
+            data.addComponent(reminderRow);
+            data.addComponent(dateRow);
+            data.addComponent(timeRow);
             return interactionResponse;
         }
         else if (componentTriggered == COMPONENT.REMOVE_BUTTON) {
@@ -70,25 +72,24 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             const actionRow = new ActionRow();
             const removeSelect = new StringSelect(COMPONENT.REMOVE_SELECT);
             removeSelect.setPlaceholder('Select the reminder to remove');
-            let reminders: any;
+            let reminders;
             try {
                 reminders = await selectUserReminderAll(env, userId);
-                reminders = reminders.results;
+                reminders = reminders.results as unknown as UserReminder[];
             } catch(error) {
                 return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
             }
             if (reminders.length == 0) {
                 return ephemeralError(interactionResponse, 'Error: You don\'t have any reminders to remove.');
             }
-            let offset: any;
+            let offset: number;
             try {
-                offset = await selectUserField(env, userId, 'utcOffset');
+                offset = await selectUserField(env, userId, 'utcOffset') as number;
                 offset = offset == null ? 0 : offset;
             } catch(error) {
                 return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
             }
-            for (let i = 0; i < reminders.length; i++) {
-                const userReminder = <UserReminder>reminders[i];
+            for (const userReminder of reminders) {
                 const datetime = new Date(userReminder.reminderDatetime);
                 datetime.setUTCHours(datetime.getUTCHours() + offset);
                 const removeOption = new StringSelectOption(datetime.toUTCString().replace('GMT', ''), userReminder.rowId.toString());
@@ -96,7 +97,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 removeSelect.addOption(removeOption);
             }
             actionRow.addComponent(removeSelect);
-            interactionResponse.data?.addComponent(actionRow);
+            data.addComponent(actionRow);
         }
         else if (componentTriggered == COMPONENT.TIMEZONE_BUTTON) {
             // Timezone button was pressed
@@ -112,10 +113,11 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 timezoneSelect.addOption(timezoneOption);
             }
             actionRow.addComponent(timezoneSelect);
-            interactionResponse.data?.addComponent(actionRow);
+            data.addComponent(actionRow);
         }
         else if (componentTriggered == COMPONENT.REMOVE_SELECT) {
             // Remove a certain reminder was selected
+            if (!interaction.data?.values) { return ephemeralError(interactionResponse, 'Error: 🐛'); }
             const rowId = Number(interaction.data.values[0]);
             try {
                 await deleteUserReminder(env, rowId);
@@ -125,6 +127,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         }
         else if (componentTriggered == COMPONENT.TIMEZONE_SELECT) {
             // Timezone was selected
+            if (!interaction.data?.values) { return ephemeralError(interactionResponse, 'Error: 🐛'); }
             const offset = Number(interaction.data.values[0]);
             const userTimezone = new User(userId, offset);
             try {
@@ -137,21 +140,21 @@ const execute = async function(interaction: any, env: any, args: string[]) {
     else if (interaction.type == INTERACTION_TYPE.MODAL_SUBMIT) {
         // Modal containing the added reminder data was submitted
         interactionResponse.setType(INTERACTION_CALLBACK_TYPE.UPDATE_MESSAGE);
-        const userId = interaction.message.interaction_metadata.user.id;
-        const reminder = interaction.data.components[0].components[0].value;
-        const dateString = interaction.data.components[1].components[0].value;
-        const timeString = interaction.data.components[2].components[0].value;
-        const date = parseDate(dateString);
-        if (!date) {
-            return ephemeralError(interactionResponse, 'Error: The date must be in YYYY/MM/DD format.');
-        }
-        const time = parseTime(timeString);
-        if (!time) {
-            return ephemeralError(interactionResponse, 'Error: The time must be in HH:MM format.');
-        }
-        let offset: any;
+        const userId = interaction.message?.interaction_metadata?.user.id;
+        if (!userId) { return ephemeralError(interactionResponse, 'Error: user id not found.'); }
+        const modalData = interaction.data?.components;
+        if (!modalData) { return ephemeralError(interactionResponse, 'Error: modal input error.'); }
+        const reminder = (modalData[0]?.components[0] as TextInput).value;
+        const dateString = (modalData[1]?.components[0] as TextInput).value;
+        const timeString = (modalData[2]?.components[0] as TextInput).value;
+        if (!reminder) { return ephemeralError(interactionResponse, 'Error: Invalid reminder text.'); }
+        const date = parseDate(dateString || '');
+        if (!date) { return ephemeralError(interactionResponse, 'Error: The date must be in YYYY/MM/DD format.'); }
+        const time = parseTime(timeString || '');
+        if (!time) { return ephemeralError(interactionResponse, 'Error: The time must be in HH:MM format.'); }
+        let offset: number;
         try {
-            offset = await selectUserField(env, userId, 'utcOffset');
+            offset = await selectUserField(env, userId, 'utcOffset') as number;
             offset = offset == null ? 0 : offset;
         } catch(error) {
             return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
@@ -161,6 +164,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         if (dateTime <= now) {
             return ephemeralError(interactionResponse, 'Error: I wish I could set a reminder in the past too but... it was the choice of Stein;Gate.');
         }
+        if (!channelId) { return ephemeralError(interactionResponse, 'Error: channel id not found. '); }
         const userReminder = new UserReminder(userId, channelId, reminder, dateTime.toISOString());
         try {
             await insertUserReminder(env, userReminder);
@@ -170,13 +174,14 @@ const execute = async function(interaction: any, env: any, args: string[]) {
     }
 
     // Fetch data from DB to show for embed
-    let offset: any;
-    let reminders: any;
+    let offset: number;
+    let reminders;
     try {
-        offset = await selectUserField(env, userId, 'utcOffset');
+        if (!userId) { return ephemeralError(interactionResponse, 'Error: user id not found'); }
+        offset = await selectUserField(env, userId, 'utcOffset') as number;
         offset = offset == null ? 0 : offset;
         reminders = await selectUserReminderAll(env, userId);
-        reminders = reminders.results;
+        reminders = reminders.results as unknown as UserReminder[];
     } catch(error) {
         return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
     }
@@ -189,13 +194,12 @@ const execute = async function(interaction: any, env: any, args: string[]) {
     embed.addField('Your current time', `${datetime.toUTCString().replace('GMT', '')}\n(If the time is wrong, change your timezone.)`, true);
     embed.addField('UTC Offset', prependPlus(offset), true);
     embed.addBlankField();
-    for (let i = 0; i < reminders.length; i++) {
-        const userReminder = <UserReminder>reminders[i];
+    for (const userReminder of reminders) {
         const datetime = new Date(userReminder.reminderDatetime);
         datetime.setUTCHours(datetime.getUTCHours() + offset);
         embed.addField(datetime.toUTCString().replace('GMT', ''), userReminder.reminder, true);
     }
-    interactionResponse.data?.addEmbed(embed);
+    data.addEmbed(embed);
     
     const buttonAdd = new ButtonNonLink(COMPONENT.ADD_BUTTON, BUTTON_STYLE.SUCCESS);
     const buttonRemove = new ButtonNonLink(COMPONENT.REMOVE_BUTTON, BUTTON_STYLE.DANGER);
@@ -210,7 +214,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
     actionRow.addComponent(buttonAdd);
     actionRow.addComponent(buttonRemove);
     actionRow.addComponent(buttonTimezone);
-    interactionResponse.data?.addComponent(actionRow);
+    data.addComponent(actionRow);
 
     return interactionResponse;
 }
@@ -265,23 +269,22 @@ function prependPlus(number: number) {
 /**
  * Scheduled cron job will trigger this to trigger reminders
  */
-export async function triggerReminder(env: any) {
+export async function triggerReminder(env: Env) {
     const headers = {
         'Content-Type': 'application/json',
         'User-Agent': env.USER_AGENT,
         'Authorization': `Bot ${env.DISCORD_TOKEN}`,
     }
-    let expiredReminders: any;
+    let expiredReminders;
     try {
         expiredReminders = await selectUserReminderExpired(env);
-        expiredReminders = expiredReminders.results;
+        expiredReminders = expiredReminders.results as unknown as UserReminder[];
     } catch(error) {
         console.error(`Reminder(s) failed to trigger due to failed fetch from DB.\n${error}`);
         return;
     }
-    for (let i = 0; i < expiredReminders.length; i++) {
+    for (const userReminder of expiredReminders) {
         // Send out reminders
-        const userReminder = <UserReminder>expiredReminders[i];
         const embed = new Embed();
         embed.setTitle('Reminder');
         embed.setDescription(`${buildUser(userReminder.userId)}\n${userReminder.reminder}`);

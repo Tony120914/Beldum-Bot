@@ -1,4 +1,4 @@
-import { USER_FLAGS, USER_PREMIUM_TYPE } from "./Enums.js"
+import { USER_FLAGS, USER_PREMIUM_TYPE } from "../Enums.js"
 
 /** 
  * User Structure 

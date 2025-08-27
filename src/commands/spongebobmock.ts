@@ -1,10 +1,11 @@
 import { ApplicationCommand } from '../templates/discord/ApplicationCommand.js'
 import { Command } from '../templates/app/Command.js';
-import { APPLICATION_COMMAND_TYPE, INTERACTION_RESPONSE_FLAGS, INTERACTION_CALLBACK_TYPE } from '../templates/discord/Enums.js';
+import { APPLICATION_COMMAND_TYPE, INTERACTION_CALLBACK_TYPE } from '../templates/discord/Enums.js';
 import { Embed } from '../templates/discord/Embed.js';
-import { InteractionResponse, MessageData } from '../templates/discord/InteractionResponse.js'
+import { InteractionResponse } from '../templates/discord/InteractionResponse.js'
 import { ActionRow, ButtonLink } from '../templates/discord/MessageComponents.js';
 import { ephemeralError } from '../handlers/ErrorHandler.js';
+import type { Interaction } from '../templates/discord/InteractionReceive.js';
 
 const applicationCommand = new ApplicationCommand(
     'Spongebob Mock',
@@ -12,28 +13,33 @@ const applicationCommand = new ApplicationCommand(
     APPLICATION_COMMAND_TYPE.MESSAGE
 );
 
-const execute = async function(interaction: any, env: any, args: string[]) {
-    const interactionResponse = new InteractionResponse(INTERACTION_CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE, new MessageData());
+const execute = async function(interaction: Interaction, env: Env, args: string[]) {
+    const interactionResponse = new InteractionResponse(INTERACTION_CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
+    const data = interactionResponse.initMessageData();
+    const interactionData = interaction.data;
+    if (!interactionData || !interactionData.target_id || !interactionData.resolved || !interactionData.resolved.messages) {
+        return ephemeralError(interactionResponse, mockText('Error: 🐛'));
+    }
     const guildId = interaction.guild_id ? interaction.guild_id : '@me';
     const channelId = interaction.channel_id;
-    const messageId = interaction.data.target_id;
-    const message = interaction.data.resolved.messages[messageId];
-    const messageText = message.content;
+    const messageId = interactionData.target_id;
+    const message = interactionData.resolved.messages[messageId];
+    const messageText = message?.content;
     const messageUrl = `https://discord.com/channels/${guildId}/${channelId}/${messageId}`;
-    if (messageText.length < 2) {
+    if (!messageText || messageText.length < 2) {
         return ephemeralError(interactionResponse, mockText('Error: The selected message is too short to mock.'));
     }
 
     const embed = new Embed();
     embed.setDescription(mockText(messageText));
     embed.thumbnail?.setUrl('https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/assets/spongebobmock.png');
-    interactionResponse.data?.addEmbed(embed);
+    data.addEmbed(embed);
 
     const actionRow = new ActionRow();
     const button = new ButtonLink(messageUrl);
     button.setLabel('Jump to original message');
     actionRow.addComponent(button);
-    interactionResponse.data?.addComponent(actionRow);
+    data.addComponent(actionRow);
 
     return interactionResponse;
 }

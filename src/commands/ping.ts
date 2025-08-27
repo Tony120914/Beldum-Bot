@@ -2,7 +2,8 @@ import { ApplicationCommand } from '../templates/discord/ApplicationCommand.js'
 import { Command } from '../templates/app/Command.js';
 import { APPLICATION_COMMAND_TYPE, INTERACTION_CALLBACK_TYPE } from '../templates/discord/Enums.js';
 import { Embed } from '../templates/discord/Embed.js';
-import { InteractionResponse, MessageData } from '../templates/discord/InteractionResponse.js'
+import { InteractionResponse } from '../templates/discord/InteractionResponse.js'
+import type { Interaction } from '../templates/discord/InteractionReceive.js';
 
 const applicationCommand = new ApplicationCommand(
     'ping',
@@ -10,7 +11,7 @@ const applicationCommand = new ApplicationCommand(
     APPLICATION_COMMAND_TYPE.CHAT_INPUT
 );
 
-const execute = async function(interaction: any, env: any, args: string[]) {
+const execute = async function(interaction: Interaction, env: Env, args: string[]) {
     const start = Date.now();
     await fetch(env.INTERACTIONS_ENDPOINT, {
         headers: {
@@ -29,8 +30,9 @@ const execute = async function(interaction: any, env: any, args: string[]) {
     embed.setTitle('Ping');
     embed.setDescription(`${emoji} ${ping} ms`);
     
-    const interactionResponse = new InteractionResponse(INTERACTION_CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE, new MessageData());
-    interactionResponse.data?.addEmbed(embed);
+    const interactionResponse = new InteractionResponse(INTERACTION_CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
+    const data = interactionResponse.initMessageData();
+    data.addEmbed(embed);
 
     return interactionResponse;
 }

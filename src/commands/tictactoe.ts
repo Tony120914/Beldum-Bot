@@ -1,13 +1,14 @@
 import { ApplicationCommand } from '../templates/discord/ApplicationCommand.js'
 import { Command } from '../templates/app/Command.js';
-import { APPLICATION_COMMAND_TYPE, BUTTON_STYLE, INTERACTION_RESPONSE_FLAGS, INTERACTION_CALLBACK_TYPE, INTERACTION_TYPE } from '../templates/discord/Enums.js';
+import { APPLICATION_COMMAND_TYPE, BUTTON_STYLE, INTERACTION_CALLBACK_TYPE, INTERACTION_TYPE } from '../templates/discord/Enums.js';
 import { Embed } from '../templates/discord/Embed.js';
-import { InteractionResponse, MessageData } from '../templates/discord/InteractionResponse.js'
+import { InteractionResponse } from '../templates/discord/InteractionResponse.js'
 import { getRandomInt } from '../handlers/Utils.js';
 import { ActionRow, ButtonNonLink, UserSelect } from '../templates/discord/MessageComponents.js';
 import { buildUser } from '../handlers/MessageHandler.js';
 import { isOriginalUserInvoked } from '../handlers/InteractionHandler.js';
 import { ephemeralError } from '../handlers/ErrorHandler.js';
+import type { Interaction } from '../templates/discord/InteractionReceive.js';
 
 const applicationCommand = new ApplicationCommand(
     'tictactoe',
@@ -15,75 +16,78 @@ const applicationCommand = new ApplicationCommand(
     APPLICATION_COMMAND_TYPE.CHAT_INPUT
 );
 
-const execute = async function(interaction: any, env: any, args: string[]) {
-    const interactionResponse = new InteractionResponse(INTERACTION_CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE, new MessageData());
+const execute = async function(interaction: Interaction, env: Env, args: string[]) {
+    const interactionResponse = new InteractionResponse(INTERACTION_CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
+    const data = interactionResponse.initMessageData();
     if (interaction.type == INTERACTION_TYPE.APPLICATION_COMMAND) {
         const actionRow = new ActionRow();
         const userSelect = new UserSelect(COMPONENT.USER_SELECT);
         userSelect.setPlaceholder('Select a user to play tic-tac-toe with');
         actionRow.addComponent(userSelect);
-        interactionResponse.data?.addComponent(actionRow);
+        data.addComponent(actionRow);
     }
     else if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
-        const originalUserId = interaction.message.interaction_metadata.user.id;
-        const invokingUserId = interaction.member?.user?.id ? interaction.member.user.id : interaction.user.id;
+        const originalUserId = interaction.message?.interaction_metadata?.user.id;
+        const invokingUserId = interaction.member?.user?.id ? interaction.member.user.id : interaction.user?.id;
+        if (!originalUserId || !invokingUserId) { return ephemeralError(interactionResponse, 'Error: user id not found.'); }
+        if (!interaction.data?.values) { return ephemeralError(interactionResponse, 'Error: 🐛'); }
         let selectedUserId: string;
         const botId = interaction.application_id;
         let currentPlayerId: string;
         let gameState: GAME_STATE;
-        const data = new GameData();
-        if (interaction.data.custom_id == COMPONENT.USER_SELECT) {
+        const gameData = new GameData();
+        if (interaction.data?.custom_id == COMPONENT.USER_SELECT) {
             if (!isOriginalUserInvoked(interaction)) {
                 return ephemeralError(interactionResponse, 'Error: You are not the original user who triggered the interaction. Please invoke a new slash command.');
             }
             // Initialize Tic-Tac-Toe game
-            selectedUserId = interaction.data.values[0];
+            selectedUserId = interaction.data.values[0] as string;
             currentPlayerId = chooseFirstPlayer(originalUserId, selectedUserId, botId);
-            data.setTurn(currentPlayerId == originalUserId ? TURN.ORIGINAL_USER : TURN.SELECTED_USER);
-            data.setSelectedId(selectedUserId);
+            gameData.setTurn(currentPlayerId == originalUserId ? TURN.ORIGINAL_USER : TURN.SELECTED_USER);
+            gameData.setSelectedId(selectedUserId);
             if (selectedUserId != botId) {
                 // Player vs player initialization
-                data.setGrid(Array(GRID_SIZE).fill(SYMBOL.VACANT));
-                data.setSymbol(SYMBOL.X);
+                gameData.setGrid(Array(GRID_SIZE).fill(SYMBOL.VACANT));
+                gameData.setSymbol(SYMBOL.X);
             }
             else {
                 // Player vs bot initialization
                 const startingGrid = Array(GRID_SIZE).fill(SYMBOL.VACANT);
                 const indexesOfInterest = [0, GRID_WIDTH-1, GRID_SIZE-GRID_WIDTH, GRID_SIZE-1, GRID_CENTER]; // 4 Corners and 1 center
                 startingGrid[indexesOfInterest[getRandomInt(0, 4)] || 0] = SYMBOL.X;
-                data.setGrid(startingGrid); // Bot will always start in a corner or center;
-                data.setSymbol(SYMBOL.O);
+                gameData.setGrid(startingGrid); // Bot will always start in a corner or center;
+                gameData.setSymbol(SYMBOL.O);
             }
             gameState = GAME_STATE.ONGOING;
         }
         else {
             // Update Tic-Tac-Toe game after a button press
-            if (!data || !data.selectedId || !data.symbol || !data.buttonId) {
+            if (!gameData || !gameData.selectedId || !gameData.symbol || !gameData.buttonId) {
                 return ephemeralError(interactionResponse, 'Error: Data error, please try again later.');
             }
-            Object.assign(data, JSON.parse(interaction.data.custom_id));
-            selectedUserId = data.selectedId;
-            const prevGrid = data.getGrid();
-            data.setGrid(prevGrid.slice(0, data.buttonId)
-                .concat([data.symbol])
-                .concat(prevGrid.slice(data.buttonId + 1, prevGrid.length))); // Update grid based on button pressed from previous interaction
-            currentPlayerId = data.turn == TURN.ORIGINAL_USER ? originalUserId : selectedUserId;
+            Object.assign(gameData, JSON.parse(interaction.data.custom_id));
+            selectedUserId = gameData.selectedId;
+            const prevGrid = gameData.getGrid();
+            gameData.setGrid(prevGrid.slice(0, gameData.buttonId)
+                .concat([gameData.symbol])
+                .concat(prevGrid.slice(gameData.buttonId + 1, prevGrid.length))); // Update grid based on button pressed from previous interaction
+            currentPlayerId = gameData.turn == TURN.ORIGINAL_USER ? originalUserId : selectedUserId;
             if (invokingUserId != currentPlayerId) {
                 return ephemeralError(interactionResponse, 'Error: It is either not your turn yet, or you are not involved in this match.');
             }
             if (selectedUserId != botId) {
                 // Player vs player update
-                gameState = evaluateTicTacToe(data);
-                data.setSymbol(data.symbol == SYMBOL.X ? SYMBOL.O : SYMBOL.X);
-                data.setTurn(data.turn == TURN.ORIGINAL_USER ? TURN.SELECTED_USER : TURN.ORIGINAL_USER);
-                currentPlayerId = data.turn == TURN.ORIGINAL_USER ? originalUserId : selectedUserId;
+                gameState = evaluateTicTacToe(gameData);
+                gameData.setSymbol(gameData.symbol == SYMBOL.X ? SYMBOL.O : SYMBOL.X);
+                gameData.setTurn(gameData.turn == TURN.ORIGINAL_USER ? TURN.SELECTED_USER : TURN.ORIGINAL_USER);
+                currentPlayerId = gameData.turn == TURN.ORIGINAL_USER ? originalUserId : selectedUserId;
             }
             else {
                 // Player vs bot update
-                data.setSymbol(SYMBOL.X);
-                data.setGrid(getBestPosition(data));
-                gameState = evaluateTicTacToe(data);
-                data.setSymbol(SYMBOL.O);
+                gameData.setSymbol(SYMBOL.X);
+                gameData.setGrid(getBestPosition(gameData));
+                gameState = evaluateTicTacToe(gameData);
+                gameData.setSymbol(SYMBOL.O);
                 currentPlayerId = originalUserId;
             }
         }
@@ -101,30 +105,30 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             embed.addField('Draw', 'It\'s a draw :yawning_face:');
         }
         else if (gameState == GAME_STATE.ONGOING) {
-            if (!data || !data.symbol) {
+            if (!gameData || !gameData.symbol) {
                 console.error(`Tic-Tac-Toe: undefined symbol.`)
                 return ephemeralError(interactionResponse, 'Error: The dev messed up ... 🐛');
             }
-            embed.addField('Instructions', `${buildUser(currentPlayerId)}'s turn. Your symbol is ${SYMBOL_TO_EMOJI[data.symbol]}`);
+            embed.addField('Instructions', `${buildUser(currentPlayerId)}'s turn. Your symbol is ${SYMBOL_TO_EMOJI[gameData.symbol]}`);
         }
-        interactionResponse.data?.addEmbed(embed);
+        data.addEmbed(embed);
 
         for (let i = 0; i < GRID_SIZE; i+=GRID_WIDTH) {
             const actionRow = new ActionRow();
             for (let j = i; j < i + GRID_WIDTH; j++) {
-                data.setButtonId(j);
-                const button = new ButtonNonLink(JSON.stringify(data), BUTTON_STYLE.PRIMARY);
-                const symbol = data.getGrid()[j];
-                if (!data || !symbol) {
+                gameData.setButtonId(j);
+                const button = new ButtonNonLink(JSON.stringify(gameData), BUTTON_STYLE.PRIMARY);
+                const symbol = gameData.getGrid()[j];
+                if (!gameData || !symbol) {
                     console.error(`Tic-Tac-Toe: tried to find symbol outside of grid range.`)
                     return ephemeralError(interactionResponse, 'Error: The dev messed up ... 🐛');
                 }
                 button.setEmoji(undefined, SYMBOL_TO_EMOJI[symbol]);
-                if (data.getGrid()[j] == SYMBOL.X) {
+                if (gameData.getGrid()[j] == SYMBOL.X) {
                     button.setStyle(BUTTON_STYLE.SUCCESS);
                     button.setDisabled(true);
                 }
-                else if (data.getGrid()[j] == SYMBOL.O) {
+                else if (gameData.getGrid()[j] == SYMBOL.O) {
                     button.setStyle(BUTTON_STYLE.DANGER);
                     button.setDisabled(true);
                 }
@@ -134,7 +138,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 }
                 actionRow.addComponent(button);
             }
-            interactionResponse.data?.addComponent(actionRow);
+            data.addComponent(actionRow);
         }
     }
     return interactionResponse;

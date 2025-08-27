@@ -1,5 +1,5 @@
 import { Emoji } from "./EmojiResources.js"
-import { DEFAULT_MESSAGE_NOTIFICATION_LEVEL, EXPLICIT_CONTENT_FILTER_LEVEL, GUILD_FEATURE, GUILD_MEMBER_FLAGS, MFA_LEVEL, NSFW_LEVEL, PREMIUM_TIER, SYSTEM_CHANNEL_FLAGS, VERIFICATION_LEVEL } from "./Enums.js"
+import { DEFAULT_MESSAGE_NOTIFICATION_LEVEL, EXPLICIT_CONTENT_FILTER_LEVEL, GUILD_FEATURE, GUILD_MEMBER_FLAGS, MFA_LEVEL, NSFW_LEVEL, PREMIUM_TIER, SYSTEM_CHANNEL_FLAGS, VERIFICATION_LEVEL } from "../Enums.js"
 import type { Role } from "./PermissionsResources.js"
 import type { Sticker } from "./StickerResources.js"
 import type { User } from "./UserResources.js"

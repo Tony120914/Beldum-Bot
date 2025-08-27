@@ -1,4 +1,4 @@
-import { STICKER_FORMAT_TYPE, STICKER_TYPE } from "./Enums.js"
+import { STICKER_FORMAT_TYPE, STICKER_TYPE } from "../Enums.js"
 import type { User } from "./UserResources.js"
 
 /**

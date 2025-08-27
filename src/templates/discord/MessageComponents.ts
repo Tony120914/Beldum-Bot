@@ -1,13 +1,13 @@
 import { BUTTON_STYLE, CHANNEL_TYPE, DEFAULT_VALUE_TYPE, MESSAGE_COMPONENT_TYPE, TEXT_INPUT_STYLE } from "./Enums.js";
-import { Emoji } from "./EmojiResources.js"
+import { Emoji } from "./resources/EmojiResources.js";
 
 /**
  * Parent structure for all 8 Message Components.
  * Belongs to Interaction Response's data.
  * https://discord.com/developers/docs/interactions/message-components
  */
-export abstract class MessageComponent {
-    abstract type: MESSAGE_COMPONENT_TYPE
+export interface MessageComponent {
+    type: MESSAGE_COMPONENT_TYPE
 }
 
 const ACTION_ROW_BUTTON_LIMIT = 5;
@@ -16,7 +16,7 @@ const ACTION_ROW_SELECT_MENU_LIMIT = 1;
  * Non-interactive container component for other types of components.
  * https://discord.com/developers/docs/interactions/message-components#action-rows
  */
-export class ActionRow extends MessageComponent {
+export class ActionRow implements MessageComponent {
     type: MESSAGE_COMPONENT_TYPE = MESSAGE_COMPONENT_TYPE.ACTION_ROW;
     components: MessageComponent[] = [];
 
@@ -87,7 +87,7 @@ const BUTTON_CUSTOM_ID_LIMIT = 100;
  * Parent structure for all 5 types of interactive button components.
  * https://discord.com/developers/docs/interactions/message-components#buttons
  */
-abstract class Button extends MessageComponent {
+abstract class Button implements MessageComponent {
     type: MESSAGE_COMPONENT_TYPE = MESSAGE_COMPONENT_TYPE.BUTTON;
     id?: number
     abstract style: BUTTON_STYLE
@@ -175,7 +175,7 @@ const SELECT_MENU_MAX_VALUES_LIMIT = 25;
  * Parent structure for all 5 select menu components.
  * https://discord.com/developers/docs/interactions/message-components#select-menus
  */
-abstract class SelectMenu extends MessageComponent {
+abstract class SelectMenu implements MessageComponent {
     abstract type: MESSAGE_COMPONENT_TYPE
     custom_id: string
     placeholder?: string
@@ -185,7 +185,6 @@ abstract class SelectMenu extends MessageComponent {
     disabled?: boolean = false;
 
     constructor(custom_id: string) {
-        super();
         if (custom_id.length >= SELECT_MENU_CUSTOM_ID_LIMIT) {
             console.error(
                 `Attempted to exceed limit of ${SELECT_MENU_CUSTOM_ID_LIMIT} characters in select menu custom id.\n` +
@@ -356,7 +355,7 @@ const TEXT_INPUT_PLACEHOLDER_LIMIT = 100;
  * Interactive component that render in modals.
  * https://discord.com/developers/docs/interactions/message-components#text-inputs
  */
-export class TextInput extends MessageComponent {
+export class TextInput implements MessageComponent {
     type: MESSAGE_COMPONENT_TYPE = MESSAGE_COMPONENT_TYPE.TEXT_INPUT;
     custom_id: string
     style: TEXT_INPUT_STYLE
@@ -368,7 +367,6 @@ export class TextInput extends MessageComponent {
     placeholder?: string
     
     constructor(custom_id: string, style: TEXT_INPUT_STYLE, label: string) {
-        super();
         if (custom_id.length >= TEXT_INPUT_CUSTOM_ID_LIMIT) {
             console.error(
                 `Attempted to exceed limit of ${TEXT_INPUT_CUSTOM_ID_LIMIT} characters in text input custom id.\n` +

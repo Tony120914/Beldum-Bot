@@ -1,10 +1,3 @@
-import {
-    InteractionResponseType,
-    InteractionResponseFlags,
-    MessageComponentTypes,
-    ButtonStyleTypes,
-    ChannelTypes,
-} from 'discord-interactions';
 
 /**
  * Application Command Types
@@ -64,19 +57,19 @@ export enum INTERACTION_DATA {
  */
 export enum INTERACTION_CALLBACK_TYPE {
     /** ACK a ping */
-    PONG = InteractionResponseType.PONG,
+    PONG = 1,
     /** Simple message response */
-    CHANNEL_MESSAGE_WITH_SOURCE = InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+    CHANNEL_MESSAGE_WITH_SOURCE = 4,
     /** ACK an interaction and edit later. The user sees a loading state. */
-    DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE = InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
+    DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE = 5,
     /** ACK an interaction and edit later. The user does NOT see a loading state. COMPONENTS ONLY. */
-    DEFERRED_UPDATE_MESSAGE = InteractionResponseType.DEFERRED_UPDATE_MESSAGE,
+    DEFERRED_UPDATE_MESSAGE = 6,
     /** Edit the message the component was attached to. COMPONENTS ONLY. */
-    UPDATE_MESSAGE = InteractionResponseType.UPDATE_MESSAGE,
+    UPDATE_MESSAGE = 7,
     /** Response to an autocomplete interaction with suggested choices. */
-    APPLICATION_COMMAND_AUTOCOMPLETE_RESULT = InteractionResponseType.APPLICATION_COMMAND_AUTOCOMPLETE_RESULT,
+    APPLICATION_COMMAND_AUTOCOMPLETE_RESULT = 8,
     /** Response to a popup modal. NOT available for MODAL_SUBMIT and PING interactions. */
-    MODAL = InteractionResponseType.MODAL,
+    MODAL = 9,
     /** Response to an upgrade button. MONETIZED APPS ONLY. */
     PREMIUM_REQUIRED = 10,
 }
@@ -99,7 +92,7 @@ export enum INTERACTION_RESPONSE_FLAGS {
     /** Do not include any embeds */
     SUPPRESS_EMBEDS = 1 << 2,
     /** Response only visible to user to invoked the interaction. */
-    EPHEMERAL = InteractionResponseFlags.EPHEMERAL,
+    EPHEMERAL = 64,
 }
 
 /**
@@ -107,14 +100,14 @@ export enum INTERACTION_RESPONSE_FLAGS {
  * https://discord.com/developers/docs/interactions/message-components#component-object-component-types
  */
 export enum MESSAGE_COMPONENT_TYPE {
-    ACTION_ROW = MessageComponentTypes.ACTION_ROW,
-    BUTTON = MessageComponentTypes.BUTTON,
-    STRING_SELECT = MessageComponentTypes.STRING_SELECT,
-    TEXT_INPUT = MessageComponentTypes.INPUT_TEXT,
-    USER_SELECT = MessageComponentTypes.USER_SELECT,
-    ROLE_SELECT = MessageComponentTypes.ROLE_SELECT,
-    MENTIONABLE_SELECT = MessageComponentTypes.MENTIONABLE_SELECT,
-    CHANNEL_SELECT = MessageComponentTypes.CHANNEL_SELECT,
+    ACTION_ROW = 1,
+    BUTTON = 2,
+    STRING_SELECT = 3,
+    TEXT_INPUT = 4,
+    USER_SELECT = 5,
+    ROLE_SELECT = 6,
+    MENTIONABLE_SELECT = 7,
+    CHANNEL_SELECT = 8,
 }
 
 /**
@@ -122,11 +115,11 @@ export enum MESSAGE_COMPONENT_TYPE {
  * https://discord.com/developers/docs/interactions/message-components#button-object-button-styles
  */
 export enum BUTTON_STYLE {
-    PRIMARY = ButtonStyleTypes.PRIMARY,
-    SECONDARY = ButtonStyleTypes.SECONDARY,
-    SUCCESS = ButtonStyleTypes.SUCCESS,
-    DANGER = ButtonStyleTypes.DANGER,
-    LINK = ButtonStyleTypes.LINK,
+    PRIMARY = 1,
+    SECONDARY = 2,
+    SUCCESS = 3,
+    DANGER = 4,
+    LINK = 5,
 }
 
 /**
@@ -144,12 +137,12 @@ export enum DEFAULT_VALUE_TYPE {
  * https://discord.com/developers/docs/resources/channel#channel-object-channel-types
  */
 export enum CHANNEL_TYPE {
-    GUILD_TEXT = ChannelTypes.GUILD_TEXT,
-    DM = ChannelTypes.DM,
-    GUILD_VOICE = ChannelTypes.GUILD_VOICE,
-    GROUP_DM = ChannelTypes.GROUP_DM,
-    GUILD_CATEGORY = ChannelTypes.GUILD_CATEGORY,
-    GUILD_ANNOUNCEMENT = ChannelTypes.GUILD_ANNOUNCEMENT,
+    GUILD_TEXT = 0,
+    DM = 1,
+    GUILD_VOICE = 2,
+    GROUP_DM = 3,
+    GUILD_CATEGORY = 4,
+    GUILD_ANNOUNCEMENT = 5,
     ANNOUNCEMENT_THREAD = 10,
     PUBLIC_THREAD = 11,
     PRIVATE_THREAD = 12,
@@ -431,4 +424,68 @@ export enum INTERACTION_CONTEXT_TYPE {
     GUILD = 0,
     BOT_DM = 1,
     PRIVATE_CHANNEL = 2
+}
+
+/**
+ * Message Types
+ * https://discord.com/developers/docs/resources/message#message-object-message-types
+ */
+export enum MESSAGE_TYPES {
+    DEFAULT = 0,
+    RECIPIENT_ADD = 1,
+    RECIPIENT_REMOVE = 2,
+    CALL = 3,
+    CHANNEL_NAME_CHANGE = 4,
+    CHANNEL_ICON_CHANGE = 5,
+    CHANNEL_PINNED_MESSAGE = 6,
+    USER_JOIN = 7,
+    GUILD_BOOST = 8,
+    GUILD_BOOST_TIER_1 = 9,
+    GUILD_BOOST_TIER_2 = 10,
+    GUILD_BOOST_TIER_3 = 11,
+    CHANNEL_FOLLOW_ADD = 12,
+    GUILD_DISCOVERY_DISQUALIFIED = 14,
+    GUILD_DISCOVERY_REQUALIFIED = 15,
+    GUILD_DISCOVERY_GRACE_PERIOD_INITIAL_WARNING = 16,
+    GUILD_DISCOVERY_GRACE_PERIOD_FINAL_WARNING = 17,
+    THREAD_CREATED = 18,
+    REPLY = 19,
+    CHAT_INPUT_COMMAND = 20,
+    THREAD_STARTER_MESSAGE = 21,
+    GUILD_INVITE_REMINDER = 22,
+    CONTEXT_MENU_COMMAND = 23,
+    AUTO_MODERATION_ACTION = 24,
+    ROLE_SUBSCRIPTION_PURCHASE = 25,
+    INTERACTION_PREMIUM_UPSELL = 26,
+    STAGE_START = 27,
+    STAGE_END = 28,
+    STAGE_SPEAKER = 29,
+    STAGE_TOPIC = 31,
+    GUILD_APPLICATION_PREMIUM_SUBSCRIPTION = 32,
+    GUILD_INCIDENT_ALERT_MODE_ENABLED = 36,
+    GUILD_INCIDENT_ALERT_MODE_DISABLED = 37,
+    GUILD_INCIDENT_REPORT_RAID = 38,
+    GUILD_INCIDENT_REPORT_FALSE_ALARM = 39,
+    PURCHASE_NOTIFICATION = 44,
+    POLL_RESULT = 46,
+}
+
+/**
+ * Message Flags
+ * https://discord.com/developers/docs/resources/message#message-object-message-flags
+ */
+export enum MESSAGE_FLAGS {
+    CROSSPOSTED = 1 << 0,
+    IS_CROSSPOST = 1 << 1,
+    SUPPRESS_EMBEDS = 1 << 2,
+    SOURCE_MESSAGE_DELETED = 1 << 3,
+    URGENT = 1 << 4,
+    HAS_THREAD = 1 << 5,
+    EPHEMERAL = 1 << 6,
+    LOADING = 1 << 7,
+    FAILED_TO_MENTION_SOME_ROLES_IN_THREAD = 1 << 8,
+    SUPPRESS_NOTIFICATIONS = 1 << 12,
+    IS_VOICE_MESSAGE = 1 << 13,
+    HAS_SNAPSHOT = 1 << 14,
+    IS_COMPONENTS_V2 = 1 << 15,
 }

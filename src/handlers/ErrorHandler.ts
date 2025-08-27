@@ -18,10 +18,11 @@ export async function getFetchErrorText(failedResponse: Response) {
 /**
  * Wrapper for errors that warrant a EPHEMERAL response
  */
-export async function ephemeralError(interactionResponse: InteractionResponse, errorText: string, error?: any) {
+export async function ephemeralError(interactionResponse: InteractionResponse, errorText: string, error?: unknown) {
     if (error) { console.error(error); }
     interactionResponse.setType(INTERACTION_CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
-    interactionResponse.data?.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
-    interactionResponse.data?.setContent(`\`${errorText}\``);
+    const data = interactionResponse.initMessageData();
+    data.setFlags(INTERACTION_RESPONSE_FLAGS.EPHEMERAL);
+    data.setContent(`\`${errorText}\``);
     return interactionResponse;
 }

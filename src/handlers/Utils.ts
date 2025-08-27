@@ -14,7 +14,7 @@ export function getRandomInt(min: number, max: number): number {
  * Build a URL
  * {baseUrl}/{path[0]}/{path[1]}/.../{path[n]}?{query[0]}&{query[1]}&...&{query[n]}
  */
-export function buildUrl(baseUrl: string, path: string[], query: string[]) {
+export function buildUrl(baseUrl: string, path: string[], query: string[]): string {
     let url = baseUrl.replace(/\/$/g, '');
     for (const segment of path) {
         url += `/${segment.replace(/\//g, '')}`;
@@ -29,7 +29,7 @@ export function buildUrl(baseUrl: string, path: string[], query: string[]) {
 /**
  * Returns the string ".<formatType>" of a STICKER_FORMAT_TYPE
  */
-export function formatTypeToString(formatType: STICKER_FORMAT_TYPE) {
+export function formatTypeToString(formatType: STICKER_FORMAT_TYPE): IMAGE_FORMAT {
     switch(formatType) {
         case STICKER_FORMAT_TYPE.PNG: {
             return IMAGE_FORMAT.PNG;

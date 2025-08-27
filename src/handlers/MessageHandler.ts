@@ -1,4 +1,4 @@
-import { Emoji } from "../templates/discord/EmojiResources.js";
+import { Emoji } from "../templates/discord/resources/EmojiResources.js";
 import { IMAGE_FORMAT, IMAGE_SIZE } from "../templates/discord/Enums.js";
 import { buildUrl } from "./Utils.js";
 
@@ -36,12 +36,12 @@ export function buildDiscordImageUrl(path: string[], format: IMAGE_FORMAT, size:
  * Parse Emoji format
  * https://discord.com/developers/docs/reference#message-formatting
  */
-export function parseEmoji(format?: string): any {
-    if (!format) { return; }
+export function parseEmoji(format?: string): Emoji {
+    if (!format) { throw new Error('empty input'); }
     const animated = format.match(/<a:/);
     const name = format.match(/(?<=\:)(\w*)(?=\:)/);
     const id = format.match(/(?<=\:)(\d*)(?=\>)/);
-    if (!id || !name) { return; }
+    if (!id || !name) { throw new Error('invalid emoji format') }
     const emoji = new Emoji(id[0], name[0]);
     emoji.setAnimated(animated ? true : false);
     return emoji;

@@ -1,12 +1,13 @@
 import { ApplicationCommand } from '../templates/discord/ApplicationCommand.js'
 import { Command } from '../templates/app/Command.js';
-import { APPLICATION_COMMAND_TYPE, BUTTON_STYLE, INTERACTION_RESPONSE_FLAGS, INTERACTION_CALLBACK_TYPE, INTERACTION_TYPE } from '../templates/discord/Enums.js';
+import { APPLICATION_COMMAND_TYPE, BUTTON_STYLE, INTERACTION_CALLBACK_TYPE, INTERACTION_TYPE } from '../templates/discord/Enums.js';
 import { Embed } from '../templates/discord/Embed.js';
-import { InteractionResponse, MessageData } from '../templates/discord/InteractionResponse.js'
+import { InteractionResponse } from '../templates/discord/InteractionResponse.js'
 import { getRandomInt } from '../handlers/Utils.js';
 import { ActionRow, ButtonNonLink } from '../templates/discord/MessageComponents.js';
 import { isOriginalUserInvoked } from '../handlers/InteractionHandler.js';
 import { ephemeralError } from '../handlers/ErrorHandler.js';
+import type { Interaction } from '../templates/discord/InteractionReceive.js';
 
 const applicationCommand = new ApplicationCommand(
     'rps',
@@ -14,15 +15,16 @@ const applicationCommand = new ApplicationCommand(
     APPLICATION_COMMAND_TYPE.CHAT_INPUT
 );
 
-const execute = async function(interaction: any, env: any, args: string[]) {
-    const interactionResponse = new InteractionResponse(INTERACTION_CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE, new MessageData());
+const execute = async function(interaction: Interaction, env: Env, args: string[]) {
+    const interactionResponse = new InteractionResponse(INTERACTION_CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
+    const data = interactionResponse.initMessageData();
 
     if (interaction.type == INTERACTION_TYPE.MESSAGE_COMPONENT) {
         if (!isOriginalUserInvoked(interaction)) {
             return ephemeralError(interactionResponse, 'Error: You are not the original user who triggered the interaction. Please invoke a new slash command.');
         }
         interactionResponse.setType(INTERACTION_CALLBACK_TYPE.UPDATE_MESSAGE);
-        const userChoice: RPS = interaction.data.custom_id;
+        const userChoice = <RPS>interaction.data?.custom_id;
         const botChoice = [RPS.ROCK, RPS.PAPER, RPS.SCISSORS][getRandomInt(0, 2)] || RPS.PAPER;
         const result = evaluateRps(userChoice, botChoice);
 
@@ -31,7 +33,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         embed.addField('You chose', RPS_TO_EMOJI[userChoice], true);
         embed.addField('Bot chose', RPS_TO_EMOJI[botChoice], true);
         embed.addField('Result', result);
-        interactionResponse.data?.addEmbed(embed);
+        data.addEmbed(embed);
     }
     
     const buttonRock = new ButtonNonLink(RPS.ROCK, BUTTON_STYLE.DANGER);
@@ -47,7 +49,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
     actionRow.addComponent(buttonRock);
     actionRow.addComponent(buttonPaper);
     actionRow.addComponent(buttonScissors);
-    interactionResponse.data?.addComponent(actionRow);
+    data.addComponent(actionRow);
 
     return interactionResponse;
 }

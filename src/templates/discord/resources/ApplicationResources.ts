@@ -1,4 +1,4 @@
-import { APPLICATION_FLAGS } from "./Enums.js"
+import { APPLICATION_FLAGS } from "../Enums.js"
 import type { Guild } from "./GuildResources.js"
 import type { User } from "./UserResources.js"
 

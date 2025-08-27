@@ -1,4 +1,4 @@
-import { ALLOWED_MENTION_TYPE, ATTACHMENT_FLAGS, CHANNEL_FLAGS, CHANNEL_TYPE } from './Enums.js';
+import { ALLOWED_MENTION_TYPE, ATTACHMENT_FLAGS, CHANNEL_FLAGS, CHANNEL_TYPE } from '../Enums.js';
 import type { User } from './UserResources.js';
 
 /**

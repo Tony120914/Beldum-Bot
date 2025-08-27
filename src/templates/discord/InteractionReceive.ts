@@ -1,12 +1,11 @@
-import type { MessageComponentTypes, StringSelectOption } from "discord-interactions"
-import type { INTERACTION_TYPE, APPLICATION_INTEGRATION_TYPE, INTERACTION_CONTEXT_TYPE, APPLICATION_COMMAND_TYPE } from "./Enums.js"
-import type { Guild, GuildMember } from "./GuildResources.js"
+import type { INTERACTION_TYPE, APPLICATION_INTEGRATION_TYPE, INTERACTION_CONTEXT_TYPE, APPLICATION_COMMAND_TYPE, MESSAGE_COMPONENT_TYPE, APPLICATION_COMMAND_OPTION_TYPE } from "./Enums.js"
+import type { Guild, GuildMember } from "./resources/GuildResources.js"
+import type { Entitlement } from "./resources/EntitlementResources.js"
+import type { User } from "./resources/UserResources.js"
+import type { Role } from "./resources/PermissionsResources.js"
+import type { Attachment, Channel } from "./resources/ChannelResources.js"
+import type { Message } from "./resources/MessageResources.js"
 import type { ModalData } from "./InteractionResponse.js"
-import type { Entitlement } from "./EntitlementResources.js"
-import type { User } from "./UserResources.js"
-import type { Role } from "./PermissionsResources.js"
-import type { Attachment, Channel } from "./ChannelResources.js"
-import type { Message } from "./MessageResources.js"
 
 /**
  * Interaction object structure
@@ -37,17 +36,20 @@ export interface Interaction {
 
 /**
  * Parent Interaction Data Payload interface, includes:
- * Application Commands, Message Components, Application Command Autocomplete, Modal Submit
+ * Application Commands
+ * Message Components
+ * Application Command Autocomplete
+ * Modal Submit
  * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-data
  */
-export interface InteractionDataPayload {
+export interface InteractionDataPayload extends InteractionApplicationCommand, InteractionApplicationCommandAutocomplete, InteractionMessageComponent, InteractionModalSubmit {
 }
 
 /**
  * Interaction received from Application Command object
  * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-application-command-data-structure
  */
-export interface InteractionApplicationCommand extends InteractionDataPayload {
+interface InteractionApplicationCommand {
     id: string
     name: string
     type: APPLICATION_COMMAND_TYPE
@@ -61,26 +63,33 @@ export interface InteractionApplicationCommand extends InteractionDataPayload {
  * Interaction received from Application Command Autocomplete object
  * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-application-command-data-structure
  */
-export interface InteractionApplicationCommandAutocomplete extends InteractionApplicationCommand {
+interface InteractionApplicationCommandAutocomplete {
     // partial of InteractionApplicationCommand
+    id: string
+    name: string
+    type: APPLICATION_COMMAND_TYPE
+    resolved?: Resolved
+    options?: ApplicationCommandInteractionDataOption[]
+    guild_id?: string
+    target_id?: string
 }
 
 /**
  * Interaction received from Message Component object
  * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-message-component-data-structure
  */
-export interface InteractionMessageComponent extends InteractionDataPayload {
+interface InteractionMessageComponent {
     custom_id: string
-    component_type: MessageComponentTypes
-    values?: StringSelectOption[]
+    component_type: MESSAGE_COMPONENT_TYPE
+    values?: string[] // docs say it's an array of select option values???
     resolved?: Resolved
 }
 
 /**
- * Interaction received from Message Component object
+ * Interaction received from Modal Submit object
  * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-modal-submit-data-structure
  */
-export interface InteractionMessageComponent extends InteractionDataPayload {
+interface InteractionModalSubmit {
     custom_id: string
     components: ModalData[]
 }
@@ -102,7 +111,10 @@ export interface Resolved {
  * Application Command Interaction Data Option object
  * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-application-command-interaction-data-option-structure
  */
-export interface ApplicationCommandInteractionDataOption {
-    // TODO when needed
+interface ApplicationCommandInteractionDataOption {
+    name: string
+    type: APPLICATION_COMMAND_OPTION_TYPE
+    value?: string | number | boolean
+    options?: ApplicationCommandInteractionDataOption[]
+    focused?: boolean
 }
-

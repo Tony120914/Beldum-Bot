@@ -1,4 +1,4 @@
-import type { Application } from "../templates/discord/ApplicationResources.js";
+import type { Application } from "../templates/discord/resources/ApplicationResources.js";
 import { getFetchErrorText } from "./ErrorHandler.js";
 import { buildDiscordAPIUrl } from "./MessageHandler.js";
 import { buildUrl } from "./Utils.js";
@@ -6,7 +6,7 @@ import { buildUrl } from "./Utils.js";
 const BASE_URL = 'https://top.gg/api';
 const BOT_ID = '454764425090433034';
 
-export async function postServerCount(env: any) {
+export async function postServerCount(env: Env) {
     // Get server count from Discord API
     const discordHeaders = {
         'Content-Type': 'application/json',
