@@ -62,12 +62,11 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
         }
         else {
             // Update Tic-Tac-Toe game after a button press
-            if (!gameData || !gameData.selectedId || !gameData.symbol || !gameData.buttonId) {
-                console.log(gameData);
-                return ephemeralError(interactionResponse, 'Error: Data error, please try again later.');
-            }
             if (!interaction.data) { return ephemeralError(interactionResponse, 'Error: 🐛2'); }
             Object.assign(gameData, JSON.parse(interaction.data.custom_id));
+            if (gameData === undefined || gameData.selectedId === undefined || gameData.symbol === undefined || gameData.buttonId === undefined) {
+                return ephemeralError(interactionResponse, 'Error: Data error, please try again later.');
+            }
             selectedUserId = gameData.selectedId;
             const prevGrid = gameData.getGrid();
             gameData.setGrid(prevGrid.slice(0, gameData.buttonId)
