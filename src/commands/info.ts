@@ -119,12 +119,12 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
             embed.addBlankField();
             embed.addField('Chat commands', getChatInputCommands().join(' '), true);
             embed.addField('Message commands', getMessageCommands().join(' '), true);
-            embed.footer?.setIconUrl('https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/assets/info-ultra-ball.png');
+            embed.initFooter('https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/assets/info-ultra-ball.png');
             const joinedDiscord = new Date(SnowflakeParser.getTimestamp(application.id));
             embed.addField('Created', joinedDiscord.toString());
             if (application.icon) {
                 const url = buildDiscordImageUrl(['app-icons', application.id, application.icon], IMAGE_FORMAT.PNG, IMAGE_SIZE.XXX_LARGE);
-                embed.thumbnail?.setUrl(url);
+                embed.initThumbnail(url);
             }
             if (application.approximate_guild_count) {
                 embed.initFooter(`Approximately in ${application.approximate_guild_count} servers.`);
@@ -208,7 +208,7 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
             embed.addField('Name', emoji.name, true);
             const created = new Date(SnowflakeParser.getTimestamp(emoji.id));
             embed.addField('Created', created.toString(), true);
-            embed.image?.setUrl(url);
+            embed.initImage(url);
             data.addEmbed(embed);
             break;
         }
@@ -231,7 +231,7 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
                 if (role.icon) {
                     const url = buildDiscordImageUrl(['role-icons', role.id, role.icon], IMAGE_FORMAT.PNG, IMAGE_SIZE.XXX_LARGE);
                     embed.setUrl(url);
-                    embed.image?.setUrl(url);
+                    embed.initImage(url);
                 }
                 data.addEmbed(embed);
             }
@@ -291,21 +291,21 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
                 const format = guild.icon.startsWith('a_') ? IMAGE_FORMAT.GIF : IMAGE_FORMAT.PNG;
                 const url = buildDiscordImageUrl(['icons', guild.id, guild.icon], format, IMAGE_SIZE.XXX_LARGE);
                 const embed = new Embed();
-                embed.image?.setUrl(url);
+                embed.initImage(url);
                 embed.setUrl(sameUrl);
                 data.addEmbed(embed);
             }
             if (guild.splash) {
                 const url = buildDiscordImageUrl(['splashes', guild.id, guild.splash], IMAGE_FORMAT.PNG, IMAGE_SIZE.XXX_LARGE);
                 const embed = new Embed();
-                embed.image?.setUrl(url)
+                embed.initImage(url);
                 embed.setUrl(sameUrl);
                 data.addEmbed(embed);
             }
             if (guild.discovery_splash) {
                 const url = buildDiscordImageUrl(['discovery-splashes', guild.id, guild.discovery_splash], IMAGE_FORMAT.PNG, IMAGE_SIZE.XXX_LARGE);
                 const embed = new Embed();
-                embed.image?.setUrl(url);
+                embed.initImage(url);
                 embed.setUrl(sameUrl);
                 data.addEmbed(embed);
             }
@@ -313,7 +313,7 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
                 const format = guild.banner.startsWith('a_') ? IMAGE_FORMAT.GIF : IMAGE_FORMAT.PNG;
                 const url = buildDiscordImageUrl(['banners', guild.id, guild.banner], format, IMAGE_SIZE.XXX_LARGE);
                 const embed = new Embed();
-                embed.image?.setUrl(url);
+                embed.initImage(url);
                 embed.setUrl(sameUrl);
                 data.addEmbed(embed);
             }
@@ -381,7 +381,7 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
                     const format = guildMember.avatar.startsWith('a_') ? IMAGE_FORMAT.GIF : IMAGE_FORMAT.PNG;
                     const url = buildDiscordImageUrl(['guilds', guildId, 'users', userId, 'avatars', guildMember.avatar], format, IMAGE_SIZE.XXX_LARGE);
                     const embed = new Embed();
-                    embed.image?.setUrl(url);
+                    embed.initImage(url);
                     embed.setUrl(sameUrl);
                     data.addEmbed(embed);
                 }
@@ -389,14 +389,14 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
                     const format = user.avatar.startsWith('a_') ? IMAGE_FORMAT.GIF : IMAGE_FORMAT.PNG;
                     const url = buildDiscordImageUrl(['avatars', userId, user.avatar], format, IMAGE_SIZE.XXX_LARGE);
                     const embed = new Embed();
-                    embed.image?.setUrl(url);
+                    embed.initImage(url);
                     embed.setUrl(sameUrl);
                     data.addEmbed(embed);
                 }
                 if (user.avatar_decoration) {
                     const url = buildDiscordImageUrl(['avatar-decorations', userId, user.avatar_decoration], IMAGE_FORMAT.PNG, IMAGE_SIZE.XXX_LARGE);
                     const embed = new Embed();
-                    embed.image?.setUrl(url);
+                    embed.initImage(url);
                     embed.setUrl(sameUrl);
                     data.addEmbed(embed);
                 }
@@ -404,7 +404,7 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
                     const format = user.banner.startsWith('a_') ? IMAGE_FORMAT.GIF : IMAGE_FORMAT.PNG;
                     const url = buildDiscordImageUrl(['banners', userId, user.banner], format, IMAGE_SIZE.XXX_LARGE);
                     const embed = new Embed();
-                    embed.image?.setUrl(url);
+                    embed.initImage(url);
                     embed.setUrl(sameUrl);
                     data.addEmbed(embed);
                 }

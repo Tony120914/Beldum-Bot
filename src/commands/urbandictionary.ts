@@ -50,7 +50,7 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
     embed.addField(':thumbsdown:', definition.thumbs_down?.toString(), true);
     if (definition.author) { embed.addField('Written by', `[${definition.author}](https://www.urbandictionary.com/author.php?author=${encodeURI(definition.author)})`, true); }
     if (definition.written_on) { embed.initFooter(`Date posted: ${new Date(definition.written_on).toString()}`); }
-    embed.thumbnail?.setUrl('https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/assets/urbandictionary.png');
+    embed.initThumbnail('https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/assets/urbandictionary.png');
     data.addEmbed(embed);
 
     return interactionResponse;

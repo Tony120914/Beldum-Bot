@@ -148,9 +148,9 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
         const dateString = (modalData[1]?.components[0] as TextInput).value;
         const timeString = (modalData[2]?.components[0] as TextInput).value;
         if (!reminder) { return ephemeralError(interactionResponse, 'Error: Invalid reminder text.'); }
-        const date = parseDate(dateString || '');
+        const date = parseDate(dateString);
         if (!date) { return ephemeralError(interactionResponse, 'Error: The date must be in YYYY/MM/DD format.'); }
-        const time = parseTime(timeString || '');
+        const time = parseTime(timeString);
         if (!time) { return ephemeralError(interactionResponse, 'Error: The time must be in HH:MM format.'); }
         let offset: number;
         try {
@@ -230,12 +230,13 @@ enum COMPONENT {
 /**
  * Parse date in YYYY/MM/DD format
  */
-function parseDate(dateString: string) {
+function parseDate(dateString?: string | undefined) {
+    if (!dateString) { return; }
     const year = dateString.match(/^\d{4}(?=\/)/u);
     const month = dateString.match(/(?<=\/)\d{1,2}(?=\/)/u);
     const day = dateString.match(/(?<=\/)\d{1,2}$/u);
     if (year == null || month == null || day == null) {
-        return;
+        return null;
     }
     const date = new Date();
     date.setUTCFullYear(Number(year));
@@ -247,7 +248,8 @@ function parseDate(dateString: string) {
 /**
  * Parse time in HH:MM format
  */
-function parseTime(timeString: string) {
+function parseTime(timeString?: string | undefined) {
+    if (!timeString) { return; }
     const hour = timeString.match(/^\d{1,2}(?=:)/u);
     const minute = timeString.match(/(?<=:)\d{1,2}$/u);
     if (hour == null || minute == null) {

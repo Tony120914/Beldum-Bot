@@ -52,7 +52,7 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
     const embed = new Embed();
     embed.setTitle('Coin Toss');
     embed.setDescription(result);
-    embed.image?.setUrl(imgUrl);
+    embed.initImage(imgUrl);
     history = `${history}${result[0]}`;
     embed.initFooter(`History: ${history}`);
     data.addEmbed(embed);

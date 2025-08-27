@@ -32,7 +32,7 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
 
     const embed = new Embed();
     embed.setDescription(mockText(messageText));
-    embed.thumbnail?.setUrl('https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/assets/spongebobmock.png');
+    embed.initThumbnail('https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/assets/spongebobmock.png');
     data.addEmbed(embed);
 
     const actionRow = new ActionRow();

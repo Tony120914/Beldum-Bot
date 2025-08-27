@@ -36,12 +36,12 @@ export function buildDiscordImageUrl(path: string[], format: IMAGE_FORMAT, size:
  * Parse Emoji format
  * https://discord.com/developers/docs/reference#message-formatting
  */
-export function parseEmoji(format?: string): Emoji {
-    if (!format) { throw new Error('empty input'); }
+export function parseEmoji(format?: string): Emoji | undefined {
+    if (!format) { return; }
     const animated = format.match(/<a:/);
     const name = format.match(/(?<=\:)(\w*)(?=\:)/);
     const id = format.match(/(?<=\:)(\d*)(?=\>)/);
-    if (!id || !name) { throw new Error('invalid emoji format') }
+    if (!id || !name) { return; }
     const emoji = new Emoji(id[0], name[0]);
     emoji.setAnimated(animated ? true : false);
     return emoji;

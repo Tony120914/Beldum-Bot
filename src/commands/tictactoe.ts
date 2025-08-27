@@ -30,7 +30,6 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
         const originalUserId = interaction.message?.interaction_metadata?.user.id;
         const invokingUserId = interaction.member?.user?.id ? interaction.member.user.id : interaction.user?.id;
         if (!originalUserId || !invokingUserId) { return ephemeralError(interactionResponse, 'Error: user id not found.'); }
-        if (!interaction.data?.values) { return ephemeralError(interactionResponse, 'Error: 🐛'); }
         let selectedUserId: string;
         const botId = interaction.application_id;
         let currentPlayerId: string;
@@ -41,6 +40,7 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
                 return ephemeralError(interactionResponse, 'Error: You are not the original user who triggered the interaction. Please invoke a new slash command.');
             }
             // Initialize Tic-Tac-Toe game
+            if (!interaction.data?.values) { return ephemeralError(interactionResponse, 'Error: 🐛1'); }
             selectedUserId = interaction.data.values[0] as string;
             currentPlayerId = chooseFirstPlayer(originalUserId, selectedUserId, botId);
             gameData.setTurn(currentPlayerId == originalUserId ? TURN.ORIGINAL_USER : TURN.SELECTED_USER);
@@ -63,8 +63,10 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
         else {
             // Update Tic-Tac-Toe game after a button press
             if (!gameData || !gameData.selectedId || !gameData.symbol || !gameData.buttonId) {
+                console.log(gameData);
                 return ephemeralError(interactionResponse, 'Error: Data error, please try again later.');
             }
+            if (!interaction.data) { return ephemeralError(interactionResponse, 'Error: 🐛2'); }
             Object.assign(gameData, JSON.parse(interaction.data.custom_id));
             selectedUserId = gameData.selectedId;
             const prevGrid = gameData.getGrid();
@@ -107,7 +109,7 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
         else if (gameState == GAME_STATE.ONGOING) {
             if (!gameData || !gameData.symbol) {
                 console.error(`Tic-Tac-Toe: undefined symbol.`)
-                return ephemeralError(interactionResponse, 'Error: The dev messed up ... 🐛');
+                return ephemeralError(interactionResponse, 'Error: 🐛3');
             }
             embed.addField('Instructions', `${buildUser(currentPlayerId)}'s turn. Your symbol is ${SYMBOL_TO_EMOJI[gameData.symbol]}`);
         }
@@ -121,7 +123,7 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
                 const symbol = gameData.getGrid()[j];
                 if (!gameData || !symbol) {
                     console.error(`Tic-Tac-Toe: tried to find symbol outside of grid range.`)
-                    return ephemeralError(interactionResponse, 'Error: The dev messed up ... 🐛');
+                    return ephemeralError(interactionResponse, 'Error: 🐛4');
                 }
                 button.setEmoji(undefined, SYMBOL_TO_EMOJI[symbol]);
                 if (gameData.getGrid()[j] == SYMBOL.X) {
