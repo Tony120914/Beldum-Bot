@@ -1,15 +1,14 @@
-import { Emoji } from "./EmojiResources"
-import { DEFAULT_MESSAGE_NOTIFICATION_LEVEL, EXPLICIT_CONTENT_FILTER_LEVEL, GUILD_FEATURE, GUILD_MEMBER_FLAGS, MFA_LEVEL, NSFW_LEVEL, PREMIUM_TIER, SYSTEM_CHANNEL_FLAGS, VERIFICATION_LEVEL } from "./Enums"
-import { Role } from "./PermissionsResources"
-import { Resource } from "./Resource"
-import { Sticker } from "./StickerResources"
-import { User } from "./UserResources"
+import { Emoji } from "./EmojiResources.js"
+import { DEFAULT_MESSAGE_NOTIFICATION_LEVEL, EXPLICIT_CONTENT_FILTER_LEVEL, GUILD_FEATURE, GUILD_MEMBER_FLAGS, MFA_LEVEL, NSFW_LEVEL, PREMIUM_TIER, SYSTEM_CHANNEL_FLAGS, VERIFICATION_LEVEL } from "../Enums.js"
+import type { Role } from "./PermissionsResources.js"
+import type { Sticker } from "./StickerResources.js"
+import type { User } from "./UserResources.js"
 
 /**
  * Guild/Server structure
  * https://discord.com/developers/docs/resources/guild#guild-object
  */
-export class Guild extends Resource {
+export interface Guild {
     id: string
     name: string
     icon?: string
@@ -26,9 +25,9 @@ export class Guild extends Resource {
     verification_level: VERIFICATION_LEVEL
     default_message_notifications: DEFAULT_MESSAGE_NOTIFICATION_LEVEL
     explicit_content_filter: EXPLICIT_CONTENT_FILTER_LEVEL
-    roles: Role[] = []
-    emojis: Emoji[] = []
-    features: GUILD_FEATURE[] = []
+    roles: Role[]
+    emojis: Emoji[]
+    features: GUILD_FEATURE[]
     mfa_level: MFA_LEVEL
     application_id?: string
     system_channel_id?: string
@@ -49,44 +48,25 @@ export class Guild extends Resource {
     approximate_presence_count?: number
     welcome_screen?: WelcomeScreen
     nsfw_level: NSFW_LEVEL
-    stickers?: Sticker[] = []
+    stickers?: Sticker[]
     premium_progress_bar_enabled: boolean
     safety_alerts_channel_id?: string
-
-    constructor(id: string, name: string) {
-        super();
-        this.id = id;
-        this.name = name;
-    }
-
-    setIcon(icon: string) { this.icon = icon; }
-    setSplash(splash: string) { this.splash = splash; }
-    setDiscoverySplash(discoverySplash: string) { this.discovery_splash = discoverySplash; }
-    setOwnerId(ownerId: string) { this.owner_id = ownerId; }
-    addRole(role: Role) { this.roles?.push(role); }
-    addEmoji(emoji: Emoji) { this.emojis?.push(emoji); }
-    setDescription(description: string) { this.description = description; }
-    setBanner(banner: string) { this.banner = banner; }
-    setPremiumTier(premiumTier: PREMIUM_TIER) { this.premium_tier = premiumTier; }
-    setPremiumSubCount(count: number) { this.premium_subscription_count = count; }
-    setApproxMemberCount(count: number) { this.approximate_member_count = count; }
-    setApproxPresenceCount(count: number) { this.approximate_presence_count = count; }
 }
 
 /**
  * Welcome Screen Structure
  * https://discord.com/developers/docs/resources/guild#welcome-screen-object
  */
-class WelcomeScreen {
+interface WelcomeScreen {
     description?: string
-    welcome_channels: WelcomeScreenChannel[] = [];
+    welcome_channels: WelcomeScreenChannel[]
 }
 
 /**
  * Welcome Screen Channel Structure
  * https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-channel-structure
  */
-class WelcomeScreenChannel {
+interface WelcomeScreenChannel {
     channel_id: string
     description: string
     emoji_id?: string
@@ -97,22 +77,17 @@ class WelcomeScreenChannel {
  * Guild Member structure
  * https://discord.com/developers/docs/resources/guild#guild-member-object
  */
-export class GuildMember extends Resource {
+export interface GuildMember {
     user?: User
     nick?: string
     avatar?: string
-    roles: string[] = []; // array of role ids
+    roles: string[] // array of role ids
     joined_at: string // ISO8601 timestamp
     premium_since?: string //ISO8601 timestamp
     deaf: boolean
     mute: boolean
-    flags: GUILD_MEMBER_FLAGS = GUILD_MEMBER_FLAGS.DEFAULT;
+    flags: GUILD_MEMBER_FLAGS
     pending?: boolean
     permissions?: string
     communication_disabled_until?: string // ISO8601 timestamp
-
-    constructor() {
-        super();
-    }
-    
 }

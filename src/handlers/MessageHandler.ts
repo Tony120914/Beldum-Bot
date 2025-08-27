@@ -1,6 +1,6 @@
-import { Emoji } from "../templates/discord/EmojiResources";
-import { IMAGE_FORMAT, IMAGE_SIZE } from "../templates/discord/Enums";
-import { buildUrl } from "./Utils";
+import { Emoji } from "../templates/discord/resources/EmojiResources.js";
+import { IMAGE_FORMAT, IMAGE_SIZE } from "../templates/discord/Enums.js";
+import { buildUrl } from "./Utils.js";
 
 const DISCORD_API_BASE_URL = 'https://discord.com/api/v';
 const DISCORD_API_VERSION = '10';
@@ -36,7 +36,8 @@ export function buildDiscordImageUrl(path: string[], format: IMAGE_FORMAT, size:
  * Parse Emoji format
  * https://discord.com/developers/docs/reference#message-formatting
  */
-export function parseEmoji(format: string): any {
+export function parseEmoji(format?: string): Emoji | undefined {
+    if (!format) { return; }
     const animated = format.match(/<a:/);
     const name = format.match(/(?<=\:)(\w*)(?=\:)/);
     const id = format.match(/(?<=\:)(\d*)(?=\>)/);

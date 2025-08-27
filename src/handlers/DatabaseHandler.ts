@@ -1,4 +1,4 @@
-import { UserReminder, User } from "../templates/db/Reminder";
+import { UserReminder, User } from "../templates/db/Reminder.js";
 
 /**
  * Cloudflare D1: serverless SQL DB
@@ -8,7 +8,7 @@ import { UserReminder, User } from "../templates/db/Reminder";
 /**
  * Upsert a row to table User
  */
-export async function upsertUser(env: any, user: User) {
+export async function upsertUser(env: Env, user: User) {
     const result = await env.DB.prepare(
         'INSERT INTO User (userId, utcOffset)\
         VALUES (?1, ?2)\
@@ -23,7 +23,7 @@ export async function upsertUser(env: any, user: User) {
 /**
  * Select from table User to get the timezone offset of a user
  */
-export async function selectUserField(env: any, userId: string, field: string) {
+export async function selectUserField(env: Env, userId: string, field: string) {
     const result = await env.DB.prepare(
         'SELECT *\
         FROM User\
@@ -37,7 +37,7 @@ export async function selectUserField(env: any, userId: string, field: string) {
 /**
  * Insert to table UserReminder
  */
-export async function insertUserReminder(env: any, reminder: UserReminder) {
+export async function insertUserReminder(env: Env, reminder: UserReminder) {
     const result = await env.DB.prepare(
         'INSERT INTO UserReminder (userId, channelId, reminder, reminderDatetime, ttl)\
         VALUES (?1, ?2, ?3, ?4, ?5)'
@@ -50,7 +50,7 @@ export async function insertUserReminder(env: any, reminder: UserReminder) {
 /**
  * Select all rows from table UserReminder that contains all reminders of a user
  */
-export async function selectUserReminderAll(env: any, userId: string) {
+export async function selectUserReminderAll(env: Env, userId: string) {
     const result = await env.DB.prepare(
         'SELECT rowid AS rowId, *\
         FROM UserReminder\
@@ -65,7 +65,7 @@ export async function selectUserReminderAll(env: any, userId: string) {
 /**
  * Select from table UserReminder to get the count of all reminders of a user
  */
-export async function selectUserReminderCount(env: any, userId: string) {
+export async function selectUserReminderCount(env: Env, userId: string) {
     const result = await env.DB.prepare(
         'SELECT COUNT(*) AS reminderCount\
         FROM UserReminder\
@@ -79,7 +79,7 @@ export async function selectUserReminderCount(env: any, userId: string) {
 /**
  * Select all expired reminders from table UserReminder
  */
-export async function selectUserReminderExpired(env: any) {
+export async function selectUserReminderExpired(env: Env) {
     const now = new Date().toISOString();
     const result = await env.DB.prepare(
         'SELECT rowid AS rowId, *\
@@ -95,7 +95,7 @@ export async function selectUserReminderExpired(env: any) {
 /**
  * Decrement from table UserReminder the TTL of a reminder
  */
-export async function decrementUserReminderTTL(env: any, rowId: number) {
+export async function decrementUserReminderTTL(env: Env, rowId: number) {
     const result = await env.DB.prepare(
         'UPDATE UserReminder\
         SET ttl=ttl-1\
@@ -110,7 +110,7 @@ export async function decrementUserReminderTTL(env: any, rowId: number) {
 /**
  * Delete from table UserReminder a reminder
  */
-export async function deleteUserReminder(env: any, rowId: number) {
+export async function deleteUserReminder(env: Env, rowId: number) {
     const result = await env.DB.prepare(
         'DELETE FROM UserReminder\
         WHERE rowId=?1'

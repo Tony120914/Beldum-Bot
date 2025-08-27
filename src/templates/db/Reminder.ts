@@ -17,7 +17,7 @@ const TTL = 3;
  * Structure for UserReminder DB Table
  */
 export class UserReminder {
-    rowId: number // Primary key (auto generated)
+    rowId!: number // Primary key (auto generated)
     userId: string
     channelId: string
     reminder: string

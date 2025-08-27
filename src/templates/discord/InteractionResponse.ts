@@ -1,35 +1,43 @@
-import {
-    INTERACTION_RESPONSE_FLAGS,
-    INTERACTION_RESPONSE_TYPE,
-    MESSAGE_COMPONENT_TYPE,
-} from './Enums';
-import { Embed } from './Embed';
-import { AllowedMentions, Attachment } from './ChannelResources';
-import { MessageComponent } from './MessageComponents';
+import { INTERACTION_RESPONSE_FLAGS, INTERACTION_CALLBACK_TYPE, MESSAGE_COMPONENT_TYPE, INTERACTION_TYPE, INTERACTION_DATA, APPLICATION_INTEGRATION_TYPE, INTERACTION_CONTEXT_TYPE } from './Enums.js';
+import { Embed } from './Embed.js';
+import { AllowedMentions, Attachment, type Channel } from './resources/ChannelResources.js';
+import type { MessageComponent } from './MessageComponents.js';
 
 /**
  * Response to an interaction
  * https://discord.com/developers/docs/interactions/receiving-and-responding#responding-to-an-interaction
  */
 export class InteractionResponse {
-    type: INTERACTION_RESPONSE_TYPE
-    data?: any
+    type: INTERACTION_CALLBACK_TYPE
+    data?: InteractionCallbackData | MessageData | AutocompleteData | ModalData
 
-    constructor(type: INTERACTION_RESPONSE_TYPE, data: CallbackData) {
+    constructor(type: INTERACTION_CALLBACK_TYPE) {
         this.type = type;
-        this.data = data;
     }
 
-    setType(type: INTERACTION_RESPONSE_TYPE) { this.type = type; }
-    setData(data: CallbackData) { this.data = data; }
+    initMessageData(): MessageData {
+        this.data = new MessageData();
+        return this.data as MessageData;
+    }
+    // TODO: when needed
+    // initAutocompleteData(): AutocompleteData {
+    //     this.data = new AutocompleteData();
+    //     return this.data as AutocompleteData;
+    // }
+    initModalData(custom_id: string, title: string): ModalData {
+        this.data = new ModalData(custom_id, title);
+        return this.data as ModalData;
+    }
+
+    setType(type: INTERACTION_CALLBACK_TYPE) { this.type = type; }
+    setData(data: InteractionCallbackData) { this.data = data; }
 }
 
 /**
- * Parent structure for interaction callback data structures.
+ * Parent interface for interaction callback data structures.
  * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-data-structure
  */
-abstract class CallbackData {
-    // Just using this class as a common type (for now...)
+interface InteractionCallbackData {
 }
 
 const MESSAGE_EMBEDS_LIMIT = 10;
@@ -38,7 +46,7 @@ const MESSAGE_ACTION_ROW_LIMIT = 5;
  * Interaction response's data structure for message callbacks
  * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-messages
  */
-export class MessageData extends CallbackData {
+class MessageData implements InteractionCallbackData {
     tts?: boolean
     content?: string
     embeds?: Embed[] = [];
@@ -86,7 +94,8 @@ export class MessageData extends CallbackData {
 /**
  * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-autocomplete
  */
-export class AutocompleteData extends CallbackData {
+class AutocompleteData implements InteractionCallbackData {
+    // TODO: when needed
 }
 
 const MODAL_CUSTOM_ID_LIMIT = 100;
@@ -97,13 +106,12 @@ const MODAL_MAX_COMPONENT_LIMIT = 5;
  * (currently only supports the TEXT_INPUT component.)
  * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-modal
  */
-export class ModalData extends CallbackData {
+export class ModalData implements InteractionCallbackData {
     custom_id: string
     title: string
     components: MessageComponent[] = []
 
     constructor(custom_id: string, title: string) {
-        super();
         if (custom_id.length >= MODAL_CUSTOM_ID_LIMIT) {
             console.error(
                 `Attempted to exceed limit of ${MODAL_CUSTOM_ID_LIMIT} characters in modal custom id.\n` +

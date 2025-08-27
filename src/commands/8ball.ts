@@ -1,9 +1,10 @@
 import { ApplicationCommand, ApplicationCommandOption } from '../templates/discord/ApplicationCommand.js'
 import { Command } from '../templates/app/Command.js';
-import { APPLICATION_COMMAND_OPTION_TYPE, APPLICATION_COMMAND_TYPE, INTERACTION_RESPONSE_TYPE } from '../templates/discord/Enums.js';
+import { APPLICATION_COMMAND_OPTION_TYPE, APPLICATION_COMMAND_TYPE, INTERACTION_CALLBACK_TYPE } from '../templates/discord/Enums.js';
 import { Embed } from '../templates/discord/Embed.js';
-import { InteractionResponse, MessageData } from '../templates/discord/InteractionResponse.js'
+import { InteractionResponse } from '../templates/discord/InteractionResponse.js'
 import { getRandomInt } from '../handlers/Utils.js';
+import type { Interaction } from '../templates/discord/InteractionReceive.js';
 
 const applicationCommand = new ApplicationCommand(
     '8ball',
@@ -19,7 +20,7 @@ const questionInputOption = new ApplicationCommandOption(
 questionInputOption.setRequired(true);
 applicationCommand.addOptions(questionInputOption);
 
-const execute = async function(interaction: any, env: any, args: string[]) {
+const execute = async function(interaction: Interaction, env: Env, args: string[]) {
     const question = args[1];
     const answers = [
         // "Yes" answers
@@ -55,8 +56,9 @@ const execute = async function(interaction: any, env: any, args: string[]) {
     embed.setDescription(`:8ball: ${question}`);
     embed.addField('Answer', answers[randomInt], true);
     
-    const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE, new MessageData());
-    interactionResponse.data?.addEmbed(embed);
+    const interactionResponse = new InteractionResponse(INTERACTION_CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
+    const data = interactionResponse.initMessageData();
+    data.addEmbed(embed);
 
     return interactionResponse;
 }

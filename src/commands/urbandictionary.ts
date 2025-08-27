@@ -1,9 +1,10 @@
 import { ApplicationCommand, ApplicationCommandOption } from '../templates/discord/ApplicationCommand.js'
 import { Command } from '../templates/app/Command.js';
-import { APPLICATION_COMMAND_OPTION_TYPE, APPLICATION_COMMAND_TYPE, INTERACTION_RESPONSE_FLAGS, INTERACTION_RESPONSE_TYPE } from '../templates/discord/Enums.js';
+import { APPLICATION_COMMAND_OPTION_TYPE, APPLICATION_COMMAND_TYPE, INTERACTION_CALLBACK_TYPE } from '../templates/discord/Enums.js';
 import { Embed } from '../templates/discord/Embed.js';
-import { InteractionResponse, MessageData } from '../templates/discord/InteractionResponse.js'
+import { InteractionResponse } from '../templates/discord/InteractionResponse.js'
 import { ephemeralError, getFetchErrorText } from '../handlers/ErrorHandler.js';
+import type { Interaction } from '../templates/discord/InteractionReceive.js';
 
 const applicationCommand = new ApplicationCommand(
     'urbandictionary',
@@ -18,9 +19,11 @@ const keywordInputOption = new ApplicationCommandOption(
 keywordInputOption.setRequired(true);
 applicationCommand.addOptions(keywordInputOption);
 
-const execute = async function(interaction: any, env: any, args: string[]) {
-    const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE, new MessageData());
+const execute = async function(interaction: Interaction, env: Env, args: string[]) {
+    const interactionResponse = new InteractionResponse(INTERACTION_CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
+    const data = interactionResponse.initMessageData();
     const keywords = args[1];
+    if (!keywords) { return ephemeralError(interactionResponse, 'Error: Empty or invalid keywords.'); }
     const url = `http://api.urbandictionary.com/v0/define?term=${encodeURI(keywords)}`;
     const response = await fetch(url, {
         headers: {
@@ -32,42 +35,45 @@ const execute = async function(interaction: any, env: any, args: string[]) {
         const error = await getFetchErrorText(response);
         return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
     }
-    const data = await response.json();
-    if (!data || !Array.isArray(data.list) || data.list.length == 0) {
+    const udList: UrbanDictionaryList = await response.json();
+    if (!udList || !udList.list || !Array.isArray(udList.list) || !udList.list[0]) {
         return ephemeralError(interactionResponse, 'Urban Dictionary has no results for: ${keywords}');
     }
-    const definition = new UrbanDictionaryDefinition();
-    Object.assign(definition, data.list[0]);
+    const definition: UrbanDictionaryDefinition = udList.list[0];
     
     const embed = new Embed();
     embed.setTitle('Urban Dictionary');
     embed.addField('Search result', `[${definition.word}](${definition.permalink})`);
     embed.addField('Top definition', definition.definition);
     embed.addField('Example', definition.example);
-    embed.addField(':thumbsup:', definition.thumbs_up.toString(), true);
-    embed.addField(':thumbsdown:', definition.thumbs_down.toString(), true);
-    embed.addField('Written by', `[${definition.author}](https://www.urbandictionary.com/author.php?author=${encodeURI(definition.author)})`, true);
-    embed.footer?.setText(`Date posted: ${new Date(definition.written_on).toString()}`);
-    embed.thumbnail?.setUrl('https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/images/urbandictionary.png');
-    interactionResponse.data?.addEmbed(embed);
+    embed.addField(':thumbsup:', definition.thumbs_up?.toString(), true);
+    embed.addField(':thumbsdown:', definition.thumbs_down?.toString(), true);
+    if (definition.author) { embed.addField('Written by', `[${definition.author}](https://www.urbandictionary.com/author.php?author=${encodeURI(definition.author)})`, true); }
+    if (definition.written_on) { embed.initFooter(`Date posted: ${new Date(definition.written_on).toString()}`); }
+    embed.initThumbnail('https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/assets/urbandictionary.png');
+    data.addEmbed(embed);
 
     return interactionResponse;
 }
 
+class UrbanDictionaryList {
+    list?: UrbanDictionaryDefinition[]
+}
+
 /**
- * Urban Dictionary structure.
+ * Urban Dictionary definition structure.
  */
 class UrbanDictionaryDefinition {
-    defid: number
-    definition: string
-    permalink: string
-    thumbs_up: number
-    thumbs_down: number
-    author: string
-    word: string
-    written_on: string
-    example: string
-    current_vote: string // deprecated?
+    defid?: number
+    definition?: string
+    permalink?: string
+    thumbs_up?: number
+    thumbs_down?: number
+    author?: string
+    word?: string
+    written_on?: string
+    example?: string
+    current_vote?: string // deprecated?
 }
 
 /**

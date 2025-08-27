@@ -1,20 +1,21 @@
 import { ApplicationCommand, ApplicationCommandOption } from '../templates/discord/ApplicationCommand.js'
 import { Command } from '../templates/app/Command.js';
-import { APPLICATION_COMMAND_OPTION_TYPE, APPLICATION_COMMAND_TYPE, APPLICATION_INTEGRATION_TYPE, IMAGE_FORMAT, IMAGE_SIZE, INTERACTION_RESPONSE_TYPE, INTERACTION_TYPE, USER_PREMIUM_TYPE } from '../templates/discord/Enums.js';
+import { APPLICATION_COMMAND_OPTION_TYPE, APPLICATION_COMMAND_TYPE, APPLICATION_INTEGRATION_TYPE, IMAGE_FORMAT, IMAGE_SIZE, INTERACTION_CALLBACK_TYPE, INTERACTION_TYPE, USER_PREMIUM_TYPE } from '../templates/discord/Enums.js';
 import { Embed } from '../templates/discord/Embed.js';
-import { InteractionResponse, MessageData } from '../templates/discord/InteractionResponse.js'
+import { InteractionResponse } from '../templates/discord/InteractionResponse.js'
 import { buildDiscordAPIUrl, buildDiscordImageUrl, buildEmoji, buildRole, buildUser, parseEmoji } from '../handlers/MessageHandler.js';
 import { ephemeralError, getFetchErrorText } from '../handlers/ErrorHandler.js';
-import { Role } from '../templates/discord/PermissionsResources.js';
-import { Guild, GuildMember } from '../templates/discord/GuildResources.js';
-import { Snowflake } from '../templates/discord/Snowflake.js';
-import { Channel } from '../templates/discord/ChannelResources.js';
-import { User } from '../templates/discord/UserResources.js';
-import { Application } from '../templates/discord/ApplicationResources.js';
-import { Sticker } from '../templates/discord/StickerResources.js';
+import type { Role } from '../templates/discord/resources/PermissionsResources.js';
+import type { Guild, GuildMember } from '../templates/discord/resources/GuildResources.js';
+import { SnowflakeParser } from '../templates/discord/Snowflake.js';
+import type { Channel } from '../templates/discord/resources/ChannelResources.js';
+import type { User } from '../templates/discord/resources/UserResources.js';
+import type { Application } from '../templates/discord/resources/ApplicationResources.js';
 import { ActionRow, ButtonLink, ChannelSelect, RoleSelect, UserSelect } from '../templates/discord/MessageComponents.js';
 import { isOriginalUserInvoked } from '../handlers/InteractionHandler.js';
 import { Commands } from '../commands.js';
+import { formatTypeToString } from '../handlers/Utils.js';
+import type { Interaction } from '../templates/discord/InteractionReceive.js';
 
 const applicationCommand = new ApplicationCommand(
     'info',
@@ -90,13 +91,14 @@ const userOption = new ApplicationCommandOption(
 );
 applicationCommand.addOptions(userOption);
 
-const execute = async function(interaction: any, env: any, args: string[]) {
+const execute = async function(interaction: Interaction, env: Env, args: string[]) {
     const headers = {
         'Content-Type': 'application/json',
         'User-Agent': env.USER_AGENT,
         'Authorization': `Bot ${env.DISCORD_TOKEN}`,
     }
-    const interactionResponse = new InteractionResponse(INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE_WITH_SOURCE, new MessageData());
+    const interactionResponse = new InteractionResponse(INTERACTION_CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
+    const data = interactionResponse.initMessageData();
     const subcommand = args[1];
     switch (subcommand) {
         case 'bot': {
@@ -108,9 +110,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 const error = await getFetchErrorText(response);
                 return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
             }
-            const data = await response.json();
-            const application = new Application(data.id, data.name);
-            Object.assign(application, data);
+            const application: Application = await response.json();
             const embed = new Embed();
             embed.setTitle(application.name);
             embed.setDescription(application.description);
@@ -119,26 +119,25 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             embed.addBlankField();
             embed.addField('Chat commands', getChatInputCommands().join(' '), true);
             embed.addField('Message commands', getMessageCommands().join(' '), true);
-            embed.footer?.setIconUrl('https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/images/info-ultra-ball.png');
-            const snowflake = new Snowflake(application.id);
-            const joinedDiscord = new Date(snowflake.timestamp);
+            embed.initFooter('https://raw.githubusercontent.com/Tony120914/Beldum-Bot/master/assets/info-ultra-ball.png');
+            const joinedDiscord = new Date(SnowflakeParser.getTimestamp(application.id));
             embed.addField('Created', joinedDiscord.toString());
             if (application.icon) {
                 const url = buildDiscordImageUrl(['app-icons', application.id, application.icon], IMAGE_FORMAT.PNG, IMAGE_SIZE.XXX_LARGE);
-                embed.thumbnail?.setUrl(url);
+                embed.initThumbnail(url);
             }
             if (application.approximate_guild_count) {
-                embed.footer?.setText(`Approximately in ${application.approximate_guild_count} servers.`);
+                embed.initFooter(`Approximately in ${application.approximate_guild_count} servers.`);
                 embed.setTimestampOn();
             }
-            interactionResponse.data?.addEmbed(embed);
+            data.addEmbed(embed);
 
             const actionRow1 = new ActionRow();
             const actionRow2 = new ActionRow();
             const buttonInvite = new ButtonLink('https://discord.com/oauth2/authorize?client_id=454764425090433034');
             const buttonVote = new ButtonLink('https://top.gg/bot/454764425090433034/vote');
-            const buttonDonate = new ButtonLink('https://ko-fi.com/toeknee');
-            const buttonDocs = new ButtonLink('https://tony120914.github.io/beldum-bot-site');
+            const buttonDonate = new ButtonLink('https://patreon.com/ToekneeL');
+            const buttonDocs = new ButtonLink('https://tony120914.github.io/beldum-bot-site/#/docs');
             const buttonSourceCode = new ButtonLink('https://github.com/Tony120914/Beldum-Bot');
             buttonInvite.setLabel('New invite');
             buttonVote.setLabel('Vote me on Top.gg');
@@ -155,8 +154,8 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             actionRow1.addComponent(buttonDonate);
             actionRow2.addComponent(buttonDocs);
             actionRow2.addComponent(buttonSourceCode);
-            interactionResponse.data?.addComponent(actionRow1);
-            interactionResponse.data?.addComponent(actionRow2);
+            data.addComponent(actionRow1);
+            data.addComponent(actionRow2);
             break;
         }
         case 'channel': {
@@ -164,13 +163,12 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 if (!isOriginalUserInvoked(interaction)) {
                     return ephemeralError(interactionResponse, 'Error: You are not the original user who triggered the interaction. Please invoke a new slash command.');
                 }
-                interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
+                interactionResponse.setType(INTERACTION_CALLBACK_TYPE.UPDATE_MESSAGE);
                 const guildId = interaction.guild_id;
-                const channelId = interaction.data.values[0];
-                const data = interaction.data.resolved.channels[channelId];
-                const channelType = data.type;
-                const channel = new Channel(channelId, channelType);
-                Object.assign(channel, data);
+                const channelId = interaction.data?.values![0];
+                if (!channelId) { return ephemeralError(interactionResponse, 'Error: channel id not found.'); }
+                const channel = interaction.data?.resolved?.channels![channelId];
+                if (!channel) { return ephemeralError(interactionResponse, 'Error: channel not found.'); }
                 const embed = new Embed();
                 embed.setTitle('Channel Info');
                 const url = `https://discord.com/channels/${guildId}/${channelId}`;
@@ -184,22 +182,21 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                     const deletedMessagesCount = Math.abs(channel.total_message_sent - channel.message_count);
                     embed.addField('Deleted / total messages', `${deletedMessagesCount} / ${channel.total_message_sent}`, true);
                 }
-                const snowflake = new Snowflake(channel.id);
-                const created = new Date(snowflake.timestamp);
+                const created = new Date(SnowflakeParser.getTimestamp(channel.id));
                 embed.addField('Created', created.toString());
-                interactionResponse.data?.addEmbed(embed);
+                data.addEmbed(embed);
             }
             const channelSelect = new ChannelSelect('channel_select');
             channelSelect.setPlaceholder('Select a channel');
             const actionRow = new ActionRow();
             actionRow.addComponent(channelSelect);
-            interactionResponse.data?.addComponent(actionRow);
+            data.addComponent(actionRow);
             break;
         }
         case 'emoji': {
             const emojiString = args[2];
             const emoji = parseEmoji(emojiString);
-            if (!emoji) {
+            if (!emoji || !emoji.id) {
                 return ephemeralError(interactionResponse, 'Error: Custom emojis only.');
             }
             const embed = new Embed();
@@ -209,11 +206,10 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             embed.setUrl(url);
             embed.setDescription(emojiString);
             embed.addField('Name', emoji.name, true);
-            const snowflake = new Snowflake(emoji.id);
-            const created = new Date(snowflake.timestamp);
+            const created = new Date(SnowflakeParser.getTimestamp(emoji.id));
             embed.addField('Created', created.toString(), true);
-            embed.image?.setUrl(url);
-            interactionResponse.data?.addEmbed(embed);
+            embed.initImage(url);
+            data.addEmbed(embed);
             break;
         }
         case 'role': {
@@ -221,31 +217,29 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 if (!isOriginalUserInvoked(interaction)) {
                     return ephemeralError(interactionResponse, 'Error: You are not the original user who triggered the interaction. Please invoke a new slash command.');
                 }
-                interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
+                interactionResponse.setType(INTERACTION_CALLBACK_TYPE.UPDATE_MESSAGE);
+                if (!interaction.data?.values || !interaction.data.resolved?.roles || !interaction.data.values[0]) { return ephemeralError(interactionResponse, 'Error: 🐛'); }
                 const roleId = interaction.data.values[0];
-                const data = interaction.data.resolved.roles[roleId];
-                const roleName = data.name;
-                const role = new Role(roleId, roleName);
-                Object.assign(role, data);
+                const role = interaction.data.resolved?.roles[roleId];
+                if (!role) { return ephemeralError(interactionResponse, 'Error: role does not exist.'); }
                 const embed = new Embed();
                 embed.setTitle('Role Info');
                 embed.setDescription(`${role.unicode_emoji || ''} ${buildRole(roleId)}`);
                 embed.addField('Name', role.name, true);
-                const snowflake = new Snowflake(role.id);
-                const created = new Date(snowflake.timestamp);
+                const created = new Date(SnowflakeParser.getTimestamp(role.id));
                 embed.addField('Created', created.toString(), true);
                 if (role.icon) {
                     const url = buildDiscordImageUrl(['role-icons', role.id, role.icon], IMAGE_FORMAT.PNG, IMAGE_SIZE.XXX_LARGE);
                     embed.setUrl(url);
-                    embed.image?.setUrl(url);
+                    embed.initImage(url);
                 }
-                interactionResponse.data?.addEmbed(embed);
+                data.addEmbed(embed);
             }
             const roleSelect = new RoleSelect('role_select');
             roleSelect.setPlaceholder('Select a role');
             const actionRow = new ActionRow();
             actionRow.addComponent(roleSelect);
-            interactionResponse.data?.addComponent(actionRow);
+            data.addComponent(actionRow);
             break;
         }
         case 'server': {
@@ -262,9 +256,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 const error = await getFetchErrorText(response);
                 return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
             }
-            const data = await response.json();
-            const guild = new Guild(data.id, data.name);
-            Object.assign(guild, data);
+            const guild: Guild = await response.json();
             const embed = new Embed();
             embed.setTitle('Server Info');
             const sameUrl = `https://discord.com/channels/${guildId}/${channelId}`; // Embeds having the same URL allows an embed to have multiple images for whatever reason...
@@ -289,42 +281,41 @@ const execute = async function(interaction: any, env: any, args: string[]) {
             embed.addField('Emojis', emojis, true);
             let stickers = '';
             guild.stickers?.forEach(sticker => {
-                stickers += `[${sticker.name}](${buildDiscordImageUrl(['stickers', sticker.id], Sticker.formatTypeToString(sticker.format_type), IMAGE_SIZE.XXX_LARGE)}), `;
+                stickers += `[${sticker.name}](${buildDiscordImageUrl(['stickers', sticker.id], formatTypeToString(sticker.format_type), IMAGE_SIZE.XXX_LARGE)}), `;
             });
             embed.addField('Stickers', stickers, true);
-            const snowflake = new Snowflake(guild.id);
-            const created = new Date(snowflake.timestamp);
+            const created = new Date(SnowflakeParser.getTimestamp(guild.id));
             embed.addField('Created', created.toString());
-            interactionResponse.data?.addEmbed(embed);
+            data.addEmbed(embed);
             if (guild.icon) {
                 const format = guild.icon.startsWith('a_') ? IMAGE_FORMAT.GIF : IMAGE_FORMAT.PNG;
                 const url = buildDiscordImageUrl(['icons', guild.id, guild.icon], format, IMAGE_SIZE.XXX_LARGE);
                 const embed = new Embed();
-                embed.image?.setUrl(url);
+                embed.initImage(url);
                 embed.setUrl(sameUrl);
-                interactionResponse.data?.addEmbed(embed);
+                data.addEmbed(embed);
             }
             if (guild.splash) {
                 const url = buildDiscordImageUrl(['splashes', guild.id, guild.splash], IMAGE_FORMAT.PNG, IMAGE_SIZE.XXX_LARGE);
                 const embed = new Embed();
-                embed.image?.setUrl(url)
+                embed.initImage(url);
                 embed.setUrl(sameUrl);
-                interactionResponse.data?.addEmbed(embed);
+                data.addEmbed(embed);
             }
             if (guild.discovery_splash) {
                 const url = buildDiscordImageUrl(['discovery-splashes', guild.id, guild.discovery_splash], IMAGE_FORMAT.PNG, IMAGE_SIZE.XXX_LARGE);
                 const embed = new Embed();
-                embed.image?.setUrl(url);
+                embed.initImage(url);
                 embed.setUrl(sameUrl);
-                interactionResponse.data?.addEmbed(embed);
+                data.addEmbed(embed);
             }
             if (guild.banner) {
                 const format = guild.banner.startsWith('a_') ? IMAGE_FORMAT.GIF : IMAGE_FORMAT.PNG;
                 const url = buildDiscordImageUrl(['banners', guild.id, guild.banner], format, IMAGE_SIZE.XXX_LARGE);
                 const embed = new Embed();
-                embed.image?.setUrl(url);
+                embed.initImage(url);
                 embed.setUrl(sameUrl);
-                interactionResponse.data?.addEmbed(embed);
+                data.addEmbed(embed);
             }
             break;
         }
@@ -333,14 +324,15 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                 if (!isOriginalUserInvoked(interaction)) {
                     return ephemeralError(interactionResponse, 'Error: You are not the original user who triggered the interaction. Please invoke a new slash command.');
                 }
+                if (!interaction.data?.values || !interaction.data.resolved?.members) { return ephemeralError(interactionResponse, 'Error: 🐛'); }
                 // Get GuildMember object
-                interactionResponse.setType(INTERACTION_RESPONSE_TYPE.UPDATE_MESSAGE);
+                interactionResponse.setType(INTERACTION_CALLBACK_TYPE.UPDATE_MESSAGE);
                 const guildId = interaction.guild_id;
                 const channelId = interaction.channel_id;
                 const userId = interaction.data.values[0];
-                const resolvedMember = guildId ? interaction.data.resolved.members[userId] : null;
-                const guildMember = new GuildMember();
-                Object.assign(guildMember, resolvedMember);
+                if (!userId) { return ephemeralError(interactionResponse, 'Error: user does not exist.'); }
+                const guildMember = guildId ? interaction.data.resolved.members[userId] : null;
+                if (!guildMember) { return ephemeralError(interactionResponse, 'Error: user does not exist in this server.'); }
 
                 // Get User Object
                 const url = buildDiscordAPIUrl(['users', userId], []);
@@ -351,9 +343,7 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                     const error = await getFetchErrorText(response);
                     return ephemeralError(interactionResponse, 'Error: Something went wrong. Please try again later.', error);
                 }
-                const data = await response.json();
-                const user = new User(data.id, data.string, data.discriminator);
-                Object.assign(user, data);
+                const user: User = await response.json();
 
                 const embed = new Embed();
                 embed.setTitle('User Info');
@@ -380,51 +370,50 @@ const execute = async function(interaction: any, env: any, args: string[]) {
                     embed.addField('Booster since', boosterSince.toString(), true);
                 }
                 embed.addBlankField()
-                const snowflake = new Snowflake(user.id);
-                const joinedDiscord = new Date(snowflake.timestamp);
+                const joinedDiscord = new Date(SnowflakeParser.getTimestamp(user.id));
                 embed.addField('Joined Discord', joinedDiscord.toString(), true);
                 if (guildMember.communication_disabled_until) {
                     const timeoutExpires = new Date(guildMember.communication_disabled_until);
                     embed.addField('Timeout expires', timeoutExpires.toString(), true);
                 }
-                interactionResponse.data?.addEmbed(embed);
-                if (guildMember.avatar) {
+                data.addEmbed(embed);
+                if (guildMember.avatar && guildId) {
                     const format = guildMember.avatar.startsWith('a_') ? IMAGE_FORMAT.GIF : IMAGE_FORMAT.PNG;
-                    const url = buildDiscordImageUrl(['guilds', interaction.guild_id, 'users', userId, 'avatars', guildMember.avatar], format, IMAGE_SIZE.XXX_LARGE);
+                    const url = buildDiscordImageUrl(['guilds', guildId, 'users', userId, 'avatars', guildMember.avatar], format, IMAGE_SIZE.XXX_LARGE);
                     const embed = new Embed();
-                    embed.image?.setUrl(url);
+                    embed.initImage(url);
                     embed.setUrl(sameUrl);
-                    interactionResponse.data?.addEmbed(embed);
+                    data.addEmbed(embed);
                 }
                 if (user.avatar) {
                     const format = user.avatar.startsWith('a_') ? IMAGE_FORMAT.GIF : IMAGE_FORMAT.PNG;
                     const url = buildDiscordImageUrl(['avatars', userId, user.avatar], format, IMAGE_SIZE.XXX_LARGE);
                     const embed = new Embed();
-                    embed.image?.setUrl(url);
+                    embed.initImage(url);
                     embed.setUrl(sameUrl);
-                    interactionResponse.data?.addEmbed(embed);
+                    data.addEmbed(embed);
                 }
                 if (user.avatar_decoration) {
                     const url = buildDiscordImageUrl(['avatar-decorations', userId, user.avatar_decoration], IMAGE_FORMAT.PNG, IMAGE_SIZE.XXX_LARGE);
                     const embed = new Embed();
-                    embed.image?.setUrl(url);
+                    embed.initImage(url);
                     embed.setUrl(sameUrl);
-                    interactionResponse.data?.addEmbed(embed);
+                    data.addEmbed(embed);
                 }
                 if (user.banner) {
                     const format = user.banner.startsWith('a_') ? IMAGE_FORMAT.GIF : IMAGE_FORMAT.PNG;
                     const url = buildDiscordImageUrl(['banners', userId, user.banner], format, IMAGE_SIZE.XXX_LARGE);
                     const embed = new Embed();
-                    embed.image?.setUrl(url);
+                    embed.initImage(url);
                     embed.setUrl(sameUrl);
-                    interactionResponse.data?.addEmbed(embed);
+                    data.addEmbed(embed);
                 }
             }
             const actionRow = new ActionRow();
             const userSelect = new UserSelect('user_select');
             userSelect.setPlaceholder('Select a user');
             actionRow.addComponent(userSelect);
-            interactionResponse.data?.addComponent(actionRow);
+            data.addComponent(actionRow);
             break;
         }
         default: {

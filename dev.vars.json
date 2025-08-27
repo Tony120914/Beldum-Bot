@@ -1,8 +1,0 @@
-{
-    "DISCORD_APPLICATION_ID": "Discord bot's application id",
-    "DISCORD_PUBLIC_KEY": "Discord bot's public key",
-    "DISCORD_TOKEN": "Discord bot's token",
-    "INTERACTIONS_ENDPOINT": "Interactions endpoint URL",
-    "TOPGG_TOKEN": "Top.gg's token",
-    "USER_AGENT": "This application's user agent in HTTP headers"
-}

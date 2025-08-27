@@ -4,7 +4,7 @@ import {
     APPLICATION_INTEGRATION_TYPE,
     CHANNEL_TYPE,
     INTERACTION_CONTEXT_TYPE
-} from "./Enums";
+} from "./Enums.js";
 
 const APPLICATION_COMMAND_NAME_LIMIT_MIN = 1;
 const APPLICATION_COMMAND_NAME_LIMIT_MAX = 32;
@@ -29,28 +29,28 @@ export class ApplicationCommand {
 
     constructor(name: string, description: string, type: APPLICATION_COMMAND_TYPE) {
         if (!(APPLICATION_COMMAND_NAME_LIMIT_MIN <= name.length && name.length <= APPLICATION_COMMAND_NAME_LIMIT_MAX)) {
-            console.error(
+            throw new Error(
                 `The condition must be met: ${APPLICATION_COMMAND_NAME_LIMIT_MIN} <= name <= ${APPLICATION_COMMAND_NAME_LIMIT_MAX} in application command.\n` +
-                `${JSON.stringify(name)}`);
-            return;
+                `${JSON.stringify(name)}`
+            );
         }
         if (type == APPLICATION_COMMAND_TYPE.CHAT_INPUT && !(APPLICATION_COMMAND_DESCRIPTION_LIMIT_MIN <= description.length && description.length <= APPLICATION_COMMAND_DESCRIPTION_LIMIT_MAX)) {
-            console.error(
+            throw new Error(
                 `The condition must be met (chat input): ${APPLICATION_COMMAND_DESCRIPTION_LIMIT_MIN} <= description <= ${APPLICATION_COMMAND_DESCRIPTION_LIMIT_MAX} in application command.\n` +
-                `${JSON.stringify(description)}`);
-            return;
+                `${JSON.stringify(description)}`
+            );
         }
         if (type == APPLICATION_COMMAND_TYPE.CHAT_INPUT && !/^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$/u.test(name)) {
-            console.error(
+            throw new Error(
                 `Application command (chat input) name must match regex:/^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$/u\n` +
-                `${JSON.stringify(name)}`);
-            return;
+                `${JSON.stringify(name)}`
+            );
         }
         if ((type == APPLICATION_COMMAND_TYPE.MESSAGE || type == APPLICATION_COMMAND_TYPE.USER) && description != '') {
-            console.error(
+            throw new Error(
                 `Application command (message/user) description must be an empty string\n` +
-                `${JSON.stringify(description)}`);
-            return;
+                `${JSON.stringify(description)}`
+            );
         }
         this.name = name;
         this.description = description;
@@ -101,22 +101,22 @@ export class ApplicationCommandOption {
 
     constructor(name: string, description: string, type: APPLICATION_COMMAND_OPTION_TYPE, ) {
         if (!(APPLICATION_COMMAND_OPTION_NAME_LIMIT_MIN <= name.length && name.length <= APPLICATION_COMMAND_OPTION_NAME_LIMIT_MAX)) {
-            console.error(
+            throw new Error(
                 `The condition must be met: ${APPLICATION_COMMAND_OPTION_NAME_LIMIT_MIN} <= name <= ${APPLICATION_COMMAND_OPTION_NAME_LIMIT_MAX} in application command.\n` +
-                `${JSON.stringify(name)}`);
-            return;
+                `${JSON.stringify(name)}`
+            );
         }
         if (!(APPLICATION_COMMAND_OPTION_DESCRIPTION_LIMIT_MIN <= description.length && description.length <= APPLICATION_COMMAND_OPTION_DESCRIPTION_LIMIT_MAX)) {
-            console.error(
+            throw new Error(
                 `The condition must be met: ${APPLICATION_COMMAND_OPTION_DESCRIPTION_LIMIT_MIN} <= description <= ${APPLICATION_COMMAND_OPTION_DESCRIPTION_LIMIT_MAX} in application command.\n` +
-                `${JSON.stringify(description)}`);
-            return;
+                `${JSON.stringify(description)}`
+            );
         }
         if (!/^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$/u.test(name)) {
-            console.error(
+            throw new Error(
                 `Application command name must match regex:/^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$/u\n` +
-                `${JSON.stringify(name)}`);
-            return;
+                `${JSON.stringify(name)}`
+            );
         }
         this.name = name;
         this.description = description;
@@ -167,10 +167,9 @@ class ApplicationCommandOptionChoice {
 
     constructor(name: string, value: string|number) {
         if (!(APPLICATION_COMMAND_OPTION_CHOICE_NAME_LIMIT_MIN <= name.length && name.length <= APPLICATION_COMMAND_OPTION_CHOICE_NAME_LIMIT_MAX)) {
-            console.error(
+            throw new Error(
                 `The condition must be met: ${APPLICATION_COMMAND_OPTION_CHOICE_NAME_LIMIT_MIN} <= name <= ${APPLICATION_COMMAND_OPTION_CHOICE_NAME_LIMIT_MAX} in application command.\n` +
                 `${JSON.stringify(name)}`);
-            return;
         }
         if (typeof(value) == 'string') {
             if (value.length >= APPLICATION_COMMAND_OPTION_CHOICE_DESCRIPTION_LIMIT) {

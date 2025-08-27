@@ -1,7 +1,7 @@
 # Top-level configuration
 name = "beldum-bot"
 main = "src/server.ts"
-compatibility_date = "2024-05-24"
+compatibility_date = "2025-08-25"
 
 [[d1_databases]]
 binding = "DB" # available in your Worker on env.DB
