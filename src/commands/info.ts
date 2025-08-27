@@ -136,8 +136,8 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
             const actionRow2 = new ActionRow();
             const buttonInvite = new ButtonLink('https://discord.com/oauth2/authorize?client_id=454764425090433034');
             const buttonVote = new ButtonLink('https://top.gg/bot/454764425090433034/vote');
-            const buttonDonate = new ButtonLink('https://ko-fi.com/toeknee');
-            const buttonDocs = new ButtonLink('https://tony120914.github.io/beldum-bot-site');
+            const buttonDonate = new ButtonLink('https://patreon.com/ToekneeL');
+            const buttonDocs = new ButtonLink('https://tony120914.github.io/beldum-bot-site/#/docs');
             const buttonSourceCode = new ButtonLink('https://github.com/Tony120914/Beldum-Bot');
             buttonInvite.setLabel('New invite');
             buttonVote.setLabel('Vote me on Top.gg');
