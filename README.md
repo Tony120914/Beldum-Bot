@@ -21,3 +21,7 @@ Check it out. ¯\\\_(ツ)_/¯
 6. `npm run tunnel` (if successful, you should get a URL)
 7. Login to [Discord Developer Portal](https://discord.com/developers/applications)
 8. Select a bot application and paste the tunnel URL into the `INTERACTIONS ENDPOINT URL` field
+
+#### Register Commands
+9. **MAKE SURE THE VARIABLES IN `.dev.vars` ARE CORRECT**
+10. `npm register`
