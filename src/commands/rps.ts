@@ -25,7 +25,8 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
         }
         interactionResponse.setType(INTERACTION_CALLBACK_TYPE.UPDATE_MESSAGE);
         const userChoice = <RPS>interaction.data?.custom_id;
-        const botChoice = [RPS.ROCK, RPS.PAPER, RPS.SCISSORS][getRandomInt(0, 2)] || RPS.PAPER;
+        const choices = [RPS.ROCK, RPS.PAPER, RPS.SCISSORS];
+        const botChoice = choices[getRandomInt(0, choices.length-1)] || RPS.PAPER;
         const result = evaluateRps(userChoice, botChoice);
 
         const embed = new Embed();
