@@ -7,8 +7,7 @@ Check it out. ¯\\\_(ツ)_/¯
 
 - [Invite](https://discord.com/oauth2/authorize?client_id=454764425090433034) this bot to your Discord server.
 - See the [documentation](https://tony120914.github.io/beldum-bot-site/#/docs) for help regarding the commands.
-- [Donations](https://tony120914.github.io/beldum-bot-site/#/donate)
-- [Vote for Beldum-Bot](https://tony120914.github.io/beldum-bot-site/#/vote)
+- [Support](https://tony120914.github.io/beldum-bot-site/#/support) the bot!
 - [Source Code](https://github.com/Tony120914/Beldum-Bot)
 
 <img src="https://top.gg/api/widget/454764425090433034.svg">
