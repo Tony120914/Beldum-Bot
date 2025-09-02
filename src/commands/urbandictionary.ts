@@ -37,7 +37,7 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
     }
     const udList: UrbanDictionaryList = await response.json();
     if (!udList || !udList.list || !Array.isArray(udList.list) || !udList.list[0]) {
-        return ephemeralError(interactionResponse, 'Urban Dictionary has no results for: ${keywords}');
+        return ephemeralError(interactionResponse, `Urban Dictionary has no results for: ${keywords}`);
     }
     const definition: UrbanDictionaryDefinition = udList.list[0];
     

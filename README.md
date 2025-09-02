@@ -30,7 +30,7 @@ Check it out. ¯\\\_(ツ)_/¯
 
 ## Advertisement
 Currently advertised on:
-* [Personal Website](https://tony120914.github.io/beldum-bot-site/)
+* [GitHub Pages](https://tony120914.github.io/beldum-bot-site/)
 * [Discord App Directory](https://discord.com/discovery/applications/454764425090433034)
 * [Top.gg](https://top.gg/bot/454764425090433034)
 * [Discord Bots](https://discord.bots.gg/bots/454764425090433034)
