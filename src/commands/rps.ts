@@ -84,4 +84,5 @@ function evaluateRps(userChoice: RPS, botChoice: RPS) {
 /**
  * Rock paper scissors Command
  */
-export const Rps = new Command(applicationCommand, execute);
+const Rps = new Command(applicationCommand, execute);
+export default Rps;

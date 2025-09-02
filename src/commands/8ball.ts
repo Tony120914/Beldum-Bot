@@ -66,4 +66,5 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
 /**
  * 8ball Command
  */
-export const EightBall = new Command(applicationCommand, execute);
+const EightBall = new Command(applicationCommand, execute);
+export default EightBall;

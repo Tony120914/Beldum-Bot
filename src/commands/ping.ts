@@ -40,4 +40,5 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
 /**
  * Ping Command
  */
-export const Ping = new Command(applicationCommand, execute);
+const Ping = new Command(applicationCommand, execute);
+export default Ping;

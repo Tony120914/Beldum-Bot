@@ -85,4 +85,5 @@ function isAlpha(char: string) {
 /**
  * Spongebob Mock Command
  */
-export const SpongebobMock = new Command(applicationCommand, execute);
+const SpongebobMock = new Command(applicationCommand, execute);
+export default SpongebobMock;

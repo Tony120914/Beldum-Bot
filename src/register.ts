@@ -1,4 +1,4 @@
-import { Commands } from './commands.js';
+import Commands from './commands.js';
 import dotenv from 'dotenv';
 import process from 'node:process';
 import { getFetchErrorText } from './handlers/ErrorHandler.js';

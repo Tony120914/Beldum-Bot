@@ -70,4 +70,5 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
 /**
  * Coin Toss Command
  */
-export const CoinToss = new Command(applicationCommand, execute);
+const CoinToss = new Command(applicationCommand, execute);
+export default CoinToss;

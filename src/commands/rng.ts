@@ -78,4 +78,5 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
 /**
  * RNG Command
  */
-export const Rng = new Command(applicationCommand, execute);
+const Rng = new Command(applicationCommand, execute);
+export default Rng;

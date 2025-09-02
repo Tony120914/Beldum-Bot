@@ -5,15 +5,13 @@ import { Embed } from '../templates/discord/Embed.js';
 import { InteractionResponse } from '../templates/discord/InteractionResponse.js'
 import { buildDiscordAPIUrl, buildDiscordImageUrl, buildEmoji, buildRole, buildUser, parseEmoji } from '../handlers/MessageHandler.js';
 import { ephemeralError, getFetchErrorText } from '../handlers/ErrorHandler.js';
-import type { Role } from '../templates/discord/resources/PermissionsResources.js';
-import type { Guild, GuildMember } from '../templates/discord/resources/GuildResources.js';
+import type { Guild } from '../templates/discord/resources/GuildResources.js';
 import { SnowflakeParser } from '../templates/discord/Snowflake.js';
-import type { Channel } from '../templates/discord/resources/ChannelResources.js';
 import type { User } from '../templates/discord/resources/UserResources.js';
 import type { Application } from '../templates/discord/resources/ApplicationResources.js';
 import { ActionRow, ButtonLink, ChannelSelect, RoleSelect, UserSelect } from '../templates/discord/MessageComponents.js';
 import { isOriginalUserInvoked } from '../handlers/InteractionHandler.js';
-import { Commands } from '../commands.js';
+import Commands from '../commands.js';
 import { formatTypeToString } from '../handlers/Utils.js';
 import type { Interaction } from '../templates/discord/InteractionReceive.js';
 
@@ -456,4 +454,5 @@ function getMessageCommands() {
 /**
  * Info Command
  */
-export const Info = new Command(applicationCommand, execute);
+const Info = new Command(applicationCommand, execute);
+export default Info;

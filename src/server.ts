@@ -4,7 +4,7 @@
 
 import { AutoRouter, type IRequest } from 'itty-router';
 import { verifyKey } from 'discord-interactions';
-import { Commands } from './commands.js';
+import Commands from './commands.js';
 import { JsonResponse } from './templates/app/JsonResponse.js';
 import { parseArgs } from './handlers/ArgumentHandler.js';
 import { INTERACTION_CALLBACK_TYPE, INTERACTION_TYPE } from './templates/discord/Enums.js';
@@ -103,5 +103,4 @@ const server = {
     fetch: router.fetch,
     scheduled: scheduled,
 };
-
 export default server;

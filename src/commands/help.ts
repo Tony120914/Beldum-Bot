@@ -1,7 +1,7 @@
 import { ApplicationCommand } from '../templates/discord/ApplicationCommand.js'
 import { Command } from '../templates/app/Command.js';
 import { APPLICATION_COMMAND_TYPE } from '../templates/discord/Enums.js';
-import { Info } from './info.js';
+import Info from './info.js';
 import type { Interaction } from '../templates/discord/InteractionReceive.js';
 
 const applicationCommand = new ApplicationCommand(
@@ -19,4 +19,5 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
 /**
  * Help Command
  */
-export const Help = new Command(applicationCommand, execute);
+const Help = new Command(applicationCommand, execute);
+export default Help;

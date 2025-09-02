@@ -325,4 +325,5 @@ export async function triggerReminder(env: Env) {
 /**
  * Reminder Command
  */
-export const Reminder = new Command(applicationCommand, execute);
+const Reminder = new Command(applicationCommand, execute);
+export default Reminder;

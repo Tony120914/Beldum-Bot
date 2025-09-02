@@ -332,4 +332,5 @@ function getBestPosition(data: GameData): SYMBOL[] {
 /**
  * Tic-Tac-Toe Command
  */
-export const TicTacToe = new Command(applicationCommand, execute);
+const TicTacToe = new Command(applicationCommand, execute);
+export default TicTacToe;
