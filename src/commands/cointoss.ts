@@ -72,3 +72,7 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
  */
 const CoinToss = new Command(applicationCommand, execute);
 export default CoinToss;
+
+export const tests = {
+    execute,
+}

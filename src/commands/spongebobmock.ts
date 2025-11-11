@@ -77,7 +77,7 @@ function mockText(text: string): string {
 function isAlpha(char: string) {
     if (char.length != 1) {
         console.error('\"char\" must be 1 character long.');
-        return;
+        return false;
     }
     return /[a-zA-Z]/u.test(char);
 }
@@ -87,3 +87,9 @@ function isAlpha(char: string) {
  */
 const SpongebobMock = new Command(applicationCommand, execute);
 export default SpongebobMock;
+
+export const tests = {
+    execute,
+    isAlpha,
+    mockText,
+}

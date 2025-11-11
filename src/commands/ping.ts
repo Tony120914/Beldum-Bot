@@ -20,11 +20,7 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
     });
     const end = Date.now();
     const ping = Math.abs(end - start);
-    let emoji: string;
-    if (ping < 100) { emoji = ':rocket:'; }
-    else if (ping < 200) { emoji = ':red_car:'; }
-    else if (ping < 300) { emoji = ':snail:'; }
-    else { emoji = ':skull:'; }
+    const emoji = pingToEmote(ping);
 
     const embed = new Embed();
     embed.setTitle('Ping');
@@ -37,8 +33,20 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
     return interactionResponse;
 }
 
+function pingToEmote(ping: number): string {
+    if (ping < 100) { return ':rocket:'; }
+    else if (ping < 200) { return ':red_car:'; }
+    else if (ping < 300) { return ':snail:'; }
+    else { return ':skull:'; }
+}
+
 /**
  * Ping Command
  */
 const Ping = new Command(applicationCommand, execute);
 export default Ping;
+
+export const tests = {
+    execute,
+    pingToEmote
+}
