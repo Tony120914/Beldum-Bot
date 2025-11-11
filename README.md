@@ -1,4 +1,5 @@
 # Beldum-Bot
+[![Test & Deploy](https://github.com/Tony120914/Beldum-Bot/actions/workflows/wrangler.yml/badge.svg)](https://github.com/Tony120914/Beldum-Bot/actions/workflows/wrangler.yml)
 <img src="https://raw.githubusercontent.com/Tony120914/Beldum-Bot/main/assets/shiny-beldum-oras-promo.png" width=30% align="right">
 
 Hey, a cool Discord bot application.
