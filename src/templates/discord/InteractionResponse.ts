@@ -90,6 +90,7 @@ class MessageData implements InteractionCallbackData {
         this.attachments?.push(attachment);
     }
 }
+export type MessageDataType = MessageData;
 
 /**
  * https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-autocomplete

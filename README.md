@@ -3,6 +3,8 @@
 
 Hey, a cool Discord bot application.
 
+Serverless and supports slash commands.
+
 Check it out. ¯\\\_(ツ)_/¯
 
 - [Invite](https://discord.com/oauth2/authorize?client_id=454764425090433034) this bot to your Discord server.
