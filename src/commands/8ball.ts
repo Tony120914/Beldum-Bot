@@ -49,12 +49,13 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
         ':no_entry_sign: Absolutely not.',
         ':no_entry_sign: Negative.',
         ];
-    const randomInt = getRandomInt(0, answers.length - 1);
+    const randomIndex = getRandomInt(0, answers.length - 1);
+    const answer = answers[randomIndex];
 
     const embed = new Embed();
     embed.setTitle('8ball');
     embed.setDescription(`:8ball: ${question}`);
-    embed.addField('Answer', answers[randomInt], true);
+    embed.addField('Answer', answer, true);
     
     const interactionResponse = new InteractionResponse(INTERACTION_CALLBACK_TYPE.CHANNEL_MESSAGE_WITH_SOURCE);
     const data = interactionResponse.initMessageData();
@@ -68,3 +69,7 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
  */
 const EightBall = new Command(applicationCommand, execute);
 export default EightBall;
+
+export const tests = {
+    execute,
+}

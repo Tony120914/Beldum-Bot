@@ -24,7 +24,7 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
             return ephemeralError(interactionResponse, 'Error: You are not the original user who triggered the interaction. Please invoke a new slash command.');
         }
         interactionResponse.setType(INTERACTION_CALLBACK_TYPE.UPDATE_MESSAGE);
-        const userChoice = <RPS>interaction.data?.custom_id;
+        const userChoice = interaction.data?.custom_id as RPS;
         const choices = [RPS.ROCK, RPS.PAPER, RPS.SCISSORS];
         const botChoice = choices[getRandomInt(0, choices.length-1)] || RPS.PAPER;
         const result = evaluateRps(userChoice, botChoice);
@@ -86,3 +86,8 @@ function evaluateRps(userChoice: RPS, botChoice: RPS) {
  */
 const Rps = new Command(applicationCommand, execute);
 export default Rps;
+
+export const tests = {
+    execute,
+    evaluateRps,
+}

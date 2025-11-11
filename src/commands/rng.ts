@@ -80,3 +80,7 @@ const execute = async function(interaction: Interaction, env: Env, args: string[
  */
 const Rng = new Command(applicationCommand, execute);
 export default Rng;
+
+export const tests = {
+    execute,
+}

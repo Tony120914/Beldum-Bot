@@ -81,3 +81,7 @@ class UrbanDictionaryDefinition {
  */
 const UrbanDictionary = new Command(applicationCommand, execute);
 export default UrbanDictionary;
+
+export const tests = {
+    execute,
+}
